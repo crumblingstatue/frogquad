@@ -1,5 +1,5 @@
-use macroquad::prelude::*;
-use macroquad_particles::{self as particles, AtlasConfig, BlendMode, Emitter, EmitterConfig};
+use frogquad::prelude::*;
+use frogquad_particles::{self as particles, AtlasConfig, BlendMode, Emitter, EmitterConfig};
 
 fn explosion() -> particles::EmitterConfig {
     particles::EmitterConfig {
@@ -43,7 +43,7 @@ fn fire() -> particles::EmitterConfig {
     }
 }
 
-#[macroquad::main("Fountain")]
+#[frogquad::main("Fountain")]
 async fn main() {
     let texture = load_texture("examples/smoke_fire.png").await.unwrap();
 

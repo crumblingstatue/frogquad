@@ -1,4 +1,4 @@
-use macroquad::prelude::*;
+use frogquad::prelude::*;
 
 use std::collections::LinkedList;
 
@@ -12,7 +12,7 @@ struct Snake {
     dir: Point,
 }
 
-#[macroquad::main("Snake")]
+#[frogquad::main("Snake")]
 async fn main() {
     let mut snake = Snake {
         head: (0, 0),

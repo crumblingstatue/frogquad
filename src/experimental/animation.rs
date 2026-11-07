@@ -10,10 +10,10 @@
 //! - Run animation with 15 frames at 15 fps
 //!
 //! ```no_run
-//! use macroquad::experimental::animation::*;
-//! use macroquad::prelude::*;
+//! use frogquad::experimental::animation::*;
+//! use frogquad::prelude::*;
 //!
-//! #[macroquad::main("Animation")]
+//! #[frogquad::main("Animation")]
 //! async fn main() {
 //!     // Define animations
 //!     let mut sprite = AnimatedSprite::new(

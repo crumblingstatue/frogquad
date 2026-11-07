@@ -1,8 +1,8 @@
-use macroquad::prelude::*;
+use frogquad::prelude::*;
 
-use macroquad_tiled as tiled;
+use frogquad_tiled as tiled;
 
-use macroquad_platformer::*;
+use frogquad_platformer::*;
 
 struct Player {
     collider: Actor,
@@ -14,7 +14,7 @@ struct Platform {
     speed: f32,
 }
 
-#[macroquad::main("Platformer")]
+#[frogquad::main("Platformer")]
 async fn main() {
     let tileset = load_texture("examples/tileset.png").await.unwrap();
     tileset.set_filter(FilterMode::Nearest);

@@ -1,6 +1,6 @@
-use macroquad::prelude::*;
+use frogquad::prelude::*;
 
-#[macroquad::main("Texture")]
+#[frogquad::main("Texture")]
 async fn main() {
     let texture: Texture2D = load_texture("examples/ferris.png").await.unwrap();
 

@@ -1,6 +1,6 @@
-use macroquad::prelude::*;
+use frogquad::prelude::*;
 
-#[macroquad::main("Text")]
+#[frogquad::main("Text")]
 async fn main() {
     let font = load_ttf_font("./examples/DancingScriptRegular.ttf")
         .await

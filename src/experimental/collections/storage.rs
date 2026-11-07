@@ -1,7 +1,7 @@
 //! Global read-only storage
 //!
 //! ```
-//! use macroquad::experimental::collections::storage;
+//! use frogquad::experimental::collections::storage;
 //!
 //! struct WorldBoundaries(i32);
 //!

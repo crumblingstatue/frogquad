@@ -1,5 +1,5 @@
-use macroquad::prelude::*;
-use macroquad::window::miniquad::*;
+use frogquad::prelude::*;
+use frogquad::window::miniquad::*;
 use miniquad::graphics::RenderPass;
 
 #[cfg(feature = "nanoserde")]
@@ -263,7 +263,7 @@ impl EmissionShape {
                 let ro = rand::gen_range(0., radius * radius).sqrt();
                 let phi = rand::gen_range(0., std::f32::consts::PI * 2.);
 
-                macroquad::math::polar_to_cartesian(ro, phi)
+                frogquad::math::polar_to_cartesian(ro, phi)
             }
         }
     }
@@ -558,7 +558,7 @@ impl Emitter {
         );
 
         let shader = {
-            use macroquad::material::shaders::{preprocess_shader, PreprocessorConfig};
+            use frogquad::material::shaders::{preprocess_shader, PreprocessorConfig};
 
             let config = PreprocessorConfig {
                 includes: vec![(

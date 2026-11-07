@@ -18,7 +18,7 @@ pub(crate) struct TextureSlotGuarded(pub TextureSlotId);
 
 #[derive(Debug, Clone, PartialEq)]
 pub(crate) enum TextureHandle {
-    // texture that belongs to macroquad and follows normal garbage collection rules
+    // texture that belongs to frogquad and follows normal garbage collection rules
     Managed(Arc<TextureSlotGuarded>),
     ManagedWeak(TextureSlotId),
     // raw miniquad texture, there are no guarantees that this texture is not yet deleted
@@ -93,7 +93,7 @@ impl Image {
     /// Creates an empty Image.
     ///
     /// ```
-    /// # use macroquad::prelude::*;
+    /// # use frogquad::prelude::*;
     /// let image = Image::empty();
     /// ```
     pub const fn empty() -> Image {
@@ -112,7 +112,7 @@ impl Image {
     /// # Example
     ///
     /// ```
-    /// # use macroquad::prelude::*;
+    /// # use frogquad::prelude::*;
     /// let icon = Image::from_file_with_format(
     ///     include_bytes!("../examples/rust.png"),
     ///     Some(ImageFormat::Png),
@@ -671,8 +671,8 @@ impl Texture2D {
     ///
     /// # Example
     /// ```
-    /// # use macroquad::prelude::*;
-    /// # #[macroquad::main("test")]
+    /// # use frogquad::prelude::*;
+    /// # #[frogquad::main("test")]
     /// # async fn main() {
     /// let texture = Texture2D::empty();
     /// # }
@@ -690,8 +690,8 @@ impl Texture2D {
     ///
     /// # Example
     /// ```
-    /// # use macroquad::prelude::*;
-    /// # #[macroquad::main("test")]
+    /// # use frogquad::prelude::*;
+    /// # #[frogquad::main("test")]
     /// # async fn main() {
     /// let texture = Texture2D::from_file_with_format(
     ///     include_bytes!("../examples/rust.png"),
@@ -735,8 +735,8 @@ impl Texture2D {
     /// # Example
     ///
     /// ```
-    /// # use macroquad::prelude::*;
-    /// # #[macroquad::main("test")]
+    /// # use frogquad::prelude::*;
+    /// # #[frogquad::main("test")]
     /// # async fn main() {
     /// // Create a 2x2 texture from a byte slice with 4 rgba pixels
     /// let bytes: Vec<u8> = vec![255, 0, 0, 192, 0, 255, 0, 192, 0, 0, 255, 192, 255, 255, 255, 192];
@@ -827,8 +827,8 @@ impl Texture2D {
     ///
     /// # Example
     /// ```
-    /// # use macroquad::prelude::*;
-    /// # #[macroquad::main("test")]
+    /// # use frogquad::prelude::*;
+    /// # #[frogquad::main("test")]
     /// # async fn main() {
     /// let texture = Texture2D::empty();
     /// texture.set_filter(FilterMode::Linear);
@@ -949,7 +949,7 @@ pub fn build_textures_atlas() {
 }
 
 #[doc(hidden)]
-/// Macroquad do not have track of all loaded fonts.
+/// frogquad do not have track of all loaded fonts.
 /// Fonts store their characters as ID's in the atlas.
 /// There fore resetting the atlas will render all fonts unusable.
 pub unsafe fn reset_textures_atlas() {

@@ -1,4 +1,4 @@
-//! The way to emulate multitasking with macroquad's `.await`.
+//! The way to emulate multitasking with frogquad's `.await`.
 //! Useful for organizing state machines, animation cutscenes and other stuff that require
 //! some evaluation over time.
 //!

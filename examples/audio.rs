@@ -1,6 +1,6 @@
-use macroquad::{audio, prelude::*, ui};
+use frogquad::{audio, prelude::*, ui};
 
-#[macroquad::main("Audio")]
+#[frogquad::main("Audio")]
 async fn main() {
     set_pc_assets_folder("examples");
 

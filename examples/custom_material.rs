@@ -1,6 +1,6 @@
-use macroquad::prelude::*;
+use frogquad::prelude::*;
 
-use macroquad::window::miniquad::*;
+use frogquad::window::miniquad::*;
 
 const VERTEX: &str = r#"#version 100
 attribute vec3 position;
@@ -147,7 +147,7 @@ fn window_conf() -> Conf {
     }
 }
 
-#[macroquad::main(window_conf)]
+#[frogquad::main(window_conf)]
 async fn main() {
     let pipeline_params = PipelineParams {
         color_blend: Some(BlendState::new(

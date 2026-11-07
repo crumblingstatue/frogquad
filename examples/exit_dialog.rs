@@ -1,7 +1,7 @@
-use macroquad::prelude::*;
-use macroquad::ui::{hash, root_ui, widgets::Window};
+use frogquad::prelude::*;
+use frogquad::ui::{hash, root_ui, widgets::Window};
 
-#[macroquad::main("Exit dialog")]
+#[frogquad::main("Exit dialog")]
 async fn main() {
     prevent_quit();
 

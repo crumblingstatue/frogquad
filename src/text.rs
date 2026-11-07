@@ -215,8 +215,8 @@ impl Font {
     ///
     /// # Example
     /// ```
-    /// # use macroquad::prelude::*;
-    /// # #[macroquad::main("test")]
+    /// # use frogquad::prelude::*;
+    /// # #[frogquad::main("test")]
     /// # async fn main() {
     /// let mut font = get_default_font();
     /// font.set_filter(FilterMode::Linear);
@@ -626,13 +626,13 @@ impl FontsStorage {
     }
 }
 
-/// Returns macroquads default font.
+/// Returns frogquads default font.
 pub fn get_default_font() -> Font {
     let context = get_context();
     context.fonts_storage.default_font.clone()
 }
 
-/// Replaces macroquads default font with `font`.
+/// Replaces frogquads default font with `font`.
 pub fn set_default_font(font: Font) {
     let context = get_context();
     context.fonts_storage.default_font = font;

@@ -1,4 +1,4 @@
-use macroquad::prelude::*;
+use frogquad::prelude::*;
 
 fn draw_text_annotated(text: &str, font: Option<&Font>, x: f32, baseline: f32) {
     let size = measure_text(text, font, 100, 1.0);
@@ -75,7 +75,7 @@ fn draw_text_annotated(text: &str, font: Option<&Font>, x: f32, baseline: f32) {
     );
 }
 
-#[macroquad::main("Text")]
+#[frogquad::main("Text")]
 async fn main() {
     let font = load_ttf_font("./examples/DancingScriptRegular.ttf")
         .await

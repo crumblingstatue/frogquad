@@ -1,6 +1,6 @@
-use macroquad::prelude::*;
+use frogquad::prelude::*;
 
-#[macroquad::main("BasicShapes")]
+#[frogquad::main("BasicShapes")]
 async fn main() {
     loop {
         clear_background(LIGHTGRAY);

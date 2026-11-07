@@ -1,6 +1,6 @@
-use macroquad::prelude::*;
+use frogquad::prelude::*;
 
-#[macroquad::main("Arkanoid")]
+#[frogquad::main("Arkanoid")]
 async fn main() {
     const BLOCKS_W: usize = 10;
     const BLOCKS_H: usize = 10;

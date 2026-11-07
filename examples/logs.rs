@@ -1,10 +1,10 @@
-//! Macroquad expose all the logging macros.
+//! frogquad expose all the logging macros.
 //! They will use browser console, android console or just stdout depending on the platform.
 //! Those macros are the recommended way to output debug traces and logs.
 
-use macroquad::prelude::*;
+use frogquad::prelude::*;
 
-#[macroquad::main("Logs")]
+#[frogquad::main("Logs")]
 async fn main() {
     debug!("This is a debug message");
     info!("and info message");

@@ -1,8 +1,8 @@
-use macroquad::ui::{hash, root_ui, widgets};
+use frogquad::ui::{hash, root_ui, widgets};
 
-use macroquad::prelude::*;
+use frogquad::prelude::*;
 
-#[macroquad::main("Events")]
+#[frogquad::main("Events")]
 async fn main() {
     loop {
         clear_background(WHITE);

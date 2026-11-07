@@ -1,7 +1,7 @@
-use macroquad::prelude::*;
+use frogquad::prelude::*;
 
-use macroquad::ui::widgets::{ProgressBar, Slider};
-use macroquad::ui::{
+use frogquad::ui::widgets::{ProgressBar, Slider};
+use frogquad::ui::{
     hash, root_ui,
     widgets::{self, Group},
     Drag, Ui,
@@ -133,7 +133,7 @@ impl Data {
     }
 }
 
-#[macroquad::main("UI showcase")]
+#[frogquad::main("UI showcase")]
 async fn main() {
     let mut data = Data::new();
 

@@ -1,8 +1,8 @@
-use macroquad::prelude::*;
+use frogquad::prelude::*;
 
-use macroquad_particles::{BlendMode, Curve, Emitter, EmitterConfig};
+use frogquad_particles::{BlendMode, Curve, Emitter, EmitterConfig};
 
-#[macroquad::main("Fountain")]
+#[frogquad::main("Fountain")]
 async fn main() {
     let mut emitter = Emitter::new(EmitterConfig {
         lifetime: 0.5,

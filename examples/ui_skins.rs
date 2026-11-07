@@ -1,8 +1,8 @@
-use macroquad::prelude::*;
+use frogquad::prelude::*;
 
-use macroquad::ui::{hash, root_ui, widgets, Skin};
+use frogquad::ui::{hash, root_ui, widgets, Skin};
 
-#[macroquad::main("UI showcase")]
+#[frogquad::main("UI showcase")]
 async fn main() {
     let skin1 = {
         let font = load_ttf_font("examples/ui_assets/HTOWERT.TTF")

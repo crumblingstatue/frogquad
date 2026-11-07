@@ -1,11 +1,11 @@
 use std::sync::{Arc, Mutex};
 
-use macroquad::prelude::{
+use frogquad::prelude::{
     coroutines::{start_coroutine, wait_seconds},
     next_frame,
 };
 
-#[macroquad::test]
+#[frogquad::test]
 async fn back_to_the_future_coroutine() {
     struct Player {
         on_ground: bool,

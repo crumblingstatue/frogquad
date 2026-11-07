@@ -1,4 +1,4 @@
-use macroquad::math::{vec2, Rect, Vec2};
+use frogquad::math::{vec2, Rect, Vec2};
 
 use std::collections::HashSet;
 

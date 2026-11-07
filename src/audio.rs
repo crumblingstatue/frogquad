@@ -37,7 +37,7 @@ mod dummy_audio {
         }
 
         pub fn play(&self, _ctx: &mut AudioContext, _params: PlaySoundParams) {
-            eprintln!("warn: macroquad's \"audio\" feature disabled.");
+            eprintln!("warn: frogquad's \"audio\" feature disabled.");
         }
 
         pub fn stop(&self, _ctx: &mut AudioContext) {}
