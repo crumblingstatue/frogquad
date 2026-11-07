@@ -38,7 +38,6 @@ quad-snd = { version = "0.2", optional = true }
 [dev-dependencies]
 frogquad-particles = { path = "./particles" }
 frogquad-tiled = { path = "./tiled" }
-frogquad-profiler = { path = "./profiler" }
 frogquad-platformer = { path = "./physics-platformer" }
 
 # workaround to fix the examples
