@@ -66,8 +66,8 @@ pub fn camera_ui() -> impl DerefMut<Target = Ui> {
 use crate::{
     math::{Rect, RectOffset, Vec2},
     text::{
-        atlas::{Atlas, SpriteKey},
         Font,
+        atlas::{Atlas, SpriteKey},
     },
     texture::Image,
     ui::{canvas::DrawCanvas, render::Painter},

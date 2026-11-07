@@ -1,6 +1,6 @@
 use frogquad::prelude::*;
 
-use frogquad::ui::{hash, root_ui, widgets, Skin};
+use frogquad::ui::{Skin, hash, root_ui, widgets};
 
 #[frogquad::main("UI showcase")]
 async fn main() {

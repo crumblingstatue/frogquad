@@ -3,13 +3,13 @@
 
 use crate::{
     color::Color,
-    math::{vec2, Rect, RectOffset, Vec2},
+    math::{Rect, RectOffset, Vec2, vec2},
     text::{
-        atlas::{Atlas, SpriteKey},
         Font, TextDimensions,
+        atlas::{Atlas, SpriteKey},
     },
     texture::Texture2D,
-    ui::{style::Style, UiContent},
+    ui::{UiContent, style::Style},
 };
 
 use std::sync::{Arc, Mutex};

@@ -4,7 +4,7 @@ use miniquad::*;
 
 pub use miniquad::{FilterMode, TextureId as MiniquadTexture, UniformDesc};
 
-use crate::{color::Color, logging::warn, telemetry, texture::Texture2D, tobytes::ToBytes, Error};
+use crate::{Error, color::Color, logging::warn, telemetry, texture::Texture2D, tobytes::ToBytes};
 
 use std::collections::BTreeMap;
 

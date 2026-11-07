@@ -3,7 +3,7 @@
 use crate::{color::Color, get_context};
 
 use crate::quad_gl::{DrawMode, Vertex};
-use glam::{vec2, vec3, vec4, Mat4, Vec2};
+use glam::{Mat4, Vec2, vec2, vec3, vec4};
 
 /// Draws a solid triangle between points `v1`, `v2`, and `v3` with a given `color`.
 pub fn draw_triangle(v1: Vec2, v2: Vec2, v3: Vec2, color: Color) {

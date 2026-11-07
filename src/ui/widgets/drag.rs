@@ -1,6 +1,6 @@
 use crate::{
-    math::{vec2, Rect, Vec2},
-    ui::{widgets::Editbox, ElementState, Id, Layout, Ui, UiContent},
+    math::{Rect, Vec2, vec2},
+    ui::{ElementState, Id, Layout, Ui, UiContent, widgets::Editbox},
 };
 
 use std::any::Any;

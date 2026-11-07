@@ -1,6 +1,6 @@
 use crate::{
-    math::{vec2, Rect},
-    ui::{widgets::Editbox, ElementState, Id, Layout, Ui},
+    math::{Rect, vec2},
+    ui::{ElementState, Id, Layout, Ui, widgets::Editbox},
 };
 
 use std::ops::Range;

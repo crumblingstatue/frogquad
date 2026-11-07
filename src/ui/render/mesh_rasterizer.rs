@@ -2,7 +2,7 @@
 
 use crate::{
     color::Color,
-    math::{vec2, vec3, Rect, RectOffset, Vec2},
+    math::{Rect, RectOffset, Vec2, vec2, vec3},
     texture::Texture2D,
     ui::render::DrawCommand,
 };

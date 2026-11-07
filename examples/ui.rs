@@ -2,9 +2,8 @@ use frogquad::prelude::*;
 
 use frogquad::ui::widgets::{ProgressBar, Slider};
 use frogquad::ui::{
-    hash, root_ui,
+    Drag, Ui, hash, root_ui,
     widgets::{self, Group},
-    Drag, Ui,
 };
 
 pub struct Slot {

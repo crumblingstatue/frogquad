@@ -2,7 +2,7 @@
 name = "frogquad"
 version = "0.4.16"
 authors = ["not-fl3 <not.fl3@gmail.com>"]
-edition = "2021"
+edition = "2024"
 description = """
 Simple and easy to use graphics library
 """

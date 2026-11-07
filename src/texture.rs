@@ -1,13 +1,13 @@
 //! Loading and rendering textures. Also render textures, per-pixel image manipulations.
 
 use crate::{
-    color::Color, file::load_file, get_context, get_quad_context, math::Rect,
-    text::atlas::SpriteKey, Error,
+    Error, color::Color, file::load_file, get_context, get_quad_context, math::Rect,
+    text::atlas::SpriteKey,
 };
 
 pub use crate::quad_gl::FilterMode;
 use crate::quad_gl::{DrawMode, Vertex};
-use glam::{vec2, Vec2};
+use glam::{Vec2, vec2};
 use slotmap::{TextureIdSlotMap, TextureSlotId};
 use std::sync::Arc;
 

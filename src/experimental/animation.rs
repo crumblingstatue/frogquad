@@ -57,7 +57,7 @@
 //! }
 
 use crate::{
-    math::{vec2, Rect, Vec2},
+    math::{Rect, Vec2, vec2},
     time::get_frame_time,
 };
 

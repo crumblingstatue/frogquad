@@ -7,7 +7,7 @@ use crate::{
     texture::RenderTarget,
     window::{screen_height, screen_width},
 };
-use glam::{vec2, vec3, Mat4, Vec2, Vec3};
+use glam::{Mat4, Vec2, Vec3, vec2, vec3};
 
 pub trait Camera {
     fn matrix(&self) -> Mat4;

@@ -36,6 +36,8 @@
 //! }
 //!```
 
+#![warn(static_mut_refs)]
+
 use miniquad::*;
 
 use std::collections::{HashMap, HashSet, VecDeque};
@@ -147,13 +149,13 @@ pub use ::log as logging;
 pub use miniquad;
 
 use crate::{
-    color::{colors::*, Color},
+    color::{Color, colors::*},
     quad_gl::QuadGl,
     texture::TextureHandle,
     ui::ui_context::UiContext,
 };
 
-use glam::{vec2, Mat4, Vec2};
+use glam::{Mat4, Vec2, vec2};
 
 pub(crate) mod thread_assert {
     static mut THREAD_ID: Option<std::thread::ThreadId> = None;
@@ -467,7 +469,7 @@ impl Context {
     }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 static mut CONTEXT: Option<Context> = None;
 
 // This is required for #[frogquad::test]

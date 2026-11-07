@@ -3,11 +3,11 @@
 use std::collections::HashMap;
 
 use crate::{
+    Error,
     color::Color,
     get_context, get_quad_context,
-    math::{vec3, Rect},
+    math::{Rect, vec3},
     texture::{Image, TextureHandle},
-    Error,
 };
 
 use crate::color::WHITE;

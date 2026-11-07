@@ -1,6 +1,6 @@
 //! Cross platform file management functions.
 
-use crate::{exec, Error};
+use crate::{Error, exec};
 
 /// Load file from the path and block until its loaded
 /// Will use filesystem on PC and do http request on web

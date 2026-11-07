@@ -1,6 +1,6 @@
+use crate::Vec2;
 use crate::prelude::screen_width;
 use crate::prelude::*;
-use crate::Vec2;
 
 /// 2D camera that can be controlled by mouse. Offset and scale can be changed.
 ///

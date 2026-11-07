@@ -1,6 +1,6 @@
 use crate::{
-    math::{vec2, Vec2},
-    ui::{widgets::Editbox, ElementState, Id, Layout, Ui, UiContent},
+    math::{Vec2, vec2},
+    ui::{ElementState, Id, Layout, Ui, UiContent, widgets::Editbox},
 };
 
 pub struct InputText<'a> {

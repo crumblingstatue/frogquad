@@ -212,18 +212,10 @@ pub fn hsl_to_rgb(h: f32, s: f32, l: f32) -> Color {
 
 pub fn rgb_to_hsl(color: Color) -> (f32, f32, f32) {
     fn max(a: f32, b: f32) -> f32 {
-        if a > b {
-            a
-        } else {
-            b
-        }
+        if a > b { a } else { b }
     }
     fn min(a: f32, b: f32) -> f32 {
-        if a < b {
-            a
-        } else {
-            b
-        }
+        if a < b { a } else { b }
     }
 
     let Color { r, g, b, .. } = color;

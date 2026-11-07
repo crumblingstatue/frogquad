@@ -2,10 +2,10 @@
 
 use std::collections::HashSet;
 
+use crate::Vec2;
 use crate::prelude::screen_height;
 use crate::prelude::screen_width;
-use crate::Vec2;
-use crate::{get_context, DroppedFile};
+use crate::{DroppedFile, get_context};
 pub use miniquad::{KeyCode, MouseButton};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]

@@ -1,4 +1,4 @@
-use crate::math::{vec2, Rect, Vec2};
+use crate::math::{Rect, Vec2, vec2};
 
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
 pub struct Circle {

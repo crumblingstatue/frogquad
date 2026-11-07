@@ -1,4 +1,4 @@
-use crate::{get_context, get_quad_context, math::Rect, texture::Image, Color};
+use crate::{Color, get_context, get_quad_context, math::Rect, texture::Image};
 
 use std::collections::HashMap;
 

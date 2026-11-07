@@ -1,13 +1,13 @@
 use crate::{
+    Error,
     color::Color,
     math::RectOffset,
     text::{
-        atlas::{Atlas, SpriteKey},
         Font,
+        atlas::{Atlas, SpriteKey},
     },
     texture::Image,
     ui::ElementState,
-    Error,
 };
 
 use std::{
