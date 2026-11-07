@@ -215,9 +215,6 @@ struct Context {
     last_frame_time: f64,
     frame_time: f64,
 
-    #[cfg(one_screenshot)]
-    counter: usize,
-
     camera_stack: Vec<camera::CameraState>,
     texture_batcher: texture::Batcher,
     unwind: bool,
@@ -363,8 +360,6 @@ impl Context {
             last_frame_time: miniquad::date::now(),
             frame_time: 1. / 60.,
 
-            #[cfg(one_screenshot)]
-            counter: 0,
             unwind: false,
             recovery_future: None,
 
@@ -419,15 +414,6 @@ impl Context {
         self.gl.draw(get_quad_context(), screen_mat);
 
         get_quad_context().commit_frame();
-
-        #[cfg(one_screenshot)]
-        {
-            get_context().counter += 1;
-            if get_context().counter == 3 {
-                crate::prelude::get_screen_data().export_png("screenshot.png");
-                panic!("screenshot successfully saved to `screenshot.png`");
-            }
-        }
 
         telemetry::end_gpu_query();
 
