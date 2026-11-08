@@ -3,7 +3,7 @@
 use std::collections::HashMap;
 
 use crate::{
-    Error,
+    Error, FrogCx,
     color::Color,
     get_context,
     math::{Rect, vec3},
@@ -273,6 +273,7 @@ pub fn load_ttf_font_from_bytes(fc: &mut crate::FrogCx, bytes: &[u8]) -> Result<
 /// Draw text with given font_size
 /// Returns text size
 pub fn draw_text(
+    fc: &mut FrogCx,
     text: impl AsRef<str>,
     x: f32,
     y: f32,
@@ -280,6 +281,7 @@ pub fn draw_text(
     color: Color,
 ) -> TextDimensions {
     draw_text_ex(
+        fc,
         text,
         x,
         y,
@@ -294,7 +296,13 @@ pub fn draw_text(
 
 /// Draw text with custom params such as font, font size and font scale
 /// Returns text size
-pub fn draw_text_ex(text: impl AsRef<str>, x: f32, y: f32, params: TextParams) -> TextDimensions {
+pub fn draw_text_ex(
+    fc: &mut FrogCx,
+    text: impl AsRef<str>,
+    x: f32,
+    y: f32,
+    params: TextParams,
+) -> TextDimensions {
     let text = text.as_ref();
 
     if text.is_empty() {
@@ -361,6 +369,7 @@ pub fn draw_text_ex(text: impl AsRef<str>, x: f32, y: f32, params: TextParams) -
         total_width += char_data.advance * font_scale_x + kerning_offset;
 
         crate::texture::draw_texture_ex(
+            fc,
             &crate::texture::Texture2D {
                 texture: TextureHandle::Unmanaged(atlas.texture()),
             },
@@ -387,6 +396,7 @@ pub fn draw_text_ex(text: impl AsRef<str>, x: f32, y: f32, params: TextParams) -
 /// Draw multiline text with the given font_size, line_distance_factor and color.
 /// If no line distance but a custom font is given, the fonts line gap will be used as line distance factor if it exists.
 pub fn draw_multiline_text(
+    fc: &mut FrogCx,
     text: impl AsRef<str>,
     x: f32,
     y: f32,
@@ -395,6 +405,7 @@ pub fn draw_multiline_text(
     color: Color,
 ) -> TextDimensions {
     draw_multiline_text_ex(
+        fc,
         text,
         x,
         y,
@@ -411,6 +422,7 @@ pub fn draw_multiline_text(
 /// Draw multiline text with the given line distance and custom params such as font, font size and font scale.
 /// If no line distance but a custom font is given, the fonts newline size will be used as line distance factor if it exists, else default to font size.
 pub fn draw_multiline_text_ex(
+    fc: &mut FrogCx,
     text: impl AsRef<str>,
     mut x: f32,
     mut y: f32,
@@ -438,7 +450,7 @@ pub fn draw_multiline_text_ex(
     let y_step = line_distance * params.font_size as f32 * params.font_scale;
 
     for line in text.as_ref().lines() {
-        let line_dimensions = draw_text_ex(line, x, y, params.clone());
+        let line_dimensions = draw_text_ex(fc, line, x, y, params.clone());
         x -= (line_distance * params.font_size as f32 * params.font_scale) * params.rotation.sin();
         y += (line_distance * params.font_size as f32 * params.font_scale) * params.rotation.cos();
 

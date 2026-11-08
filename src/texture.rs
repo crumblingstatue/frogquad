@@ -511,19 +511,18 @@ impl Default for DrawTextureParams {
     }
 }
 
-pub fn draw_texture(texture: &Texture2D, x: f32, y: f32, color: Color) {
-    draw_texture_ex(texture, x, y, color, Default::default());
+pub fn draw_texture(fc: &mut FrogCx, texture: &Texture2D, x: f32, y: f32, color: Color) {
+    draw_texture_ex(fc, texture, x, y, color, Default::default());
 }
 
 pub fn draw_texture_ex(
+    fc: &mut FrogCx,
     texture: &Texture2D,
     x: f32,
     y: f32,
     color: Color,
     params: DrawTextureParams,
 ) {
-    let context = get_context();
-
     let [mut width, mut height] = texture.size().to_array();
 
     let Rect {
@@ -538,7 +537,7 @@ pub fn draw_texture_ex(
         h: height,
     });
 
-    let texture_opt = context
+    let texture_opt = fc
         .texture_batcher
         .get(texture)
         .map(|(batched_texture, uv)| {
@@ -606,9 +605,9 @@ pub fn draw_texture_ex(
     ];
     let indices: [u16; 6] = [0, 1, 2, 0, 2, 3];
 
-    context.gl.texture(Some(texture));
-    context.gl.draw_mode(DrawMode::Triangles);
-    context.gl.geometry(&vertices, &indices);
+    fc.gl.texture(Some(texture));
+    fc.gl.draw_mode(DrawMode::Triangles);
+    fc.gl.geometry(&vertices, &indices);
 }
 
 /// Get pixel data from screen buffer and return an Image (screenshot)

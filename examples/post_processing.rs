@@ -41,6 +41,7 @@ async fn main() {
         clear_background(WHITE);
         gl_use_material(&material);
         draw_texture_ex(
+            fc,
             &render_target.texture,
             0.,
             0.,

@@ -134,6 +134,7 @@ async fn main() {
         // Back to screen space, render some text
         set_default_camera(fc);
         draw_text(
+            fc,
             format!("target (WASD keys) = ({:+.2}, {:+.2})", target.0, target.1).as_str(),
             10.0,
             10.0,
@@ -141,6 +142,7 @@ async fn main() {
             BLACK,
         );
         draw_text(
+            fc,
             format!("rotation (mouse wheel) = {rotation} degrees").as_str(),
             10.0,
             25.0,
@@ -148,6 +150,7 @@ async fn main() {
             BLACK,
         );
         draw_text(
+            fc,
             format!("zoom (ctrl + mouse wheel) = {zoom:.2}").as_str(),
             10.0,
             40.0,
@@ -155,13 +158,14 @@ async fn main() {
             BLACK,
         );
         draw_text(
+            fc,
             format!("offset (arrow keys) = ({:+.2}, {:+.2})", offset.0, offset.1).as_str(),
             10.0,
             55.0,
             15.0,
             BLACK,
         );
-        draw_text("HELLO", 30.0, 200.0, 30.0, BLACK);
+        draw_text(fc, "HELLO", 30.0, 200.0, 30.0, BLACK);
 
         next_frame().await
     }

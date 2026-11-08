@@ -2,6 +2,7 @@ use frogquad::prelude::*;
 
 #[frogquad::main("Text")]
 async fn main() {
+    let fc = frogquad::get_context();
     let font = load_ttf_font(
         frogquad::get_context(),
         "./examples/DancingScriptRegular.ttf",
@@ -14,7 +15,7 @@ async fn main() {
     loop {
         clear_background(BLACK);
 
-        draw_text_ex("Custom font size:", 20.0, 20.0, TextParams::default());
+        draw_text_ex(fc, "Custom font size:", 20.0, 20.0, TextParams::default());
         let mut y = 20.0;
 
         for font_size in (30..100).step_by(20) {
@@ -25,11 +26,18 @@ async fn main() {
             };
 
             y += font_size as f32;
-            draw_text_ex(text, 20.0, y, params);
+            draw_text_ex(fc, text, 20.0, y, params);
         }
 
-        draw_text_ex("Dynamic font scale:", 20.0, 400.0, TextParams::default());
         draw_text_ex(
+            fc,
+            "Dynamic font scale:",
+            20.0,
+            400.0,
+            TextParams::default(),
+        );
+        draw_text_ex(
+            fc,
             "abcd",
             20.0,
             450.0,
@@ -40,8 +48,9 @@ async fn main() {
             },
         );
 
-        draw_text_ex("Custom font:", 400.0, 20.0, TextParams::default());
+        draw_text_ex(fc, "Custom font:", 400.0, 20.0, TextParams::default());
         draw_text_ex(
+            fc,
             "abcd",
             400.0,
             70.0,
@@ -53,6 +62,7 @@ async fn main() {
         );
 
         draw_text_ex(
+            fc,
             "abcd",
             400.0,
             160.0,
@@ -64,6 +74,7 @@ async fn main() {
         );
 
         draw_text_ex(
+            fc,
             "abcd",
             screen_width() / 4.0 * 2.0,
             screen_height() / 3.0 * 2.0,
@@ -77,6 +88,7 @@ async fn main() {
 
         let center = get_text_center("abcd", Option::None, 70, 1.0, angle * 2.0);
         draw_text_ex(
+            fc,
             "abcd",
             screen_width() / 4.0 * 3.0 - center.x,
             screen_height() / 3.0 * 2.0 - center.y,

@@ -52,12 +52,13 @@ async fn main() {
 
         set_camera(fc, &camera);
 
-        tiled_map.draw_tiles("main layer", Rect::new(0.0, 0.0, 320.0, 152.0), None);
+        tiled_map.draw_tiles(fc, "main layer", Rect::new(0.0, 0.0, 320.0, 152.0), None);
 
         // draw platform
         {
             let pos = world.solid_pos(platform.collider);
             tiled_map.spr_ex(
+                fc,
                 "tileset",
                 Rect::new(6.0 * 8.0, 0.0, 32.0, 8.0),
                 Rect::new(pos.x, pos.y, 32.0, 8.0),
@@ -71,9 +72,15 @@ async fn main() {
 
             let pos = world.actor_pos(player.collider);
             if player.speed.x >= 0.0 {
-                tiled_map.spr("tileset", PLAYER_SPRITE, Rect::new(pos.x, pos.y, 8.0, 8.0));
+                tiled_map.spr(
+                    fc,
+                    "tileset",
+                    PLAYER_SPRITE,
+                    Rect::new(pos.x, pos.y, 8.0, 8.0),
+                );
             } else {
                 tiled_map.spr(
+                    fc,
                     "tileset",
                     PLAYER_SPRITE,
                     Rect::new(pos.x + 8.0, pos.y, -8.0, 8.0),

@@ -35,7 +35,7 @@ async fn main() {
 
         clear_background(LIGHTGRAY);
 
-        draw_text("Hello Letterbox", 20.0, 20.0, 30.0, DARKGRAY);
+        draw_text(fc, "Hello Letterbox", 20.0, 20.0, 30.0, DARKGRAY);
         draw_circle(VIRTUAL_WIDTH / 2.0 - 65.0, VIRTUAL_HEIGHT / 2.0, 35.0, RED);
         draw_circle(VIRTUAL_WIDTH / 2.0 + 65.0, VIRTUAL_HEIGHT / 2.0, 35.0, BLUE);
         draw_circle(
@@ -56,6 +56,7 @@ async fn main() {
 
         // Draw 'render_target' to window screen, porperly scaled and letterboxed
         draw_texture_ex(
+            fc,
             &render_target.texture,
             (screen_width() - (VIRTUAL_WIDTH * scale)) * 0.5,
             (screen_height() - (VIRTUAL_HEIGHT * scale)) * 0.5,

@@ -17,6 +17,7 @@ async fn main() {
         let dimensions = measure_multiline_text(&text, None, font_size, 1.0, Some(1.0));
 
         draw_multiline_text(
+            fc,
             &text,
             20.0,
             20.0 + dimensions.offset_y,

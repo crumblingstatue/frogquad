@@ -69,6 +69,7 @@ async fn main() {
             }
             let text_size = measure_text(text, None, font_size as _, 1.0);
             draw_text(
+                fc,
                 text,
                 screen_width() / 2. - text_size.width / 2.,
                 screen_height() / 2. - text_size.height / 2.,

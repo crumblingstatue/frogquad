@@ -114,11 +114,11 @@ impl Default for TileFlippedParams {
 }
 
 impl Map {
-    pub fn spr(&self, tileset: &str, sprite: u32, dest: Rect) {
-        self.spr_flip(tileset, sprite, dest, TileFlippedParams::default())
+    pub fn spr(&self, fc: &mut frogquad::FrogCx, tileset: &str, sprite: u32, dest: Rect) {
+        self.spr_flip(fc, tileset, sprite, dest, TileFlippedParams::default())
     }
 
-    pub fn spr_flip(&self, tileset: &str, sprite: u32, dest: Rect, flip: TileFlippedParams) {
+    pub fn spr_flip(&self, fc: &mut frogquad::FrogCx, tileset: &str, sprite: u32, dest: Rect, flip: TileFlippedParams) {
         if self.tilesets.contains_key(tileset) == false {
             panic!(
                 "No such tileset: {}, tilesets available: {:?}",
@@ -137,6 +137,7 @@ impl Map {
         };
 
         draw_texture_ex(
+            fc,
             &tileset.texture,
             dest.x,
             dest.y,
@@ -157,10 +158,11 @@ impl Map {
         );
     }
 
-    pub fn spr_ex(&self, tileset: &str, source: Rect, dest: Rect) {
+    pub fn spr_ex(&self, fc: &mut frogquad::FrogCx, tileset: &str, source: Rect, dest: Rect) {
         let tileset = &self.tilesets[tileset];
 
         draw_texture_ex(
+            fc,
             &tileset.texture,
             dest.x,
             dest.y,
@@ -177,7 +179,7 @@ impl Map {
         self.layers.contains_key(layer)
     }
 
-    pub fn draw_tiles(&self, layer: &str, dest: Rect, source: impl Into<Option<Rect>>) {
+    pub fn draw_tiles(&self, fc: &mut frogquad::FrogCx, layer: &str, dest: Rect, source: impl Into<Option<Rect>>) {
         assert!(self.layers.contains_key(layer), "No such layer: {}", layer);
 
         let source = source.into().unwrap_or(Rect::new(
@@ -219,6 +221,7 @@ impl Map {
         for (tileset, tileset_layer) in &separated_by_ts {
             for (tile, rect) in tileset_layer {
                 self.spr_flip(
+                    fc,
                     tileset,
                     tile.id,
                     *rect,
@@ -232,7 +235,7 @@ impl Map {
         }
     }
 
-    pub fn draw_imglayer(&self, layer: &str, dest: Rect, source: Option<Rect>) {
+    pub fn draw_imglayer(&self, fc: &mut frogquad::FrogCx, layer: &str, dest: Rect, source: Option<Rect>) {
         assert!(self.layers.contains_key(layer), "No such layer: {}", layer);
         let layer = &self.layers[layer];
         assert!(layer.image.is_some(), "No texture found.");
@@ -244,6 +247,7 @@ impl Map {
 
         let source = source.unwrap_or(Rect::new(0., 0., img_texture.width(), img_texture.height()));
         draw_texture_ex(
+            fc,
             &img_texture,
             (layer.offsetx.unwrap() - source.x) / source.w * dest.w + dest.x,
             (layer.offsety.unwrap() - source.y) / source.h * dest.h + dest.y,

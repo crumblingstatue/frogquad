@@ -67,11 +67,12 @@ async fn main() {
     loop {
         clear_background(BLACK);
 
-        draw_text("Local coord emitter", 20.0, 30.0, 30.0, RED);
+        draw_text(fc, "Local coord emitter", 20.0, 30.0, 30.0, RED);
 
-        draw_text("World coord emitter", 20.0, 60.0, 30.0, GREEN);
+        draw_text(fc, "World coord emitter", 20.0, 60.0, 30.0, GREEN);
 
         draw_text(
+            fc,
             "One shot emitter, press Space to emit",
             20.0,
             90.0,

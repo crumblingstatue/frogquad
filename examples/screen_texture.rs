@@ -20,6 +20,7 @@ async fn main() {
     loop {
         clear_background(WHITE);
         draw_texture_ex(
+            fc,
             &texture,
             0.0,
             0.0,

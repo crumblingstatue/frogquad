@@ -8,6 +8,7 @@ enum CellState {
 
 #[frogquad::main("Life")]
 async fn main() {
+    let fc = frogquad::get_context();
     let w = screen_width() as usize;
     let h = screen_height() as usize;
 
@@ -86,7 +87,7 @@ async fn main() {
 
         texture.update(&image);
 
-        draw_texture(&texture, 0., 0., WHITE);
+        draw_texture(fc, &texture, 0., 0., WHITE);
 
         next_frame().await
     }

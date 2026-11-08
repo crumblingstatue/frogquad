@@ -2,6 +2,7 @@ use frogquad::prelude::*;
 
 #[frogquad::main("DefaultFont")]
 async fn main() {
+    let fc = frogquad::get_context();
     let font = load_ttf_font(
         frogquad::get_context(),
         "./examples/DancingScriptRegular.ttf",
@@ -14,6 +15,7 @@ async fn main() {
         clear_background(WHITE);
 
         draw_text(
+            fc,
             "Hello world in a new default font!",
             100.0,
             100.0,
@@ -22,6 +24,7 @@ async fn main() {
         );
 
         draw_text_ex(
+            fc,
             "And with extra formatting options",
             100.0,
             230.0,

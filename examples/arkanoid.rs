@@ -54,6 +54,7 @@ async fn main() {
                 ..Default::default()
             };
             draw_text_ex(
+                fc,
                 "Press space to start",
                 SCR_W / 2. - 5.,
                 SCR_H / 2.,

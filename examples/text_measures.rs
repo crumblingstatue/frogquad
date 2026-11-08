@@ -1,6 +1,12 @@
 use frogquad::prelude::*;
 
-fn draw_text_annotated(text: &str, font: Option<&Font>, x: f32, baseline: f32) {
+fn draw_text_annotated(
+    fc: &mut frogquad::FrogCx,
+    text: &str,
+    font: Option<&Font>,
+    x: f32,
+    baseline: f32,
+) {
     let size = measure_text(text, font, 100, 1.0);
 
     // Full background rect
@@ -12,6 +18,7 @@ fn draw_text_annotated(text: &str, font: Option<&Font>, x: f32, baseline: f32) {
     // Base line annotation
     draw_rectangle(x + size.width, baseline - 1.0, 120.0, 1.0, GRAY);
     draw_text(
+        fc,
         "baseline",
         x + size.width + 10.0,
         baseline - 5.0,
@@ -31,6 +38,7 @@ fn draw_text_annotated(text: &str, font: Option<&Font>, x: f32, baseline: f32) {
         GRAY,
     );
     draw_text(
+        fc,
         "topline",
         x + size.width + 10.0,
         baseline - size.offset_y - 5.0,
@@ -56,6 +64,7 @@ fn draw_text_annotated(text: &str, font: Option<&Font>, x: f32, baseline: f32) {
         GRAY,
     );
     draw_text(
+        fc,
         "bottomline",
         x + size.width + 10.0,
         baseline - size.offset_y + size.height - 5.0,
@@ -64,6 +73,7 @@ fn draw_text_annotated(text: &str, font: Option<&Font>, x: f32, baseline: f32) {
     );
 
     draw_text_ex(
+        fc,
         text,
         x,
         baseline,
@@ -77,6 +87,7 @@ fn draw_text_annotated(text: &str, font: Option<&Font>, x: f32, baseline: f32) {
 
 #[frogquad::main("Text")]
 async fn main() {
+    let fc = frogquad::get_context();
     let font = load_ttf_font(
         frogquad::get_context(),
         "./examples/DancingScriptRegular.ttf",
@@ -89,8 +100,8 @@ async fn main() {
 
         let text = "abcdIj";
 
-        draw_text_annotated(text, None, 40.0, 200.0);
-        draw_text_annotated(text, Some(&font), 400.0, 400.0);
+        draw_text_annotated(fc, text, None, 40.0, 200.0);
+        draw_text_annotated(fc, text, Some(&font), 400.0, 400.0);
 
         next_frame().await
     }

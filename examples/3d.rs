@@ -43,7 +43,7 @@ async fn main() {
         // Back to screen space, render some text
 
         set_default_camera(fc);
-        draw_text("WELCOME TO 3D WORLD", 10.0, 20.0, 30.0, BLACK);
+        draw_text(fc, "WELCOME TO 3D WORLD", 10.0, 20.0, 30.0, BLACK);
 
         next_frame().await
     }
