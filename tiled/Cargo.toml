@@ -2,7 +2,7 @@
 name = "frogquad-tiled"
 version = "0.2.1"
 authors = ["Fedor Logachev <not.fl3@gmail.com>"]
-edition = "2018"
+edition = "2024"
 license = "MIT/Apache-2.0"
 description = """
 Tiled editor frogquad intergration

@@ -2,7 +2,7 @@
 name = "frogquad-particles"
 version = "0.2.2"
 authors = ["Fedor Logachev <not.fl3@gmail.com>"]
-edition = "2018"
+edition = "2024"
 license = "MIT/Apache-2.0"
 description = """
 Visual effects editor based on frogquad and megaui.
