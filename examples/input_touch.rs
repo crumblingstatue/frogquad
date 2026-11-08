@@ -2,10 +2,11 @@ use frogquad::prelude::*;
 
 #[frogquad::main("InputTouch")]
 async fn main() {
+    let fc = frogquad::get_context();
     loop {
         clear_background(LIGHTGRAY);
 
-        for touch in touches() {
+        for touch in touches(fc) {
             let (fill_color, size) = match touch.phase {
                 TouchPhase::Started => (GREEN, 80.0),
                 TouchPhase::Stationary => (WHITE, 60.0),

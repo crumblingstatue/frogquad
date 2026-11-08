@@ -56,7 +56,7 @@ async fn main() {
             break;
         }
 
-        match mouse_wheel() {
+        match mouse_wheel(fc) {
             (_x, y) if y != 0.0 => {
                 // Normalize mouse wheel values is browser (chromium: 53, firefox: 3)
                 #[cfg(target_arch = "wasm32")]

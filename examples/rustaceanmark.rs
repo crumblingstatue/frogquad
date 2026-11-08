@@ -18,7 +18,7 @@ async fn main() {
     loop {
         clear_background(Color::default());
 
-        if frogquad::input::is_mouse_button_down(MouseButton::Left) {
+        if frogquad::input::is_mouse_button_down(fc, MouseButton::Left) {
             for _i in 0..100 {
                 rustaceanes.push(Rustaceane {
                     pos: Vec2::from(frogquad::input::mouse_position(fc)),
