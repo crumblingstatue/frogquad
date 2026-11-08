@@ -29,16 +29,17 @@ impl From<nanoserde::DeJsonErr> for Error {
 impl std::fmt::Display for Error {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Error::DeJsonErr { .. } | Error::TextureNotFound {..} => std::fmt::Debug::fmt(self, f),
+            Error::DeJsonErr { .. } | Error::TextureNotFound { .. } => {
+                std::fmt::Debug::fmt(self, f)
+            }
             Error::NonUniqueLayerName { layer } => write!(
                 f,
-                "Layer name should be unique to load tiled level in frogquad, non-unique layer name: {}", layer
+                "Layer name should be unique to load tiled level in frogquad, non-unique layer name: {}",
+                layer
             ),
-            Error::LayerTypeNotFound{layer_type} => write!(
-                f,
-                "{} type layer not found.", layer_type
-            ),
-
+            Error::LayerTypeNotFound { layer_type } => {
+                write!(f, "{} type layer not found.", layer_type)
+            }
         }
     }
 }

@@ -118,7 +118,14 @@ impl Map {
         self.spr_flip(fc, tileset, sprite, dest, TileFlippedParams::default())
     }
 
-    pub fn spr_flip(&self, fc: &mut frogquad::FrogCx, tileset: &str, sprite: u32, dest: Rect, flip: TileFlippedParams) {
+    pub fn spr_flip(
+        &self,
+        fc: &mut frogquad::FrogCx,
+        tileset: &str,
+        sprite: u32,
+        dest: Rect,
+        flip: TileFlippedParams,
+    ) {
         if self.tilesets.contains_key(tileset) == false {
             panic!(
                 "No such tileset: {}, tilesets available: {:?}",
@@ -179,7 +186,13 @@ impl Map {
         self.layers.contains_key(layer)
     }
 
-    pub fn draw_tiles(&self, fc: &mut frogquad::FrogCx, layer: &str, dest: Rect, source: impl Into<Option<Rect>>) {
+    pub fn draw_tiles(
+        &self,
+        fc: &mut frogquad::FrogCx,
+        layer: &str,
+        dest: Rect,
+        source: impl Into<Option<Rect>>,
+    ) {
         assert!(self.layers.contains_key(layer), "No such layer: {}", layer);
 
         let source = source.into().unwrap_or(Rect::new(
@@ -235,17 +248,28 @@ impl Map {
         }
     }
 
-    pub fn draw_imglayer(&self, fc: &mut frogquad::FrogCx, layer: &str, dest: Rect, source: Option<Rect>) {
+    pub fn draw_imglayer(
+        &self,
+        fc: &mut frogquad::FrogCx,
+        layer: &str,
+        dest: Rect,
+        source: Option<Rect>,
+    ) {
         assert!(self.layers.contains_key(layer), "No such layer: {}", layer);
         let layer = &self.layers[layer];
         assert!(layer.image.is_some(), "No texture found.");
         let img_texture = layer.image.clone().unwrap();
-        let dest_width_frac =
-            img_texture.width() / (self.raw_tiled_map.width * self.raw_tiled_map.tilewidth) as f32;
+        let dest_width_frac = img_texture.width(fc)
+            / (self.raw_tiled_map.width * self.raw_tiled_map.tilewidth) as f32;
         let dest_height_frac =
-            img_texture.height() / (self.raw_tiled_map.height * self.raw_tiled_map.height) as f32;
+            img_texture.height(fc) / (self.raw_tiled_map.height * self.raw_tiled_map.height) as f32;
 
-        let source = source.unwrap_or(Rect::new(0., 0., img_texture.width(), img_texture.height()));
+        let source = source.unwrap_or(Rect::new(
+            0.,
+            0.,
+            img_texture.width(fc),
+            img_texture.height(fc),
+        ));
         draw_texture_ex(
             fc,
             &img_texture,
@@ -498,7 +522,7 @@ pub fn load_map(
                 layer_type => {
                     return Err(error::Error::LayerTypeNotFound {
                         layer_type: layer_type.to_string(),
-                    })
+                    });
                 }
             },
         );

@@ -143,6 +143,8 @@ pub mod logging {
 pub use ::log as logging;
 pub use miniquad;
 
+use crate::quad_gl::MagicSnapshotter;
+use crate::texture::TexturesContext;
 use crate::{
     color::{Color, colors::*},
     quad_gl::QuadGl,
@@ -196,7 +198,8 @@ pub struct FrogCx {
 
     input_events: Vec<Vec<MiniquadInputEvent>>,
 
-    gl: QuadGl,
+    pub gl: QuadGl,
+    snapshotter: MagicSnapshotter,
     camera_matrix: Option<Mat4>,
 
     fonts_storage: text::FontsStorage,
@@ -212,10 +215,10 @@ pub struct FrogCx {
     unwind: bool,
     recovery_future: Option<Pin<Box<dyn Future<Output = ()>>>>,
 
-    quad_context: Box<dyn miniquad::RenderingBackend>,
+    pub quad_context: Box<dyn miniquad::RenderingBackend>,
 
     default_filter_mode: crate::quad_gl::FilterMode,
-    textures: crate::texture::TexturesContext,
+    pub textures: crate::texture::TexturesContext,
 
     update_on: conf::UpdateTrigger,
 
@@ -336,6 +339,7 @@ impl FrogCx {
                 draw_call_vertex_capacity,
                 draw_call_index_capacity,
             ),
+            snapshotter: MagicSnapshotter::new(&mut *ctx),
 
             fonts_storage: text::FontsStorage::new(&mut *ctx),
             texture_batcher: texture::Batcher::new(&mut *ctx),
@@ -361,17 +365,19 @@ impl FrogCx {
     }
 
     /// Returns the handle for this texture.
-    pub(crate) fn raw_miniquad_id(&self, handle: &TextureHandle) -> miniquad::TextureId {
+    pub fn raw_miniquad_id(
+        gl: &QuadGl,
+        textures: &TexturesContext,
+        handle: &TextureHandle,
+    ) -> miniquad::TextureId {
         match handle {
             TextureHandle::Unmanaged(texture) => *texture,
-            TextureHandle::Managed(texture) => self
-                .textures
-                .texture(texture.0)
-                .unwrap_or(self.gl.white_texture),
-            TextureHandle::ManagedWeak(texture) => self
-                .textures
-                .texture(*texture)
-                .unwrap_or(self.gl.white_texture),
+            TextureHandle::Managed(texture) => {
+                textures.texture(texture.0).unwrap_or(gl.white_texture)
+            }
+            TextureHandle::ManagedWeak(texture) => {
+                textures.texture(*texture).unwrap_or(gl.white_texture)
+            }
         }
     }
 
@@ -392,7 +398,12 @@ impl FrogCx {
         self.perform_render_passes();
 
         let screen_mat = self.pixel_perfect_projection_matrix();
-        self.gl.draw(&mut *self.quad_context, screen_mat);
+        self.gl.draw(
+            &mut *self.quad_context,
+            &self.textures,
+            screen_mat,
+            &mut self.snapshotter,
+        );
 
         self.quad_context.commit_frame();
 
@@ -439,10 +450,15 @@ impl FrogCx {
         }
     }
 
-    pub(crate) fn perform_render_passes(&mut self) {
+    pub fn perform_render_passes(&mut self) {
         let matrix = self.projection_matrix();
 
-        self.gl.draw(&mut *self.quad_context, matrix);
+        self.gl.draw(
+            &mut *self.quad_context,
+            &self.textures,
+            matrix,
+            &mut self.snapshotter,
+        );
     }
 }
 

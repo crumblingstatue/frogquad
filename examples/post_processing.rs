@@ -4,7 +4,7 @@ use frogquad::prelude::*;
 async fn main() {
     let fc = frogquad::get_context();
     let render_target = render_target(fc, 320, 150);
-    render_target.texture.set_filter(FilterMode::Nearest);
+    render_target.texture.set_filter(fc, FilterMode::Nearest);
 
     let material = load_material(
         ShaderSource::Glsl {

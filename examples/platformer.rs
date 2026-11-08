@@ -18,7 +18,7 @@ struct Platform {
 async fn main() {
     let fc = frogquad::get_context();
     let tileset = load_texture(fc, "examples/tileset.png").await.unwrap();
-    tileset.set_filter(FilterMode::Nearest);
+    tileset.set_filter(fc, FilterMode::Nearest);
 
     let tiled_map_json = load_string(fc, "examples/map.json").await.unwrap();
     let tiled_map = tiled::load_map(&tiled_map_json, &[("tileset.png", tileset)], &[]).unwrap();

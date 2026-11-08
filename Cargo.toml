@@ -47,3 +47,5 @@ frogquad = { path = './' }
 #miniquad = { path = '../miniquad' }
 #quad-gl = {path = './quad-gl'}
 
+[workspace]
+members = ["frogquad_macro", "particles", "physics-platformer", "tiled"]

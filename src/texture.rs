@@ -1,12 +1,14 @@
 //! Loading and rendering textures. Also render textures, per-pixel image manipulations.
 
 use crate::{
-    Error, FrogCx, color::Color, file::load_file, get_context, math::Rect, text::atlas::SpriteKey,
+    Error, FrogCx, color::Color, file::load_file, get_context, math::Rect, quad_gl::QuadGl,
+    text::atlas::SpriteKey,
 };
 
 pub use crate::quad_gl::FilterMode;
 use crate::quad_gl::{DrawMode, Vertex};
 use glam::{Vec2, vec2};
+use miniquad::{GlContext, RenderingBackend};
 use slotmap::{TextureIdSlotMap, TextureSlotId};
 use std::sync::Arc;
 
@@ -16,7 +18,7 @@ mod slotmap;
 pub(crate) struct TextureSlotGuarded(pub TextureSlotId);
 
 #[derive(Debug, Clone, PartialEq)]
-pub(crate) enum TextureHandle {
+pub enum TextureHandle {
     // texture that belongs to frogquad and follows normal garbage collection rules
     Managed(Arc<TextureSlotGuarded>),
     ManagedWeak(TextureSlotId),
@@ -24,7 +26,7 @@ pub(crate) enum TextureHandle {
     Unmanaged(miniquad::TextureId),
 }
 
-pub(crate) struct TexturesContext {
+pub struct TexturesContext {
     textures: TextureIdSlotMap,
     removed: Vec<TextureSlotId>,
     removed_render_passes: Vec<miniquad::RenderPass>,
@@ -342,7 +344,7 @@ pub async fn load_image(fc: &mut FrogCx, path: &str) -> Result<Image, Error> {
 pub async fn load_texture(fc: &mut FrogCx, path: &str) -> Result<Texture2D, Error> {
     let bytes = load_file(fc, path).await?;
 
-    Ok(Texture2D::from_file_with_format(&bytes[..], None))
+    Ok(Texture2D::from_file_with_format(fc, &bytes[..], None))
 }
 
 #[derive(Debug, Clone)]
@@ -523,7 +525,7 @@ pub fn draw_texture_ex(
     color: Color,
     params: DrawTextureParams,
 ) {
-    let [mut width, mut height] = texture.size().to_array();
+    let [mut width, mut height] = texture.size(fc).to_array();
 
     let Rect {
         x: mut sx,
@@ -537,21 +539,21 @@ pub fn draw_texture_ex(
         h: height,
     });
 
-    let texture_opt = fc
-        .texture_batcher
-        .get(texture)
-        .map(|(batched_texture, uv)| {
-            let [batched_width, batched_height] = batched_texture.size().to_array();
-            sx = ((sx / width) * uv.w + uv.x) * batched_width;
-            sy = ((sy / height) * uv.h + uv.y) * batched_height;
-            sw = (sw / width) * uv.w * batched_width;
-            sh = (sh / height) * uv.h * batched_height;
+    let texture_opt =
+        fc.texture_batcher
+            .get(&fc.gl, &fc.textures, texture)
+            .map(|(batched_texture, uv)| {
+                let [batched_width, batched_height] = batched_texture.size(fc).to_array();
+                sx = ((sx / width) * uv.w + uv.x) * batched_width;
+                sy = ((sy / height) * uv.h + uv.y) * batched_height;
+                sw = (sw / width) * uv.w * batched_width;
+                sh = (sh / height) * uv.h * batched_height;
 
-            width = batched_width;
-            height = batched_height;
+                width = batched_width;
+                height = batched_height;
 
-            batched_texture
-        });
+                batched_texture
+            });
     let texture = texture_opt.as_ref().unwrap_or(texture);
 
     let (mut w, mut h) = match params.dest_size {
@@ -611,9 +613,7 @@ pub fn draw_texture_ex(
 }
 
 /// Get pixel data from screen buffer and return an Image (screenshot)
-pub fn get_screen_data() -> Image {
-    let fc = get_context();
-
+pub fn get_screen_data(fc: &mut FrogCx) -> Image {
     unsafe {
         crate::window::get_internal_gl(fc).flush();
     }
@@ -628,15 +628,15 @@ pub fn get_screen_data() -> Image {
         texture: fc.textures.store_texture(texture_id),
     };
 
-    texture.grab_screen();
+    texture.grab_screen(&fc.gl, &fc.textures);
 
-    texture.get_texture_data()
+    texture.get_texture_data(&fc.gl, &fc.textures, &mut *fc.quad_context)
 }
 
 /// Texture, data stored in GPU memory
 #[derive(Clone, Debug, PartialEq)]
 pub struct Texture2D {
-    pub(crate) texture: TextureHandle,
+    pub texture: TextureHandle,
 }
 
 impl Drop for TextureSlotGuarded {
@@ -670,13 +670,12 @@ impl Texture2D {
     /// # use frogquad::prelude::*;
     /// # #[frogquad::main("test")]
     /// # async fn main() {
-    /// let texture = Texture2D::empty();
+    /// let fc = frogquad::get_context();
+    /// let texture = Texture2D::empty(fc);
     /// # }
     /// ```
-    pub fn empty() -> Texture2D {
-        let ctx = get_context();
-
-        Texture2D::unmanaged(ctx.gl.white_texture)
+    pub fn empty(fc: &mut FrogCx) -> Texture2D {
+        Texture2D::unmanaged(fc.gl.white_texture)
     }
 
     /// Creates a Texture2D from a slice of bytes that contains an encoded image.
@@ -689,13 +688,19 @@ impl Texture2D {
     /// # use frogquad::prelude::*;
     /// # #[frogquad::main("test")]
     /// # async fn main() {
+    /// let fc = frogquad::get_context();
     /// let texture = Texture2D::from_file_with_format(
+    ///     fc,
     ///     include_bytes!("../examples/rust.png"),
     ///     None,
     ///     );
     /// # }
     /// ```
-    pub fn from_file_with_format(bytes: &[u8], format: Option<image::ImageFormat>) -> Texture2D {
+    pub fn from_file_with_format(
+        fc: &mut FrogCx,
+        bytes: &[u8],
+        format: Option<image::ImageFormat>,
+    ) -> Texture2D {
         let img = if let Some(fmt) = format {
             image::load_from_memory_with_format(bytes, fmt)
                 .unwrap_or_else(|e| panic!("{}", e))
@@ -709,12 +714,12 @@ impl Texture2D {
         let height = img.height() as u16;
         let bytes = img.into_raw();
 
-        Self::from_rgba8(width, height, &bytes)
+        Self::from_rgba8(fc, width, height, &bytes)
     }
 
     /// Creates a Texture2D from an [Image].
-    pub fn from_image(image: &Image) -> Texture2D {
-        Texture2D::from_rgba8(image.width, image.height, &image.bytes)
+    pub fn from_image(fc: &mut FrogCx, image: &Image) -> Texture2D {
+        Texture2D::from_rgba8(fc, image.width, image.height, &image.bytes)
     }
 
     /// Creates a Texture2D from a miniquad
@@ -734,17 +739,17 @@ impl Texture2D {
     /// # use frogquad::prelude::*;
     /// # #[frogquad::main("test")]
     /// # async fn main() {
+    /// let fc = frogquad::get_context();
     /// // Create a 2x2 texture from a byte slice with 4 rgba pixels
     /// let bytes: Vec<u8> = vec![255, 0, 0, 192, 0, 255, 0, 192, 0, 0, 255, 192, 255, 255, 255, 192];
-    /// let texture = Texture2D::from_rgba8(2, 2, &bytes);
+    /// let texture = Texture2D::from_rgba8(fc, 2, 2, &bytes);
     /// # }
     /// ```
-    pub fn from_rgba8(width: u16, height: u16, bytes: &[u8]) -> Texture2D {
-        let fc = get_context();
+    pub fn from_rgba8(fc: &mut FrogCx, width: u16, height: u16, bytes: &[u8]) -> Texture2D {
         let texture = fc.quad_context.new_texture_from_rgba8(width, height, bytes);
         let texture = fc.textures.store_texture(texture);
         let texture = Texture2D { texture };
-        texture.set_filter(fc.default_filter_mode);
+        texture.set_filter(fc, fc.default_filter_mode);
 
         fc.texture_batcher.add_unbatched(&texture);
 
@@ -752,40 +757,49 @@ impl Texture2D {
     }
 
     /// Uploads [Image] data to this texture.
-    pub fn update(&self, image: &Image) {
-        let ctx = &mut get_context().quad_context;
-        let (width, height) = ctx.texture_size(self.raw_miniquad_id());
+    pub fn update(&self, fc: &mut FrogCx, image: &Image) {
+        let ctx = &mut fc.quad_context;
+        let (width, height) =
+            ctx.texture_size(FrogCx::raw_miniquad_id(&fc.gl, &fc.textures, &self.texture));
 
         assert_eq!(width, image.width as u32);
         assert_eq!(height, image.height as u32);
 
-        ctx.texture_update(self.raw_miniquad_id(), &image.bytes);
+        ctx.texture_update(
+            FrogCx::raw_miniquad_id(&fc.gl, &fc.textures, &self.texture),
+            &image.bytes,
+        );
     }
 
     // Updates the texture from an array of bytes.
-    pub fn update_from_bytes(&self, width: u32, height: u32, bytes: &[u8]) {
-        let ctx = &mut get_context().quad_context;
-        let (texture_width, texture_height) = ctx.texture_size(self.raw_miniquad_id());
+    pub fn update_from_bytes(&self, fc: &mut FrogCx, width: u32, height: u32, bytes: &[u8]) {
+        let ctx = &mut fc.quad_context;
+        let (texture_width, texture_height) =
+            ctx.texture_size(FrogCx::raw_miniquad_id(&fc.gl, &fc.textures, &self.texture));
 
         assert_eq!(texture_width, width);
         assert_eq!(texture_height, height);
 
-        ctx.texture_update(self.raw_miniquad_id(), bytes);
+        ctx.texture_update(
+            FrogCx::raw_miniquad_id(&fc.gl, &fc.textures, &self.texture),
+            bytes,
+        );
     }
 
     /// Uploads [Image] data to part of this texture.
     pub fn update_part(
         &self,
+        fc: &mut FrogCx,
         image: &Image,
         x_offset: i32,
         y_offset: i32,
         width: i32,
         height: i32,
     ) {
-        let ctx = &mut get_context().quad_context;
+        let ctx = &mut fc.quad_context;
 
         ctx.texture_update_part(
-            self.raw_miniquad_id(),
+            FrogCx::raw_miniquad_id(&fc.gl, &fc.textures, &self.texture),
             x_offset,
             y_offset,
             width,
@@ -795,24 +809,27 @@ impl Texture2D {
     }
 
     /// Returns the width of this texture.
-    pub fn width(&self) -> f32 {
-        let ctx = &mut get_context().quad_context;
-        let (width, _) = ctx.texture_size(self.raw_miniquad_id());
+    pub fn width(&self, fc: &mut FrogCx) -> f32 {
+        let ctx = &mut fc.quad_context;
+        let (width, _) =
+            ctx.texture_size(FrogCx::raw_miniquad_id(&fc.gl, &fc.textures, &self.texture));
 
         width as f32
     }
 
     /// Returns the height of this texture.
-    pub fn height(&self) -> f32 {
-        let ctx = &mut get_context().quad_context;
-        let (_, height) = ctx.texture_size(self.raw_miniquad_id());
+    pub fn height(&self, fc: &mut FrogCx) -> f32 {
+        let ctx = &mut fc.quad_context;
+        let (_, height) =
+            ctx.texture_size(FrogCx::raw_miniquad_id(&fc.gl, &fc.textures, &self.texture));
 
         height as f32
     }
 
-    pub fn size(&self) -> Vec2 {
-        let ctx = &mut get_context().quad_context;
-        let (width, height) = ctx.texture_size(self.raw_miniquad_id());
+    pub fn size(&self, fc: &mut FrogCx) -> Vec2 {
+        let ctx = &mut fc.quad_context;
+        let (width, height) =
+            ctx.texture_size(FrogCx::raw_miniquad_id(&fc.gl, &fc.textures, &self.texture));
 
         vec2(width as f32, height as f32)
     }
@@ -826,32 +843,26 @@ impl Texture2D {
     /// # use frogquad::prelude::*;
     /// # #[frogquad::main("test")]
     /// # async fn main() {
-    /// let texture = Texture2D::empty();
-    /// texture.set_filter(FilterMode::Linear);
+    /// let fc = frogquad::get_context();
+    /// let texture = Texture2D::empty(fc);
+    /// texture.set_filter(fc, FilterMode::Linear);
     /// # }
     /// ```
-    pub fn set_filter(&self, filter_mode: FilterMode) {
-        let ctx = &mut get_context().quad_context;
+    pub fn set_filter(&self, fc: &mut FrogCx, filter_mode: FilterMode) {
+        let ctx = &mut fc.quad_context;
 
         ctx.texture_set_filter(
-            self.raw_miniquad_id(),
+            FrogCx::raw_miniquad_id(&fc.gl, &fc.textures, &self.texture),
             filter_mode,
             miniquad::MipmapFilterMode::None,
         );
     }
 
-    /// Returns the handle for this texture.
-    pub fn raw_miniquad_id(&self) -> miniquad::TextureId {
-        let ctx = get_context();
-
-        ctx.raw_miniquad_id(&self.texture)
-    }
-
     /// Updates this texture from the screen.
     #[allow(unreachable_patterns)]
-    pub fn grab_screen(&self) {
+    pub fn grab_screen(&self, gl: &QuadGl, textures: &TexturesContext) {
         use miniquad::*;
-        let texture = self.raw_miniquad_id();
+        let texture = FrogCx::raw_miniquad_id(gl, textures, &self.texture);
         let ctx = &mut get_context().quad_context;
         let params = ctx.texture_params(texture);
         let raw_id = match unsafe { ctx.texture_raw_id(texture) } {
@@ -887,15 +898,23 @@ impl Texture2D {
     /// Returns an [Image] from the pixel data in this texture.
     ///
     /// This operation can be expensive.
-    pub fn get_texture_data(&self) -> Image {
-        let ctx = &mut get_context().quad_context;
-        let (width, height) = ctx.texture_size(self.raw_miniquad_id());
+    pub fn get_texture_data(
+        &self,
+        gl: &QuadGl,
+        textures: &TexturesContext,
+        rend: &mut dyn RenderingBackend,
+    ) -> Image {
+        let (width, height) =
+            rend.texture_size(FrogCx::raw_miniquad_id(gl, textures, &self.texture));
         let mut image = Image {
             width: width as _,
             height: height as _,
             bytes: vec![0; width as usize * height as usize * 4],
         };
-        ctx.texture_read_pixels(self.raw_miniquad_id(), &mut image.bytes);
+        rend.texture_read_pixels(
+            FrogCx::raw_miniquad_id(gl, textures, &self.texture),
+            &mut image.bytes,
+        );
         image
     }
 }
@@ -917,8 +936,13 @@ impl Batcher {
         self.unbatched.push(texture.weak_clone());
     }
 
-    pub fn get(&mut self, texture: &Texture2D) -> Option<(Texture2D, Rect)> {
-        let id = SpriteKey::Texture(texture.raw_miniquad_id());
+    pub fn get(
+        &mut self,
+        gl: &QuadGl,
+        tex_ctx: &TexturesContext,
+        texture: &Texture2D,
+    ) -> Option<(Texture2D, Rect)> {
+        let id = SpriteKey::Texture(FrogCx::raw_miniquad_id(gl, tex_ctx, &texture.texture));
         let uv_rect = self.atlas.get_uv_rect(id)?;
         Some((Texture2D::unmanaged(self.atlas.texture()), uv_rect))
     }
@@ -930,13 +954,17 @@ impl Batcher {
 /// NOTE: the GPU memory and texture itself in Texture2D will still be allocated
 /// and Texture->Image conversions will work with Texture2D content, not the atlas
 pub fn build_textures_atlas() {
-    let context = get_context();
+    let fc = get_context();
 
-    for texture in context.texture_batcher.unbatched.drain(0..) {
-        let sprite: Image = texture.get_texture_data();
-        let id = SpriteKey::Texture(texture.raw_miniquad_id());
+    for texture in fc.texture_batcher.unbatched.drain(0..) {
+        let sprite: Image = texture.get_texture_data(&fc.gl, &fc.textures, &mut *fc.quad_context);
+        let id = SpriteKey::Texture(FrogCx::raw_miniquad_id(
+            &fc.gl,
+            &fc.textures,
+            &texture.texture,
+        ));
 
-        context.texture_batcher.atlas.cache_sprite(id, sprite);
+        fc.texture_batcher.atlas.cache_sprite(id, sprite);
     }
 }
 

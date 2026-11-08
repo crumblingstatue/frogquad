@@ -46,7 +46,7 @@ impl DeJson for PropertyVal {
             _ => {
                 return Err(s.err_token(
                     "Incorrect property value. Must be either string, number or boolean",
-                ))
+                ));
             }
         };
 

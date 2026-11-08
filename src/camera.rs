@@ -10,7 +10,7 @@ use crate::{
 use glam::{Mat4, Vec2, Vec3, vec2, vec3};
 
 pub trait Camera {
-    fn matrix(&self) -> Mat4;
+    fn matrix(&self, fc: &mut FrogCx) -> Mat4;
     fn depth_enabled(&self) -> bool;
     fn render_pass(&self) -> Option<RenderPass>;
     fn viewport(&self) -> Option<(i32, i32, i32, i32)>;
@@ -74,7 +74,7 @@ impl Default for Camera2D {
 }
 
 impl Camera for Camera2D {
-    fn matrix(&self) -> Mat4 {
+    fn matrix(&self, _fc: &mut FrogCx) -> Mat4 {
         // gleaned from https://github.com/raysan5/raylib/blob/master/src/core.c#L1528
 
         // The camera in world-space is set by
@@ -122,7 +122,7 @@ impl Camera2D {
     ///
     /// Screen position in window space - from (0, 0) to (screen_width, screen_height()).
     /// When a viewport is set, returns coordinates within that viewport's screen region.
-    pub fn world_to_screen(&self, point: Vec2) -> Vec2 {
+    pub fn world_to_screen(&self, fc: &mut FrogCx, point: Vec2) -> Vec2 {
         let dims = self
             .viewport()
             .map(|(vx, vy, vw, vh)| Rect {
@@ -138,7 +138,7 @@ impl Camera2D {
                 h: screen_height(),
             });
 
-        let mat = self.matrix();
+        let mat = self.matrix(fc);
         let transform = mat.transform_point3(vec3(point.x, point.y, 0.));
 
         vec2(
@@ -150,7 +150,7 @@ impl Camera2D {
     /// Returns the world space position for a 2d camera screen space position.
     ///
     /// Point is a screen space position, often mouse x and y.
-    pub fn screen_to_world(&self, point: Vec2) -> Vec2 {
+    pub fn screen_to_world(&self, fc: &mut FrogCx, point: Vec2) -> Vec2 {
         let dims = self
             .viewport()
             .map(|(vx, vy, vw, vh)| Rect {
@@ -170,7 +170,7 @@ impl Camera2D {
             (point.x - dims.x) / dims.w * 2. - 1.,
             1. - (point.y - dims.y) / dims.h * 2.,
         );
-        let inv_mat = self.matrix().inverse();
+        let inv_mat = self.matrix(fc).inverse();
         let transform = inv_mat.transform_point3(vec3(point.x, point.y, 0.));
 
         vec2(transform.x, transform.y)
@@ -239,9 +239,9 @@ impl Default for Camera3D {
 }
 
 impl Camera for Camera3D {
-    fn matrix(&self) -> Mat4 {
+    fn matrix(&self, fc: &mut FrogCx) -> Mat4 {
         let (width, height) = if let Some(rt) = &self.render_target {
-            (rt.texture.width(), rt.texture.height())
+            (rt.texture.width(fc), rt.texture.height(fc))
         } else {
             (screen_width(), screen_height())
         };
@@ -285,7 +285,7 @@ pub fn set_camera(fc: &mut FrogCx, camera: &dyn Camera) {
 
     fc.gl.viewport(camera.viewport());
     fc.gl.depth_test(camera.depth_enabled());
-    fc.camera_matrix = Some(camera.matrix());
+    fc.camera_matrix = Some(camera.matrix(fc));
 }
 
 /// Reset default 2D camera mode.

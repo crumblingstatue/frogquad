@@ -22,7 +22,7 @@ async fn main() {
             *cell = CellState::Alive;
         }
     }
-    let texture = Texture2D::from_image(&image);
+    let texture = Texture2D::from_image(fc, &image);
 
     loop {
         clear_background(WHITE);
@@ -85,7 +85,7 @@ async fn main() {
             );
         }
 
-        texture.update(&image);
+        texture.update(fc, &image);
 
         draw_texture(fc, &texture, 0., 0., WHITE);
 

@@ -39,8 +39,9 @@ impl Material {
             .set_uniform_array(self.pipeline.0, name, uniform);
     }
 
-    pub fn set_texture(&self, name: &str, texture: Texture2D) {
-        get_context().gl.set_texture(self.pipeline.0, name, texture);
+    pub fn set_texture(&self, fc: &mut crate::FrogCx, name: &str, texture: Texture2D) {
+        fc.gl
+            .set_texture(&fc.textures, self.pipeline.0, name, texture);
     }
 }
 

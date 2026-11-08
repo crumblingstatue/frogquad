@@ -13,7 +13,7 @@ async fn main() {
     let rustacean_tex = load_texture(fc, "examples/rustacean_happy.png")
         .await
         .unwrap();
-    rustacean_tex.set_filter(FilterMode::Nearest);
+    rustacean_tex.set_filter(fc, FilterMode::Nearest);
 
     loop {
         clear_background(Color::default());
@@ -39,13 +39,13 @@ async fn main() {
         for rustaceane in &mut rustaceanes {
             rustaceane.pos += rustaceane.speed;
 
-            if ((rustaceane.pos.x + rustacean_tex.width() / 2.) > screen_width())
-                || ((rustaceane.pos.x + rustacean_tex.width() / 2.) < 0.)
+            if ((rustaceane.pos.x + rustacean_tex.width(fc) / 2.) > screen_width())
+                || ((rustaceane.pos.x + rustacean_tex.width(fc) / 2.) < 0.)
             {
                 rustaceane.speed.x *= -1.;
             }
-            if ((rustaceane.pos.y + rustacean_tex.height() / 2.) > screen_height())
-                || ((rustaceane.pos.y + rustacean_tex.height() / 2.) < 0.)
+            if ((rustaceane.pos.y + rustacean_tex.height(fc) / 2.) > screen_height())
+                || ((rustaceane.pos.y + rustacean_tex.height(fc) / 2.) < 0.)
             {
                 rustaceane.speed.y *= -1.;
             }
