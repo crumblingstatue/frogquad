@@ -61,7 +61,6 @@ pub mod shapes;
 pub mod text;
 pub mod texture;
 pub mod time;
-pub mod ui;
 pub mod window;
 
 pub mod experimental;
@@ -152,7 +151,6 @@ use crate::{
     color::{Color, colors::*},
     quad_gl::QuadGl,
     texture::TextureHandle,
-    ui::ui_context::UiContext,
 };
 
 use glam::{Mat4, Vec2, vec2};
@@ -192,7 +190,6 @@ struct Context {
     mouse_released: HashSet<MouseButton>,
     touches: HashMap<u64, input::Touch>,
     chars_pressed_queue: VecDeque<char>,
-    chars_pressed_ui_queue: VecDeque<char>,
     mouse_position: Vec2,
     last_mouse_position: Option<Vec2>,
     mouse_wheel: Vec2,
@@ -207,7 +204,6 @@ struct Context {
     gl: QuadGl,
     camera_matrix: Option<Mat4>,
 
-    ui_context: UiContext,
     coroutines_context: experimental::coroutines::CoroutinesContext,
     fonts_storage: text::FontsStorage,
 
@@ -325,7 +321,6 @@ impl Context {
             keys_pressed: HashSet::new(),
             keys_released: HashSet::new(),
             chars_pressed_queue: VecDeque::new(),
-            chars_pressed_ui_queue: VecDeque::new(),
             mouse_down: HashSet::new(),
             mouse_pressed: HashSet::new(),
             mouse_released: HashSet::new(),
@@ -348,7 +343,6 @@ impl Context {
                 draw_call_index_capacity,
             ),
 
-            ui_context: UiContext::new(&mut *ctx, screen_width, screen_height),
             fonts_storage: text::FontsStorage::new(&mut *ctx),
             texture_batcher: texture::Batcher::new(&mut *ctx),
             camera_stack: vec![],
@@ -398,8 +392,6 @@ impl Context {
     fn begin_frame(&mut self) {
         telemetry::begin_gpu_query("GPU");
 
-        self.ui_context.process_input();
-
         let color = Self::DEFAULT_BG_COLOR;
 
         get_quad_context().clear(Some((color.r, color.g, color.b, color.a)), None, None);
@@ -411,7 +403,6 @@ impl Context {
 
         self.perform_render_passes();
 
-        self.ui_context.draw(get_quad_context(), &mut self.gl);
         let screen_mat = self.pixel_perfect_projection_matrix();
         self.gl.draw(get_quad_context(), screen_mat);
 
@@ -670,7 +661,6 @@ impl EventHandler for Stage {
         let context = get_context();
 
         context.chars_pressed_queue.push_back(character);
-        context.chars_pressed_ui_queue.push_back(character);
 
         context.input_events.iter_mut().for_each(|arr| {
             arr.push(MiniquadInputEvent::Char {

@@ -146,12 +146,6 @@ pub fn get_char_pressed() -> Option<char> {
     context.chars_pressed_queue.pop_front()
 }
 
-pub(crate) fn get_char_pressed_ui() -> Option<char> {
-    let context = get_context();
-
-    context.chars_pressed_ui_queue.pop_front()
-}
-
 /// Return the last pressed key.
 pub fn get_last_key_pressed() -> Option<KeyCode> {
     let context = get_context();
@@ -178,7 +172,6 @@ pub fn get_keys_released() -> HashSet<KeyCode> {
 pub fn clear_input_queue() {
     let context = get_context();
     context.chars_pressed_queue.clear();
-    context.chars_pressed_ui_queue.clear();
     context.mouse_pressed.clear();
     context.keys_pressed.clear();
 }

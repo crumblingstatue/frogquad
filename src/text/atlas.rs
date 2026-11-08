@@ -78,14 +78,6 @@ impl Atlas {
         self.sprites.get(&key).cloned()
     }
 
-    pub const fn width(&self) -> u16 {
-        self.image.width
-    }
-
-    pub const fn height(&self) -> u16 {
-        self.image.height
-    }
-
     pub fn texture(&mut self) -> miniquad::TextureId {
         let ctx = get_quad_context();
         if self.dirty {
@@ -253,8 +245,8 @@ mod tests {
         atlas.cache_sprite(SpriteKey::Id(2), sprite(39, 10, WHITE));
 
         // the sprite must have moved to the next row, not doubled the atlas
-        assert_eq!(atlas.width(), 64);
-        assert_eq!(atlas.height(), 1024);
+        assert_eq!(atlas.image.width(), 64);
+        assert_eq!(atlas.image.height(), 1024);
         assert_eq!(
             atlas.get(SpriteKey::Id(2)).map(|sprite| sprite.rect),
             Some(Rect::new(2.0, 14.0, 39.0, 10.0))
@@ -275,8 +267,8 @@ mod tests {
         // x = 24 + GAP = 26, and x + width == 64 exactly.
         atlas.cache_sprite(SpriteKey::Id(2), sprite(38, 10, WHITE));
 
-        assert_eq!(atlas.width(), 64);
-        assert_eq!(atlas.height(), 1024);
+        assert_eq!(atlas.image.width(), 64);
+        assert_eq!(atlas.image.height(), 1024);
         assert_eq!(
             atlas.get(SpriteKey::Id(2)).map(|sprite| sprite.rect),
             Some(Rect::new(26.0, 0.0, 38.0, 10.0))
@@ -304,7 +296,7 @@ mod tests {
         // the 64x32 atlas doubled once; tallest-first repacking puts the two
         // 10-tall sprites on row 0 (wider first) and the 24-tall one after
         // them, with no further growth
-        assert_eq!((atlas.width(), atlas.height()), (128, 64));
+        assert_eq!((atlas.image.width(), atlas.image.height()), (128, 64));
         assert_eq!(
             atlas.get(SpriteKey::Id(1)).map(|sprite| sprite.rect),
             Some(Rect::new(45.0, 0.0, 20.0, 10.0))
@@ -352,7 +344,7 @@ mod tests {
             atlas.cache_sprite(SpriteKey::Id(4), sprite(60, 40, white));
 
             (
-                (atlas.width(), atlas.height()),
+                (atlas.image.width(), atlas.image.height()),
                 [
                     atlas.get(SpriteKey::Id(1)).map(|s| s.rect),
                     atlas.get(SpriteKey::Id(2)).map(|s| s.rect),
