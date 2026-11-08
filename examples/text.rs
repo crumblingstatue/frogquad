@@ -86,7 +86,7 @@ async fn main() {
             },
         );
 
-        let center = get_text_center("abcd", Option::None, 70, 1.0, angle * 2.0);
+        let center = get_text_center("abcd", fc.default_font(), 70, 1.0, angle * 2.0);
         draw_text_ex(
             fc,
             "abcd",

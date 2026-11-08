@@ -5,7 +5,6 @@ use std::collections::HashMap;
 use crate::{
     Error, FrogCx,
     color::Color,
-    get_context,
     math::{Rect, vec3},
     texture::{Image, TextureHandle},
 };
@@ -196,18 +195,6 @@ impl Font {
     pub fn set_filter(&mut self, filter_mode: miniquad::FilterMode) {
         self.atlas.lock().unwrap().set_filter(filter_mode);
     }
-
-    // pub fn texture(&self) -> Texture2D {
-    //     let font = get_context().fonts_storage.get_font(*self);
-
-    //     font.font_texture
-    // }
-}
-
-impl Default for Font {
-    fn default() -> Self {
-        get_default_font()
-    }
 }
 
 /// Arguments for "draw_text_ex" function such as font, font_size etc
@@ -309,9 +296,10 @@ pub fn draw_text_ex(
         return TextDimensions::default();
     }
 
-    let font = params
-        .font
-        .unwrap_or(&get_context().fonts_storage.default_font);
+    let font = match params.font {
+        Some(font) => font,
+        None => &fc.fonts_storage.default_font.clone(),
+    };
 
     let dpi_scaling = miniquad::window::dpi_scale();
 
@@ -436,7 +424,7 @@ pub fn draw_multiline_text_ex(
             let font = if let Some(font) = params.font {
                 font
             } else {
-                &get_default_font()
+                &get_default_font(fc)
             };
             if let Some(metrics) = font.font.horizontal_line_metrics(1.0) {
                 font_line_distance = metrics.new_line_size;
@@ -468,7 +456,7 @@ pub fn draw_multiline_text_ex(
 /// Get the text center.
 pub fn get_text_center(
     text: impl AsRef<str>,
-    font: Option<&Font>,
+    font: &Font,
     font_size: u16,
     font_scale: f32,
     rotation: f32,
@@ -483,23 +471,20 @@ pub fn get_text_center(
 
 pub fn measure_text(
     text: impl AsRef<str>,
-    font: Option<&Font>,
+    font: &Font,
     font_size: u16,
     font_scale: f32,
 ) -> TextDimensions {
-    let font = font.unwrap_or_else(|| &get_context().fonts_storage.default_font);
-
     font.measure_text(text, font_size, font_scale, font_scale, |_| {})
 }
 
 pub fn measure_multiline_text(
     text: &str,
-    font: Option<&Font>,
+    font: &Font,
     font_size: u16,
     font_scale: f32,
     line_distance_factor: Option<f32>,
 ) -> TextDimensions {
-    let font = font.unwrap_or_else(|| &get_context().fonts_storage.default_font);
     let line_distance = match line_distance_factor {
         Some(distance) => distance,
         None => match font.font.horizontal_line_metrics(1.0) {
@@ -527,13 +512,11 @@ pub fn measure_multiline_text(
 /// Converts word breaks to newlines wherever the text would otherwise exceed the given length.
 pub fn wrap_text(
     text: &str,
-    font: Option<&Font>,
+    font: &Font,
     font_size: u16,
     font_scale: f32,
     maximum_line_length: f32,
 ) -> String {
-    let font = font.unwrap_or_else(|| &get_context().fonts_storage.default_font);
-
     // This is always a bit too much memory, but it saves a lot of reallocations.
     let mut new_text =
         String::with_capacity(text.len() + text.chars().filter(|c| c.is_whitespace()).count());
@@ -595,7 +578,7 @@ pub fn wrap_text(
 }
 
 pub(crate) struct FontsStorage {
-    default_font: Font,
+    pub(crate) default_font: Font,
 }
 
 impl FontsStorage {
@@ -608,24 +591,21 @@ impl FontsStorage {
 }
 
 /// Returns frogquads default font.
-pub fn get_default_font() -> Font {
-    let context = get_context();
-    context.fonts_storage.default_font.clone()
+pub fn get_default_font(fc: &mut FrogCx) -> Font {
+    fc.fonts_storage.default_font.clone()
 }
 
 /// Replaces frogquads default font with `font`.
-pub fn set_default_font(font: Font) {
-    let context = get_context();
-    context.fonts_storage.default_font = font;
+pub fn set_default_font(fc: &mut FrogCx, font: Font) {
+    fc.fonts_storage.default_font = font;
 }
 
 /// From given font size in world space gives
 /// (font_size, font_scale and font_aspect) params to make rasterized font
 /// looks good in currently active camera
-pub fn camera_font_scale(world_font_size: f32) -> (u16, f32, f32) {
-    let context = get_context();
+pub fn camera_font_scale(fc: &mut FrogCx, world_font_size: f32) -> (u16, f32, f32) {
     let (scr_w, scr_h) = miniquad::window::screen_size();
-    let cam_space = context
+    let cam_space = fc
         .projection_matrix()
         .inverse()
         .transform_vector3(vec3(2., 2., 0.));

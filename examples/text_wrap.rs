@@ -13,8 +13,15 @@ async fn main() {
         clear_background(BLACK);
 
         let maximum_line_length = f32::max(20.0, mouse_position(fc).0 - 20.0);
-        let text = wrap_text(LOREM, None, font_size, 1.0, maximum_line_length);
-        let dimensions = measure_multiline_text(&text, None, font_size, 1.0, Some(1.0));
+        let text = wrap_text(
+            LOREM,
+            fc.default_font(),
+            font_size,
+            1.0,
+            maximum_line_length,
+        );
+        let dimensions =
+            measure_multiline_text(&text, fc.default_font(), font_size, 1.0, Some(1.0));
 
         draw_multiline_text(
             fc,

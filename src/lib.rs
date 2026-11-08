@@ -144,6 +144,7 @@ pub use ::log as logging;
 pub use miniquad;
 
 use crate::quad_gl::MagicSnapshotter;
+use crate::text::Font;
 use crate::texture::TexturesContext;
 use crate::{
     color::{Color, colors::*},
@@ -459,6 +460,10 @@ impl FrogCx {
             matrix,
             &mut self.snapshotter,
         );
+    }
+
+    pub fn default_font(&self) -> &Font {
+        &self.fonts_storage.default_font
     }
 }
 

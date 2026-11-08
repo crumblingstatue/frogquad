@@ -67,7 +67,7 @@ async fn main() {
             if asteroids.len() > 0 {
                 text = "Game Over. Press [enter] to play again.";
             }
-            let text_size = measure_text(text, None, font_size as _, 1.0);
+            let text_size = measure_text(text, fc.default_font(), font_size as _, 1.0);
             draw_text(
                 fc,
                 text,

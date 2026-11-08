@@ -9,7 +9,7 @@ async fn main() {
     )
     .await
     .unwrap();
-    set_default_font(font);
+    set_default_font(fc, font);
 
     loop {
         clear_background(WHITE);

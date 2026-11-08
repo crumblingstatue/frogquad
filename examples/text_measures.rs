@@ -7,7 +7,7 @@ fn draw_text_annotated(
     x: f32,
     baseline: f32,
 ) {
-    let size = measure_text(text, font, 100, 1.0);
+    let size = measure_text(text, font.unwrap_or_else(|| fc.default_font()), 100, 1.0);
 
     // Full background rect
     draw_rectangle(x, baseline - size.offset_y, size.width, size.height, BLUE);

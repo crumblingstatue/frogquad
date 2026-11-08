@@ -46,7 +46,7 @@ async fn main() {
             ball_x += dx * delta;
             ball_y += dy * delta;
         } else {
-            let (font_size, font_scale, font_aspect) = camera_font_scale(1.);
+            let (font_size, font_scale, font_aspect) = camera_font_scale(fc, 1.);
             let text_params = TextParams {
                 font_size,
                 font_scale,
