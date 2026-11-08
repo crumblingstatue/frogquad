@@ -5,7 +5,7 @@ use std::collections::HashMap;
 use crate::{
     Error,
     color::Color,
-    get_context, get_quad_context,
+    get_context,
     math::{Rect, vec3},
     texture::{Image, TextureHandle},
 };
@@ -243,21 +243,21 @@ impl<'a> Default for TextParams<'a> {
 }
 
 /// Load font from file with "path"
-pub async fn load_ttf_font(ctx: &mut crate::Context, path: &str) -> Result<Font, Error> {
+pub async fn load_ttf_font(fc: &mut crate::FrogCx, path: &str) -> Result<Font, Error> {
     let bytes = crate::file::load_file(path)
         .await
         .map_err(|_| Error::FontError("The Font file couldn't be loaded"))?;
 
-    load_ttf_font_from_bytes(ctx, &bytes[..])
+    load_ttf_font_from_bytes(fc, &bytes[..])
 }
 
 /// Load font from bytes array, may be use in combination with include_bytes!
 /// ```ignore
-/// let font = load_ttf_font_from_bytes(include_bytes!("font.ttf"));
+/// let font = load_ttf_font_from_bytes(fc, include_bytes!("font.ttf"));
 /// ```
-pub fn load_ttf_font_from_bytes(ctx: &mut crate::Context, bytes: &[u8]) -> Result<Font, Error> {
+pub fn load_ttf_font_from_bytes(fc: &mut crate::FrogCx, bytes: &[u8]) -> Result<Font, Error> {
     let atlas = Arc::new(Mutex::new(Atlas::new(
-        get_quad_context(),
+        &mut *fc.quad_context,
         miniquad::FilterMode::Linear,
     )));
 
@@ -265,9 +265,7 @@ pub fn load_ttf_font_from_bytes(ctx: &mut crate::Context, bytes: &[u8]) -> Resul
 
     font.populate_font_cache(&Font::ascii_character_list(), 15);
 
-    let ctx = get_context();
-
-    font.set_filter(ctx.default_filter_mode);
+    font.set_filter(fc.default_filter_mode);
 
     Ok(font)
 }

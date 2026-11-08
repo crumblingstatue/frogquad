@@ -169,7 +169,9 @@ pub(crate) mod thread_assert {
         }
     }
 }
-pub struct Context {
+
+/// Frog context C:
+pub struct FrogCx {
     screen_width: f32,
     screen_height: f32,
 
@@ -290,7 +292,7 @@ impl MiniquadInputEvent {
     }
 }
 
-impl Context {
+impl FrogCx {
     const DEFAULT_BG_COLOR: Color = BLACK;
 
     fn new(
@@ -298,12 +300,12 @@ impl Context {
         default_filter_mode: crate::FilterMode,
         draw_call_vertex_capacity: usize,
         draw_call_index_capacity: usize,
-    ) -> Context {
+    ) -> FrogCx {
         let mut ctx: Box<dyn miniquad::RenderingBackend> =
             miniquad::window::new_rendering_backend();
         let (screen_width, screen_height) = miniquad::window::screen_size();
 
-        Context {
+        FrogCx {
             screen_width,
             screen_height,
 
@@ -444,7 +446,7 @@ impl Context {
 }
 
 #[unsafe(no_mangle)]
-static mut CONTEXT: Option<Context> = None;
+static mut CONTEXT: Option<FrogCx> = None;
 
 // This is required for #[frogquad::test]
 //
@@ -456,7 +458,7 @@ pub mod test {
     pub static ONCE: std::sync::Once = std::sync::Once::new();
 }
 
-pub fn get_context() -> &'static mut Context {
+pub fn get_context() -> &'static mut FrogCx {
     thread_assert::same_thread();
 
     unsafe { CONTEXT.as_mut().unwrap_or_else(|| panic!()) }
@@ -884,7 +886,7 @@ impl Window {
         } = config.into();
         miniquad::start(miniquad_conf, move || {
             thread_assert::set_thread_id();
-            let context = Context::new(
+            let context = FrogCx::new(
                 update_on.unwrap_or_default(),
                 default_filter_mode,
                 draw_call_vertex_capacity,
