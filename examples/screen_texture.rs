@@ -2,6 +2,7 @@ use frogquad::prelude::*;
 
 #[frogquad::main("Texture")]
 async fn main() {
+    let fc = frogquad::get_context();
     let texture: Texture2D = load_texture("examples/chess.png").await.unwrap();
 
     let lens_material = load_material(
@@ -29,7 +30,7 @@ async fn main() {
             },
         );
 
-        let lens_center = mouse_position();
+        let lens_center = mouse_position(fc);
 
         lens_material.set_uniform("Center", lens_center);
 

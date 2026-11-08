@@ -35,7 +35,7 @@ async fn main() {
     let mut up = right.cross(front).normalize();
 
     let mut position = vec3(0.0, 1.0, 0.0);
-    let mut last_mouse_position: Vec2 = mouse_position().into();
+    let mut last_mouse_position: Vec2 = mouse_position(fc).into();
 
     let mut grabbed = true;
     set_cursor_grab(fc, grabbed);
@@ -66,7 +66,7 @@ async fn main() {
             position += right * MOVE_SPEED;
         }
 
-        let mouse_position: Vec2 = mouse_position().into();
+        let mouse_position: Vec2 = mouse_position(fc).into();
         let mouse_delta = mouse_position - last_mouse_position;
 
         last_mouse_position = mouse_position;

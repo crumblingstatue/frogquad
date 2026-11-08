@@ -401,7 +401,7 @@ impl FrogCx {
         self.keys_released.clear();
         self.mouse_pressed.clear();
         self.mouse_released.clear();
-        self.last_mouse_position = Some(crate::prelude::mouse_position_local());
+        self.last_mouse_position = Some(crate::prelude::mouse_position_local(self));
 
         self.quit_requested = false;
 

@@ -8,6 +8,7 @@ struct Rustaceane {
 
 #[frogquad::main("Rustaceanmark")]
 async fn main() {
+    let fc = frogquad::get_context();
     let mut rustaceanes: Vec<Rustaceane> = Vec::new();
     let rustacean_tex = load_texture("examples/rustacean_happy.png").await.unwrap();
     rustacean_tex.set_filter(FilterMode::Nearest);
@@ -18,7 +19,7 @@ async fn main() {
         if frogquad::input::is_mouse_button_down(MouseButton::Left) {
             for _i in 0..100 {
                 rustaceanes.push(Rustaceane {
-                    pos: Vec2::from(frogquad::input::mouse_position()),
+                    pos: Vec2::from(frogquad::input::mouse_position(fc)),
                     speed: Vec2::new(
                         rand::gen_range(-250., 250.) / 60.,
                         rand::gen_range(-250., 250.) / 60.,

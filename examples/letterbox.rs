@@ -24,8 +24,8 @@ async fn main() {
 
         // Mouse position in the virtual screen
         let virtual_mouse_pos = Vec2 {
-            x: (mouse_position().0 - (screen_width() - (VIRTUAL_WIDTH * scale)) * 0.5) / scale,
-            y: (mouse_position().1 - (screen_height() - (VIRTUAL_HEIGHT * scale)) * 0.5) / scale,
+            x: (mouse_position(fc).0 - (screen_width() - (VIRTUAL_WIDTH * scale)) * 0.5) / scale,
+            y: (mouse_position(fc).1 - (screen_height() - (VIRTUAL_HEIGHT * scale)) * 0.5) / scale,
         };
 
         // ------------------------------------------------------------------------

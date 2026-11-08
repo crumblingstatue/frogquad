@@ -48,27 +48,25 @@ pub fn show_mouse(shown: bool) {
 }
 
 /// Return mouse position in pixels.
-pub fn mouse_position() -> (f32, f32) {
-    let context = get_context();
-
+pub fn mouse_position(fc: &mut FrogCx) -> (f32, f32) {
     (
-        context.mouse_position.x / miniquad::window::dpi_scale(),
-        context.mouse_position.y / miniquad::window::dpi_scale(),
+        fc.mouse_position.x / miniquad::window::dpi_scale(),
+        fc.mouse_position.y / miniquad::window::dpi_scale(),
     )
 }
 
 /// Return mouse position in range [-1; 1].
-pub fn mouse_position_local() -> Vec2 {
-    let (pixels_x, pixels_y) = mouse_position();
+pub fn mouse_position_local(fc: &mut FrogCx) -> Vec2 {
+    let (pixels_x, pixels_y) = mouse_position(fc);
 
     convert_to_local(Vec2::new(pixels_x, pixels_y))
 }
 
 /// Returns the difference between the current mouse position and the mouse position on the previous frame.
-pub fn mouse_delta_position() -> Vec2 {
+pub fn mouse_delta_position(fc: &mut FrogCx) -> Vec2 {
     let context = get_context();
 
-    let current_position = mouse_position_local();
+    let current_position = mouse_position_local(fc);
     let last_position = context.last_mouse_position.unwrap_or(current_position);
 
     // Calculate the delta
