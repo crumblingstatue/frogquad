@@ -599,10 +599,6 @@ unsafe fn get_scene() -> &'static mut Scene {
     SCENE.get_or_insert_with(|| Scene::new())
 }
 
-pub(crate) fn allocated_memory() -> usize {
-    unsafe { get_scene().arena.offset() }
-}
-
 pub fn clear() {
     crate::experimental::coroutines::stop_all_coroutines();
 

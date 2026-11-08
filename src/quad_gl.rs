@@ -4,7 +4,7 @@ use miniquad::*;
 
 pub use miniquad::{FilterMode, TextureId as MiniquadTexture, UniformDesc};
 
-use crate::{Error, color::Color, logging::warn, telemetry, texture::Texture2D, tobytes::ToBytes};
+use crate::{Error, color::Color, logging::warn, texture::Texture2D, tobytes::ToBytes};
 
 use std::collections::BTreeMap;
 
@@ -787,10 +787,6 @@ impl QuadGl {
             ctx.draw(0, dc.indices_count as i32, 1);
             ctx.end_render_pass();
 
-            if dc.capture {
-                telemetry::track_drawcall(&pipeline.pipeline, bindings, dc.indices_count);
-            }
-
             dc.vertices_count = 0;
             dc.indices_count = 0;
             dc.vertices_start = 0;
@@ -800,10 +796,6 @@ impl QuadGl {
         self.draw_calls_count = 0;
         self.batch_index_buffer.clear();
         self.batch_vertex_buffer.clear();
-    }
-
-    pub(crate) fn capture(&mut self, capture: bool) {
-        self.state.capture = capture;
     }
 
     pub fn get_projection_matrix(&self) -> glam::Mat4 {

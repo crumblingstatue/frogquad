@@ -78,12 +78,6 @@ impl Arena {
     fn alloc_bytes(&self, size: usize) -> *mut u8 {
         self.alloc_byte_vec(Vec::with_capacity(size))
     }
-
-    #[doc(hidden)]
-    #[inline]
-    pub unsafe fn offset(&self) -> usize {
-        self.offset.get()
-    }
 }
 
 /// Akin to `CopyCell`: `Sync` is unsafe but `Send` is totally fine!

@@ -93,11 +93,6 @@ impl<T> GenerationalStorage<T> {
             }
         }
     }
-
-    pub fn count(&self) -> usize {
-        self.vec.iter().filter(|c| c.is_some()).count()
-    }
-
     pub fn clear(&mut self) {
         self.vec.clear();
         self.free_indices.clear();
@@ -115,9 +110,5 @@ impl<T> GenerationalStorage<T> {
 
         self.free_indices.push((id.id, id.generation));
         self.vec[id.id] = None;
-    }
-
-    pub(crate) fn allocated_memory(&self) -> usize {
-        self.vec.capacity() * size_of::<GenerationalCell<T>>()
     }
 }

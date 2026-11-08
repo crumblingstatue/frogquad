@@ -50,12 +50,7 @@ impl TexturesContext {
     pub fn texture(&self, texture: TextureSlotId) -> Option<miniquad::TextureId> {
         self.textures.get(texture)
     }
-    // fn remove(&mut self, texture: TextureSlotId) {
-    //     self.textures.remove(texture);
-    // }
-    pub const fn len(&self) -> usize {
-        self.textures.len()
-    }
+
     pub fn garbage_collect(&mut self, ctx: &mut miniquad::Context) {
         // Delete RenderPasses first, then textures (safer for attachments/FBOs)
         for pass in self.removed_render_passes.drain(0..) {
@@ -942,10 +937,6 @@ pub fn build_textures_atlas() {
 
         context.texture_batcher.atlas.cache_sprite(id, sprite);
     }
-
-    let texture = context.texture_batcher.atlas.texture();
-    let (w, h) = get_quad_context().texture_size(texture);
-    crate::telemetry::log_string(&format!("Atlas: {w} {h}"));
 }
 
 #[doc(hidden)]

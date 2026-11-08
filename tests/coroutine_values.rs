@@ -1,4 +1,4 @@
-use frogquad::{experimental::coroutines::start_coroutine, telemetry, window::next_frame};
+use frogquad::{experimental::coroutines::start_coroutine, window::next_frame};
 
 #[frogquad::test]
 async fn coroutine_value() {
@@ -31,6 +31,4 @@ async fn coroutine_memory() {
 
     // wait for the last one to finish
     next_frame().await;
-
-    assert_eq!(telemetry::active_coroutines_count(), 0);
 }

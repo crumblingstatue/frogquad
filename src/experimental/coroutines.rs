@@ -85,14 +85,6 @@ impl CoroutinesContext {
             true
         });
     }
-
-    pub(crate) fn allocated_memory(&self) -> usize {
-        self.coroutines.allocated_memory()
-    }
-
-    pub(crate) fn active_coroutines_count(&self) -> usize {
-        self.coroutines.count()
-    }
 }
 #[derive(Clone, Copy, Debug)]
 pub struct Coroutine<T = ()> {
