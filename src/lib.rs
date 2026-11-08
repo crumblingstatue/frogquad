@@ -383,7 +383,8 @@ impl FrogCx {
     fn begin_frame(&mut self) {
         let color = Self::DEFAULT_BG_COLOR;
 
-        get_quad_context().clear(Some((color.r, color.g, color.b, color.a)), None, None);
+        self.quad_context
+            .clear(Some((color.r, color.g, color.b, color.a)), None, None);
         self.gl.reset();
     }
 
@@ -391,9 +392,9 @@ impl FrogCx {
         self.perform_render_passes();
 
         let screen_mat = self.pixel_perfect_projection_matrix();
-        self.gl.draw(get_quad_context(), screen_mat);
+        self.gl.draw(&mut *self.quad_context, screen_mat);
 
-        get_quad_context().commit_frame();
+        self.quad_context.commit_frame();
 
         self.mouse_wheel = Vec2::new(0., 0.);
         self.keys_pressed.clear();
@@ -404,7 +405,7 @@ impl FrogCx {
 
         self.quit_requested = false;
 
-        self.textures.garbage_collect(get_quad_context());
+        self.textures.garbage_collect(&mut *self.quad_context);
 
         // remove all touches that were Ended or Cancelled
         self.touches.retain(|_, touch| {
@@ -441,7 +442,7 @@ impl FrogCx {
     pub(crate) fn perform_render_passes(&mut self) {
         let matrix = self.projection_matrix();
 
-        self.gl.draw(get_quad_context(), matrix);
+        self.gl.draw(&mut *self.quad_context, matrix);
     }
 }
 
