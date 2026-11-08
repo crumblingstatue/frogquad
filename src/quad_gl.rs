@@ -381,6 +381,7 @@ impl PipelineExt {
     }
 }
 
+#[derive(Default)]
 struct PipelinesStorage {
     pipelines: [Option<PipelineExt>; Self::MAX_PIPELINES],
     pipelines_amount: usize,
@@ -720,11 +721,16 @@ impl QuadGl {
         let time = (miniquad::date::now() - self.start_time) as f32;
         let time = glam::vec4(time, time.sin(), time.cos(), 0.);
 
-        for (dc, bindings) in self.draw_calls[0..self.draw_calls_count]
+        // Avoid overlapping borrows
+        let mut draw_calls = std::mem::take(&mut self.draw_calls);
+        let mut draw_calls_bindings = std::mem::take(&mut self.draw_calls_bindings);
+        let mut pipelines = std::mem::take(&mut self.pipelines);
+
+        for (dc, bindings) in draw_calls[0..self.draw_calls_count]
             .iter_mut()
-            .zip(self.draw_calls_bindings.iter_mut())
+            .zip(draw_calls_bindings.iter_mut())
         {
-            let pipeline = self.pipelines.get_quad_pipeline_mut(dc.pipeline);
+            let pipeline = pipelines.get_quad_pipeline_mut(dc.pipeline);
 
             let (width, height) = if let Some(render_pass) = dc.render_pass {
                 let render_texture = quad_context.render_pass_texture(render_pass);
@@ -735,8 +741,7 @@ impl QuadGl {
             };
 
             if pipeline.wants_screen_texture {
-                todo!("Reimplement snapshot without borrow errors");
-                //snapshotter.snapshot(self, textures, &mut *quad_context, dc.render_pass);
+                snapshotter.snapshot(self, textures, &mut *quad_context, dc.render_pass);
             }
 
             if let Some(render_pass) = dc.render_pass {
@@ -810,6 +815,9 @@ impl QuadGl {
             dc.vertices_start = 0;
             dc.indices_start = 0;
         }
+        std::mem::swap(&mut draw_calls, &mut self.draw_calls);
+        std::mem::swap(&mut draw_calls_bindings, &mut self.draw_calls_bindings);
+        std::mem::swap(&mut pipelines, &mut self.pipelines);
 
         self.draw_calls_count = 0;
         self.batch_index_buffer.clear();
