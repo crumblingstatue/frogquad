@@ -2,6 +2,7 @@
 
 use std::collections::HashSet;
 
+use crate::FrogCx;
 use crate::Vec2;
 use crate::prelude::screen_height;
 use crate::prelude::screen_width;
@@ -36,9 +37,8 @@ pub struct Touch {
 }
 
 /// Constrain mouse to window
-pub fn set_cursor_grab(grab: bool) {
-    let context = get_context();
-    context.cursor_grabbed = grab;
+pub fn set_cursor_grab(fc: &mut FrogCx, grab: bool) {
+    fc.cursor_grabbed = grab;
     miniquad::window::set_cursor_grab(grab);
 }
 

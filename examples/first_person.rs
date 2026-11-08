@@ -38,7 +38,7 @@ async fn main() {
     let mut last_mouse_position: Vec2 = mouse_position().into();
 
     let mut grabbed = true;
-    set_cursor_grab(grabbed);
+    set_cursor_grab(fc, grabbed);
     show_mouse(false);
 
     loop {
@@ -49,7 +49,7 @@ async fn main() {
         }
         if is_key_pressed(KeyCode::Tab) {
             grabbed = !grabbed;
-            set_cursor_grab(grabbed);
+            set_cursor_grab(fc, grabbed);
             show_mouse(!grabbed);
         }
 
