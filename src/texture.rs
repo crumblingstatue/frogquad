@@ -611,11 +611,11 @@ pub fn draw_texture_ex(
 
 /// Get pixel data from screen buffer and return an Image (screenshot)
 pub fn get_screen_data() -> Image {
-    unsafe {
-        crate::window::get_internal_gl().flush();
-    }
-
     let context = get_context();
+
+    unsafe {
+        crate::window::get_internal_gl(context).flush();
+    }
 
     let texture_id = get_quad_context().new_render_texture(miniquad::TextureParams {
         width: context.screen_width as _,

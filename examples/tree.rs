@@ -28,6 +28,7 @@ fn tree(gl: &mut QuadGl, time: f64, deep: u32, angle: f32, tall: f32) {
 
 #[frogquad::main("Tree")]
 async fn main() {
+    let fc = frogquad::get_context();
     let camera = Camera2D {
         zoom: vec2(1., 1.),
         target: vec2(0.0, 0.5),
@@ -39,7 +40,13 @@ async fn main() {
         clear_background(LIGHTGRAY);
 
         draw_circle(0., 0., 0.03, DARKGRAY);
-        tree(unsafe { get_internal_gl().quad_gl }, get_time(), 0, 1., 0.3);
+        tree(
+            unsafe { get_internal_gl(fc).quad_gl },
+            get_time(),
+            0,
+            1.,
+            0.3,
+        );
 
         next_frame().await
     }

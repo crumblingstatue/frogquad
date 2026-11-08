@@ -1,6 +1,6 @@
 //! Window and associated to window rendering context related functions.
 
-use crate::{get_context, get_quad_context};
+use crate::{FrogCx, get_context, get_quad_context};
 
 use crate::color::Color;
 
@@ -46,12 +46,10 @@ impl<'a> InternalGlContext<'a> {
     }
 }
 
-pub unsafe fn get_internal_gl<'a>() -> InternalGlContext<'a> {
-    let context = get_context();
-
+pub unsafe fn get_internal_gl<'a>(fc: &'a mut FrogCx) -> InternalGlContext<'a> {
     InternalGlContext {
-        quad_context: get_quad_context(),
-        quad_gl: &mut context.gl,
+        quad_context: &mut *fc.quad_context,
+        quad_gl: &mut fc.gl,
     }
 }
 

@@ -536,9 +536,10 @@ impl Emitter {
     const MAX_PARTICLES: usize = 10000;
 
     pub fn new(config: EmitterConfig) -> Emitter {
+        let fc = frogquad::get_context();
         let InternalGlContext {
             quad_context: ctx, ..
-        } = unsafe { get_internal_gl() };
+        } = unsafe { get_internal_gl(fc) };
 
         // empty, dynamic instance-data vertex buffer
         let positions_vertex_buffer = ctx.new_buffer(
@@ -980,7 +981,8 @@ impl Emitter {
     }
 
     pub fn draw(&mut self, pos: Vec2) {
-        let mut gl = unsafe { get_internal_gl() };
+        let fc = frogquad::get_context();
+        let mut gl = unsafe { get_internal_gl(fc) };
 
         gl.flush();
 
@@ -1044,7 +1046,8 @@ impl EmittersCache {
     }
 
     pub fn draw(&mut self) {
-        let mut gl = unsafe { get_internal_gl() };
+        let fc = frogquad::get_context();
+        let mut gl = unsafe { get_internal_gl(fc) };
 
         gl.flush();
 

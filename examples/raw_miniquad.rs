@@ -2,10 +2,11 @@ use frogquad::prelude::*;
 
 #[frogquad::main("Raw miniquad")]
 async fn main() {
+    let fc = frogquad::get_context();
     let stage = {
         let InternalGlContext {
             quad_context: ctx, ..
-        } = unsafe { get_internal_gl() };
+        } = unsafe { get_internal_gl(fc) };
 
         raw_miniquad::Stage::new(ctx)
     };
@@ -24,7 +25,7 @@ async fn main() {
         draw_circle(0., 0., 0.1, YELLOW);
 
         {
-            let mut gl = unsafe { get_internal_gl() };
+            let mut gl = unsafe { get_internal_gl(fc) };
 
             // Ensure that frogquad's shapes are not going to be lost
             gl.flush();

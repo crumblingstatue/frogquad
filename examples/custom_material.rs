@@ -149,6 +149,7 @@ fn window_conf() -> Conf {
 
 #[frogquad::main(window_conf)]
 async fn main() {
+    let fc = frogquad::get_context();
     let pipeline_params = PipelineParams {
         color_blend: Some(BlendState::new(
             Equation::Add,
@@ -158,7 +159,7 @@ async fn main() {
         ..Default::default()
     };
 
-    let ctx = unsafe { get_internal_gl().quad_context };
+    let ctx = unsafe { get_internal_gl(fc).quad_context };
     let mat = load_material(
         match ctx.info().backend {
             Backend::OpenGl => ShaderSource::Glsl {
