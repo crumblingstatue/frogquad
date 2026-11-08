@@ -8,7 +8,7 @@ use crate::{
 pub use crate::quad_gl::FilterMode;
 use crate::quad_gl::{DrawMode, Vertex};
 use glam::{Vec2, vec2};
-use miniquad::{GlContext, RenderingBackend};
+use miniquad::RenderingBackend;
 use slotmap::{TextureIdSlotMap, TextureSlotId};
 use std::sync::Arc;
 
