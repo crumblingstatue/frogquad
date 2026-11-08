@@ -77,9 +77,12 @@ fn draw_text_annotated(text: &str, font: Option<&Font>, x: f32, baseline: f32) {
 
 #[frogquad::main("Text")]
 async fn main() {
-    let font = load_ttf_font("./examples/DancingScriptRegular.ttf")
-        .await
-        .unwrap();
+    let font = load_ttf_font(
+        frogquad::get_context(),
+        "./examples/DancingScriptRegular.ttf",
+    )
+    .await
+    .unwrap();
 
     loop {
         clear_background(BLACK);

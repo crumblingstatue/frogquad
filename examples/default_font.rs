@@ -2,9 +2,12 @@ use frogquad::prelude::*;
 
 #[frogquad::main("DefaultFont")]
 async fn main() {
-    let font = load_ttf_font("./examples/DancingScriptRegular.ttf")
-        .await
-        .unwrap();
+    let font = load_ttf_font(
+        frogquad::get_context(),
+        "./examples/DancingScriptRegular.ttf",
+    )
+    .await
+    .unwrap();
     set_default_font(font);
 
     loop {

@@ -169,7 +169,7 @@ pub(crate) mod thread_assert {
         }
     }
 }
-struct Context {
+pub struct Context {
     screen_width: f32,
     screen_height: f32,
 
@@ -359,7 +359,7 @@ impl Context {
     }
 
     /// Returns the handle for this texture.
-    pub fn raw_miniquad_id(&self, handle: &TextureHandle) -> miniquad::TextureId {
+    pub(crate) fn raw_miniquad_id(&self, handle: &TextureHandle) -> miniquad::TextureId {
         match handle {
             TextureHandle::Unmanaged(texture) => *texture,
             TextureHandle::Managed(texture) => self
@@ -456,7 +456,7 @@ pub mod test {
     pub static ONCE: std::sync::Once = std::sync::Once::new();
 }
 
-fn get_context() -> &'static mut Context {
+pub fn get_context() -> &'static mut Context {
     thread_assert::same_thread();
 
     unsafe { CONTEXT.as_mut().unwrap_or_else(|| panic!()) }
