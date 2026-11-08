@@ -1,4 +1,4 @@
-use crate::{Color, get_context, get_quad_context, math::Rect, texture::Image};
+use crate::{Color, get_context, math::Rect, texture::Image};
 
 use std::collections::HashMap;
 
@@ -69,7 +69,7 @@ impl Atlas {
     }
 
     pub fn set_filter(&mut self, filter_mode: miniquad::FilterMode) {
-        let ctx = get_quad_context();
+        let ctx = &mut get_context().quad_context;
         self.filter = filter_mode;
         ctx.texture_set_filter(self.texture, filter_mode, miniquad::MipmapFilterMode::None);
     }
@@ -79,7 +79,7 @@ impl Atlas {
     }
 
     pub fn texture(&mut self) -> miniquad::TextureId {
-        let ctx = get_quad_context();
+        let ctx = &mut get_context().quad_context;
         if self.dirty {
             self.dirty = false;
             let (texture_width, texture_height) = ctx.texture_size(self.texture);
@@ -101,7 +101,7 @@ impl Atlas {
     }
 
     pub fn get_uv_rect(&self, key: SpriteKey) -> Option<Rect> {
-        let ctx = get_quad_context();
+        let ctx = &mut get_context().quad_context;
         self.get(key).map(|sprite| {
             let (w, h) = ctx.texture_size(self.texture);
 

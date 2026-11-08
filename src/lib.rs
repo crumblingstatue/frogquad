@@ -465,16 +465,6 @@ pub fn get_context() -> &'static mut FrogCx {
     unsafe { CONTEXT.as_mut().unwrap_or_else(|| panic!()) }
 }
 
-fn get_quad_context() -> &'static mut dyn miniquad::RenderingBackend {
-    thread_assert::same_thread();
-
-    unsafe {
-        assert!(CONTEXT.is_some());
-    }
-
-    unsafe { &mut *CONTEXT.as_mut().unwrap().quad_context }
-}
-
 struct Stage {
     main_future: Pin<Box<dyn Future<Output = ()>>>,
 }
