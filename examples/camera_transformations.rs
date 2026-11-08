@@ -1,4 +1,4 @@
-use frogquad::prelude::*;
+use frogquad::{FrogCx, prelude::*};
 
 fn short_angle_dist(a0: f32, a1: f32) -> f32 {
     let max = 360.0;
@@ -10,11 +10,11 @@ fn angle_lerp(a0: f32, a1: f32, t: f32) -> f32 {
     a0 + short_angle_dist(a0, a1) * t
 }
 
-fn draw_cross(x: f32, y: f32, color: Color) {
+fn draw_cross(fc: &mut FrogCx, x: f32, y: f32, color: Color) {
     let size = 0.1;
     let thickness = 0.005;
-    draw_line(x - size, y, x + size, y, thickness, color);
-    draw_line(x, y - size, x, y + size, thickness, color);
+    draw_line(fc, x - size, y, x + size, y, thickness, color);
+    draw_line(fc, x, y - size, x, y + size, thickness, color);
 }
 
 #[frogquad::main("Camera")]
@@ -24,6 +24,7 @@ async fn main() {
     let mut rotation = 0.0;
     let mut smooth_rotation: f32 = 0.0;
     let mut offset = (0., 0.);
+    let fc = frogquad::get_context();
 
     loop {
         if is_key_down(KeyCode::W) {
@@ -88,14 +89,14 @@ async fn main() {
             target: vec2(target.0, target.1),
             ..Default::default()
         });
-        draw_cross(0., 0., RED);
+        draw_cross(fc, 0., 0., RED);
 
         set_camera(&Camera2D {
             target: vec2(target.0, target.1),
             rotation: smooth_rotation,
             ..Default::default()
         });
-        draw_cross(0., 0., GREEN);
+        draw_cross(fc, 0., 0., GREEN);
 
         set_camera(&Camera2D {
             target: vec2(target.0, target.1),
@@ -103,7 +104,7 @@ async fn main() {
             zoom: vec2(zoom, zoom * screen_width() / screen_height()),
             ..Default::default()
         });
-        draw_cross(0., 0., BLUE);
+        draw_cross(fc, 0., 0., BLUE);
 
         set_camera(&Camera2D {
             target: vec2(target.0, target.1),
@@ -114,7 +115,7 @@ async fn main() {
         });
 
         // Render some primitives in camera space
-        draw_line(-0.4, 0.4, -0.8, 0.9, 0.05, BLUE);
+        draw_line(fc, -0.4, 0.4, -0.8, 0.9, 0.05, BLUE);
         draw_rectangle(-0.3, 0.3, 0.2, 0.2, GREEN);
         draw_circle(0., 0., 0.1, YELLOW);
 

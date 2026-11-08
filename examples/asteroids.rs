@@ -44,6 +44,7 @@ fn wrap_around(v: &Vec2) -> Vec2 {
 
 #[frogquad::main("Asteroids")]
 async fn main() {
+    let fc = frogquad::get_context();
     let mut ship = Ship {
         pos: Vec2::new(screen_width() / 2., screen_height() / 2.),
         rot: 0.,
@@ -241,7 +242,7 @@ async fn main() {
             ship.pos.x + rotation.cos() * SHIP_BASE / 2. - rotation.sin() * SHIP_HEIGHT / 2.,
             ship.pos.y + rotation.sin() * SHIP_BASE / 2. + rotation.cos() * SHIP_HEIGHT / 2.,
         );
-        draw_triangle_lines(v1, v2, v3, 2., BLACK);
+        draw_triangle_lines(fc, v1, v2, v3, 2., BLACK);
 
         next_frame().await
     }

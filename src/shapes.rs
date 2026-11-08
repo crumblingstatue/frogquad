@@ -1,14 +1,13 @@
 //! 2D shapes rendering.
 
+use crate::FrogCx;
 use crate::{color::Color, get_context};
 
 use crate::quad_gl::{DrawMode, Vertex};
 use glam::{Mat4, Vec2, vec2, vec3, vec4};
 
 /// Draws a solid triangle between points `v1`, `v2`, and `v3` with a given `color`.
-pub fn draw_triangle(v1: Vec2, v2: Vec2, v3: Vec2, color: Color) {
-    let context = get_context();
-
+pub fn draw_triangle(fc: &mut FrogCx, v1: Vec2, v2: Vec2, v3: Vec2, color: Color) {
     let vertices = [
         Vertex::new(v1.x, v1.y, 0., 0., 0., color),
         Vertex::new(v2.x, v2.y, 0., 0., 0., color),
@@ -17,16 +16,23 @@ pub fn draw_triangle(v1: Vec2, v2: Vec2, v3: Vec2, color: Color) {
 
     let indices: [u16; 3] = [0, 1, 2];
 
-    context.gl.texture(None);
-    context.gl.draw_mode(DrawMode::Triangles);
-    context.gl.geometry(&vertices, &indices);
+    fc.gl.texture(None);
+    fc.gl.draw_mode(DrawMode::Triangles);
+    fc.gl.geometry(&vertices, &indices);
 }
 
 /// Draws a triangle outline between points `v1`, `v2`, and `v3` with a given line `thickness` and `color`.
-pub fn draw_triangle_lines(v1: Vec2, v2: Vec2, v3: Vec2, thickness: f32, color: Color) {
-    draw_line(v1.x, v1.y, v2.x, v2.y, thickness, color);
-    draw_line(v2.x, v2.y, v3.x, v3.y, thickness, color);
-    draw_line(v3.x, v3.y, v1.x, v1.y, thickness, color);
+pub fn draw_triangle_lines(
+    fc: &mut FrogCx,
+    v1: Vec2,
+    v2: Vec2,
+    v3: Vec2,
+    thickness: f32,
+    color: Color,
+) {
+    draw_line(fc, v1.x, v1.y, v2.x, v2.y, thickness, color);
+    draw_line(fc, v2.x, v2.y, v3.x, v3.y, thickness, color);
+    draw_line(fc, v3.x, v3.y, v1.x, v1.y, thickness, color);
 }
 
 /// Draws a solid rectangle with its top-left corner at `[x, y]` with size `[w, h]` (width going to
@@ -302,6 +308,7 @@ pub fn draw_ellipse(x: f32, y: f32, w: f32, h: f32, rotation: f32, color: Color)
 /// Draws an ellipse outline centered at `[x, y]` with a given size `[w, h]`,
 /// clockwise `rotation` (in degrees), line `thickness` and `color`.
 pub fn draw_ellipse_lines(
+    fc: &mut FrogCx,
     x: f32,
     y: f32,
     w: f32,
@@ -334,13 +341,20 @@ pub fn draw_ellipse_lines(
 
         let p1 = vec2(x + rotated_x, y + rotated_y);
 
-        draw_line(p0.x, p0.y, p1.x, p1.y, thickness, color);
+        draw_line(fc, p0.x, p0.y, p1.x, p1.y, thickness, color);
     }
 }
 
 /// Draws a line between points `[x1, y1]` and `[x2, y2]` with a given `thickness` and `color`.
-pub fn draw_line(x1: f32, y1: f32, x2: f32, y2: f32, thickness: f32, color: Color) {
-    let context = get_context();
+pub fn draw_line(
+    fc: &mut FrogCx,
+    x1: f32,
+    y1: f32,
+    x2: f32,
+    y2: f32,
+    thickness: f32,
+    color: Color,
+) {
     let dx = x2 - x1;
     let dy = y2 - y1;
 
@@ -356,9 +370,9 @@ pub fn draw_line(x1: f32, y1: f32, x2: f32, y2: f32, thickness: f32, color: Colo
     let tx = nx / tlen;
     let ty = ny / tlen;
 
-    context.gl.texture(None);
-    context.gl.draw_mode(DrawMode::Triangles);
-    context.gl.geometry(
+    fc.gl.texture(None);
+    fc.gl.draw_mode(DrawMode::Triangles);
+    fc.gl.geometry(
         &[
             Vertex::new(x1 + tx, y1 + ty, 0., 0., 0., color),
             Vertex::new(x1 - tx, y1 - ty, 0., 0., 0., color),

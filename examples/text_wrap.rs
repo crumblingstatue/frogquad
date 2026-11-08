@@ -7,6 +7,7 @@ are preserved.";
 
 #[frogquad::main("Text Wrap")]
 async fn main() {
+    let fc = frogquad::get_context();
     let font_size = 24;
     loop {
         clear_background(BLACK);
@@ -25,6 +26,7 @@ async fn main() {
         );
         draw_rectangle_lines(20.0, 20.0, dimensions.width, dimensions.height, 2.0, BLUE);
         draw_line(
+            fc,
             20.0 + maximum_line_length,
             0.0,
             20.0 + maximum_line_length,

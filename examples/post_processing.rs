@@ -2,6 +2,7 @@ use frogquad::prelude::*;
 
 #[frogquad::main("Post processing")]
 async fn main() {
+    let fc = frogquad::get_context();
     let render_target = render_target(320, 150);
     render_target.texture.set_filter(FilterMode::Nearest);
 
@@ -26,7 +27,7 @@ async fn main() {
         });
 
         clear_background(LIGHTGRAY);
-        draw_line(-30.0, 45.0, 30.0, 45.0, 3.0, BLUE);
+        draw_line(fc, -30.0, 45.0, 30.0, 45.0, 3.0, BLUE);
         draw_circle(-45.0, -35.0, 20.0, YELLOW);
         draw_circle(45.0, -35.0, 20.0, GREEN);
 

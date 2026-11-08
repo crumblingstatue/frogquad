@@ -14,6 +14,7 @@ struct Snake {
 
 #[frogquad::main("Snake")]
 async fn main() {
+    let fc = frogquad::get_context();
     let mut snake = Snake {
         head: (0, 0),
         dir: (1, 0),
@@ -85,6 +86,7 @@ async fn main() {
 
             for i in 1..SQUARES {
                 draw_line(
+                    fc,
                     offset_x,
                     offset_y + sq_size * i as f32,
                     screen_width() - offset_x,
@@ -96,6 +98,7 @@ async fn main() {
 
             for i in 1..SQUARES {
                 draw_line(
+                    fc,
                     offset_x + sq_size * i as f32,
                     offset_y,
                     offset_x + sq_size * i as f32,
