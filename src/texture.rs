@@ -396,13 +396,14 @@ pub struct RenderTarget {
 }
 
 /// A shortcut to create a render target with sample_count: 1 and no depth buffer
-pub fn render_target(width: u32, height: u32) -> RenderTarget {
-    render_target_ex(width, height, RenderTargetParams::default())
+pub fn render_target(fc: &mut FrogCx, width: u32, height: u32) -> RenderTarget {
+    render_target_ex(fc, width, height, RenderTargetParams::default())
 }
 
 /// A shortcut to create a render target with no depth buffer and `sample_count: 4`
-pub fn render_target_msaa(width: u32, height: u32) -> RenderTarget {
+pub fn render_target_msaa(fc: &mut FrogCx, width: u32, height: u32) -> RenderTarget {
     render_target_ex(
+        fc,
         width,
         height,
         RenderTargetParams {
@@ -412,9 +413,12 @@ pub fn render_target_msaa(width: u32, height: u32) -> RenderTarget {
     )
 }
 
-pub fn render_target_ex(width: u32, height: u32, params: RenderTargetParams) -> RenderTarget {
-    let fc = get_context();
-
+pub fn render_target_ex(
+    fc: &mut FrogCx,
+    width: u32,
+    height: u32,
+    params: RenderTargetParams,
+) -> RenderTarget {
     let color_texture = fc.quad_context.new_render_texture(miniquad::TextureParams {
         width,
         height,

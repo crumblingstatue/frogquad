@@ -3,7 +3,7 @@ use frogquad::prelude::*;
 #[frogquad::main("Post processing")]
 async fn main() {
     let fc = frogquad::get_context();
-    let render_target = render_target(320, 150);
+    let render_target = render_target(fc, 320, 150);
     render_target.texture.set_filter(FilterMode::Nearest);
 
     let material = load_material(
