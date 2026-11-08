@@ -27,32 +27,32 @@ async fn main() {
     let fc = frogquad::get_context();
 
     loop {
-        if is_key_down(KeyCode::W) {
+        if is_key_down(fc, KeyCode::W) {
             target.1 -= 0.1;
         }
-        if is_key_down(KeyCode::S) {
+        if is_key_down(fc, KeyCode::S) {
             target.1 += 0.1;
         }
-        if is_key_down(KeyCode::A) {
+        if is_key_down(fc, KeyCode::A) {
             target.0 += 0.1;
         }
-        if is_key_down(KeyCode::D) {
+        if is_key_down(fc, KeyCode::D) {
             target.0 -= 0.1;
         }
-        if is_key_down(KeyCode::Left) {
+        if is_key_down(fc, KeyCode::Left) {
             offset.0 -= 0.1;
         }
-        if is_key_down(KeyCode::Right) {
+        if is_key_down(fc, KeyCode::Right) {
             offset.0 += 0.1;
         }
-        if is_key_down(KeyCode::Up) {
+        if is_key_down(fc, KeyCode::Up) {
             offset.1 += 0.1;
         }
-        if is_key_down(KeyCode::Down) {
+        if is_key_down(fc, KeyCode::Down) {
             offset.1 -= 0.1;
         }
         #[cfg(not(target_arch = "wasm32"))]
-        if is_key_down(KeyCode::Q) | is_key_down(KeyCode::Escape) {
+        if is_key_down(fc, KeyCode::Q) | is_key_down(fc, KeyCode::Escape) {
             break;
         }
 
@@ -67,7 +67,7 @@ async fn main() {
                 } else {
                     0.0
                 };
-                if is_key_down(KeyCode::LeftControl) {
+                if is_key_down(fc, KeyCode::LeftControl) {
                     zoom *= 1.1f32.powf(y);
                 } else {
                     rotation += 10.0 * y;

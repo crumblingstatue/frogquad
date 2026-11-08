@@ -34,16 +34,16 @@ async fn main() {
 
     loop {
         if !game_over {
-            if is_key_down(KeyCode::Right) && snake.dir != left && !navigation_lock {
+            if is_key_down(fc, KeyCode::Right) && snake.dir != left && !navigation_lock {
                 snake.dir = right;
                 navigation_lock = true;
-            } else if is_key_down(KeyCode::Left) && snake.dir != right && !navigation_lock {
+            } else if is_key_down(fc, KeyCode::Left) && snake.dir != right && !navigation_lock {
                 snake.dir = left;
                 navigation_lock = true;
-            } else if is_key_down(KeyCode::Up) && snake.dir != down && !navigation_lock {
+            } else if is_key_down(fc, KeyCode::Up) && snake.dir != down && !navigation_lock {
                 snake.dir = up;
                 navigation_lock = true;
-            } else if is_key_down(KeyCode::Down) && snake.dir != up && !navigation_lock {
+            } else if is_key_down(fc, KeyCode::Down) && snake.dir != up && !navigation_lock {
                 snake.dir = down;
                 navigation_lock = true;
             }
@@ -149,7 +149,7 @@ async fn main() {
                 DARKGRAY,
             );
 
-            if is_key_down(KeyCode::Enter) {
+            if is_key_down(fc, KeyCode::Enter) {
                 snake = Snake {
                     head: (0, 0),
                     dir: (1, 0),

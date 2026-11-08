@@ -44,25 +44,25 @@ async fn main() {
     loop {
         let delta = get_frame_time();
 
-        if is_key_pressed(KeyCode::Escape) {
+        if is_key_pressed(fc, KeyCode::Escape) {
             break;
         }
-        if is_key_pressed(KeyCode::Tab) {
+        if is_key_pressed(fc, KeyCode::Tab) {
             grabbed = !grabbed;
             set_cursor_grab(fc, grabbed);
             show_mouse(!grabbed);
         }
 
-        if is_key_down(KeyCode::Up) {
+        if is_key_down(fc, KeyCode::Up) {
             position += front * MOVE_SPEED;
         }
-        if is_key_down(KeyCode::Down) {
+        if is_key_down(fc, KeyCode::Down) {
             position -= front * MOVE_SPEED;
         }
-        if is_key_down(KeyCode::Left) {
+        if is_key_down(fc, KeyCode::Left) {
             position -= right * MOVE_SPEED;
         }
-        if is_key_down(KeyCode::Right) {
+        if is_key_down(fc, KeyCode::Right) {
             position += right * MOVE_SPEED;
         }
 

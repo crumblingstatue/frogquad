@@ -35,10 +35,10 @@ async fn main() {
 
         let delta = get_frame_time();
 
-        if is_key_down(KeyCode::Right) && platform_x < SCR_W - platform_width / 2. {
+        if is_key_down(fc, KeyCode::Right) && platform_x < SCR_W - platform_width / 2. {
             platform_x += 3.0 * delta;
         }
-        if is_key_down(KeyCode::Left) && platform_x > platform_width / 2. {
+        if is_key_down(fc, KeyCode::Left) && platform_x > platform_width / 2. {
             platform_x -= 3.0 * delta;
         }
 
@@ -63,7 +63,7 @@ async fn main() {
             ball_x = platform_x;
             ball_y = SCR_H - 0.5;
 
-            stick = !is_key_down(KeyCode::Space);
+            stick = !is_key_down(fc, KeyCode::Space);
         }
 
         if ball_x <= 0. || ball_x > SCR_W {

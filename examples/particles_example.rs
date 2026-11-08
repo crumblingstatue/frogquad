@@ -81,7 +81,7 @@ async fn main() {
         one_shot_emitter.draw(vec2(650.0, 82.0));
         draw_circle(650.0, 82.0, 15.0, YELLOW);
 
-        if is_key_pressed(KeyCode::Space) {
+        if is_key_pressed(fc, KeyCode::Space) {
             one_shot_emitter.config.emitting = true;
         }
 

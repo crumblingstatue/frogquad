@@ -75,7 +75,7 @@ async fn main() {
                 font_size,
                 DARKGRAY,
             );
-            if is_key_down(KeyCode::Enter) {
+            if is_key_down(fc, KeyCode::Enter) {
                 ship = Ship {
                     pos: Vec2::new(screen_width() / 2., screen_height() / 2.),
                     rot: 0.,
@@ -110,12 +110,12 @@ async fn main() {
         let mut acc = -ship.vel / 100.; // Friction
 
         // Forward
-        if is_key_down(KeyCode::Up) {
+        if is_key_down(fc, KeyCode::Up) {
             acc = Vec2::new(rotation.sin(), -rotation.cos()) / 3.;
         }
 
         // Shot
-        if is_key_down(KeyCode::Space) && frame_t - last_shot > 0.5 {
+        if is_key_down(fc, KeyCode::Space) && frame_t - last_shot > 0.5 {
             let rot_vec = Vec2::new(rotation.sin(), -rotation.cos());
             bullets.push(Bullet {
                 pos: ship.pos + rot_vec * SHIP_HEIGHT / 2.,
@@ -127,9 +127,9 @@ async fn main() {
         }
 
         // Steer
-        if is_key_down(KeyCode::Right) {
+        if is_key_down(fc, KeyCode::Right) {
             ship.rot += 5.;
-        } else if is_key_down(KeyCode::Left) {
+        } else if is_key_down(fc, KeyCode::Left) {
             ship.rot -= 5.;
         }
 

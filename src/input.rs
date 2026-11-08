@@ -108,30 +108,23 @@ pub fn mouse_wheel() -> (f32, f32) {
 }
 
 /// Detect if the key has been pressed once
-pub fn is_key_pressed(key_code: KeyCode) -> bool {
-    let context = get_context();
-
-    context.keys_pressed.contains(&key_code)
+pub fn is_key_pressed(fc: &mut FrogCx, key_code: KeyCode) -> bool {
+    fc.keys_pressed.contains(&key_code)
 }
 
 /// Detect if the key is being pressed
-pub fn is_key_down(key_code: KeyCode) -> bool {
-    let context = get_context();
-
-    context.keys_down.contains(&key_code)
+pub fn is_key_down(fc: &mut FrogCx, key_code: KeyCode) -> bool {
+    fc.keys_down.contains(&key_code)
 }
 
 /// Detect if the key has been released this frame
-pub fn is_key_released(key_code: KeyCode) -> bool {
-    let context = get_context();
-
-    context.keys_released.contains(&key_code)
+pub fn is_key_released(fc: &mut FrogCx, key_code: KeyCode) -> bool {
+    fc.keys_released.contains(&key_code)
 }
 
 /// Detect if any key is being pressed
-pub fn is_any_key_down() -> bool {
-    let context = get_context();
-    context.keys_down.len() > 0
+pub fn is_any_key_down(fc: &mut FrogCx) -> bool {
+    fc.keys_down.len() > 0
 }
 
 /// Return the last pressed char.

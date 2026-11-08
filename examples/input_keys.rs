@@ -2,22 +2,23 @@ use frogquad::prelude::*;
 
 #[frogquad::main("InputKeys")]
 async fn main() {
+    let fc = frogquad::get_context();
     let mut x = screen_width() / 2.0;
     let mut y = screen_height() / 2.0;
 
     loop {
         clear_background(LIGHTGRAY);
 
-        if is_key_down(KeyCode::Right) {
+        if is_key_down(fc, KeyCode::Right) {
             x += 1.0;
         }
-        if is_key_down(KeyCode::Left) {
+        if is_key_down(fc, KeyCode::Left) {
             x -= 1.0;
         }
-        if is_key_down(KeyCode::Down) {
+        if is_key_down(fc, KeyCode::Down) {
             y += 1.0;
         }
-        if is_key_down(KeyCode::Up) {
+        if is_key_down(fc, KeyCode::Up) {
             y -= 1.0;
         }
 
