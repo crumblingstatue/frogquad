@@ -19,12 +19,15 @@ async fn main() {
         // drawing to the texture
 
         // 0..100, 0..100 camera
-        set_camera(&Camera2D {
-            zoom: vec2(0.01, 0.01),
-            target: vec2(0.0, 0.0),
-            render_target: Some(render_target.clone()),
-            ..Default::default()
-        });
+        set_camera(
+            fc,
+            &Camera2D {
+                zoom: vec2(0.01, 0.01),
+                target: vec2(0.0, 0.0),
+                render_target: Some(render_target.clone()),
+                ..Default::default()
+            },
+        );
 
         clear_background(LIGHTGRAY);
         draw_line(fc, -30.0, 45.0, 30.0, 45.0, 3.0, BLUE);
@@ -33,7 +36,7 @@ async fn main() {
 
         // drawing to the screen
 
-        set_default_camera();
+        set_default_camera(fc);
 
         clear_background(WHITE);
         gl_use_material(&material);

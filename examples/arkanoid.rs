@@ -2,6 +2,7 @@ use frogquad::prelude::*;
 
 #[frogquad::main("Arkanoid")]
 async fn main() {
+    let fc = frogquad::get_context();
     const BLOCKS_W: usize = 10;
     const BLOCKS_H: usize = 10;
     const SCR_W: f32 = 20.0;
@@ -20,11 +21,14 @@ async fn main() {
     // build camera with following coordinate system:
     // (0., 0)     .... (SCR_W, 0.)
     // (0., SCR_H) .... (SCR_W, SCR_H)
-    set_camera(&Camera2D {
-        zoom: vec2(1. / SCR_W * 2., 1. / SCR_H * 2.),
-        target: vec2(SCR_W / 2., SCR_H / 2.),
-        ..Default::default()
-    });
+    set_camera(
+        fc,
+        &Camera2D {
+            zoom: vec2(1. / SCR_W * 2., 1. / SCR_H * 2.),
+            target: vec2(SCR_W / 2., SCR_H / 2.),
+            ..Default::default()
+        },
+    );
 
     loop {
         clear_background(SKYBLUE);

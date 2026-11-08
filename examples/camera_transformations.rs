@@ -85,34 +85,46 @@ async fn main() {
 
         clear_background(LIGHTGRAY);
 
-        set_camera(&Camera2D {
-            target: vec2(target.0, target.1),
-            ..Default::default()
-        });
+        set_camera(
+            fc,
+            &Camera2D {
+                target: vec2(target.0, target.1),
+                ..Default::default()
+            },
+        );
         draw_cross(fc, 0., 0., RED);
 
-        set_camera(&Camera2D {
-            target: vec2(target.0, target.1),
-            rotation: smooth_rotation,
-            ..Default::default()
-        });
+        set_camera(
+            fc,
+            &Camera2D {
+                target: vec2(target.0, target.1),
+                rotation: smooth_rotation,
+                ..Default::default()
+            },
+        );
         draw_cross(fc, 0., 0., GREEN);
 
-        set_camera(&Camera2D {
-            target: vec2(target.0, target.1),
-            rotation: smooth_rotation,
-            zoom: vec2(zoom, zoom * screen_width() / screen_height()),
-            ..Default::default()
-        });
+        set_camera(
+            fc,
+            &Camera2D {
+                target: vec2(target.0, target.1),
+                rotation: smooth_rotation,
+                zoom: vec2(zoom, zoom * screen_width() / screen_height()),
+                ..Default::default()
+            },
+        );
         draw_cross(fc, 0., 0., BLUE);
 
-        set_camera(&Camera2D {
-            target: vec2(target.0, target.1),
-            rotation: smooth_rotation,
-            zoom: vec2(zoom, zoom * screen_width() / screen_height()),
-            offset: vec2(offset.0, offset.1),
-            ..Default::default()
-        });
+        set_camera(
+            fc,
+            &Camera2D {
+                target: vec2(target.0, target.1),
+                rotation: smooth_rotation,
+                zoom: vec2(zoom, zoom * screen_width() / screen_height()),
+                offset: vec2(offset.0, offset.1),
+                ..Default::default()
+            },
+        );
 
         // Render some primitives in camera space
         draw_line(fc, -0.4, 0.4, -0.8, 0.9, 0.05, BLUE);
@@ -120,7 +132,7 @@ async fn main() {
         draw_circle(0., 0., 0.1, YELLOW);
 
         // Back to screen space, render some text
-        set_default_camera();
+        set_default_camera(fc);
         draw_text(
             format!("target (WASD keys) = ({:+.2}, {:+.2})", target.0, target.1).as_str(),
             10.0,

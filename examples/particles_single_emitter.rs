@@ -4,6 +4,7 @@ use frogquad_particles::{BlendMode, Curve, Emitter, EmitterConfig};
 
 #[frogquad::main("Fountain")]
 async fn main() {
+    let fc = frogquad::get_context();
     let mut emitter = Emitter::new(EmitterConfig {
         lifetime: 0.5,
         amount: 5,
@@ -24,7 +25,7 @@ async fn main() {
 
         let camera = Camera2D::from_display_rect(Rect::new(0.0, 0.0, 100.0, 100.0));
 
-        set_camera(&camera);
+        set_camera(fc, &camera);
 
         emitter.draw(vec2(50., 50.));
 

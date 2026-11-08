@@ -16,6 +16,7 @@ struct Platform {
 
 #[frogquad::main("Platformer")]
 async fn main() {
+    let fc = frogquad::get_context();
     let tileset = load_texture("examples/tileset.png").await.unwrap();
     tileset.set_filter(FilterMode::Nearest);
 
@@ -49,7 +50,7 @@ async fn main() {
     loop {
         clear_background(BLACK);
 
-        set_camera(&camera);
+        set_camera(fc, &camera);
 
         tiled_map.draw_tiles("main layer", Rect::new(0.0, 0.0, 320.0, 152.0), None);
 

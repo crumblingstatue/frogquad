@@ -5,6 +5,7 @@ const VIRTUAL_HEIGHT: f32 = 720.0;
 
 #[frogquad::main("Letterbox")]
 async fn main() {
+    let fc = frogquad::get_context();
     // Setup 'render_target', used to hold the rendering result so we can resize it
     let render_target = render_target(VIRTUAL_WIDTH as u32, VIRTUAL_HEIGHT as u32);
     render_target.texture.set_filter(FilterMode::Linear);
@@ -30,7 +31,7 @@ async fn main() {
         // ------------------------------------------------------------------------
         // Begin drawing the virtual screen to 'render_target'
         // ------------------------------------------------------------------------
-        set_camera(&render_target_cam);
+        set_camera(fc, &render_target_cam);
 
         clear_background(LIGHTGRAY);
 
@@ -49,7 +50,7 @@ async fn main() {
         // ------------------------------------------------------------------------
         // Begin drawing the window screen
         // ------------------------------------------------------------------------
-        set_default_camera();
+        set_default_camera(fc);
 
         clear_background(BLACK); // Will be the letterbox color
 

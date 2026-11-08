@@ -16,6 +16,7 @@ fn conf() -> Conf {
 
 #[frogquad::main(conf)]
 async fn main() {
+    let fc = frogquad::get_context();
     let mut x = 0.0;
     let mut switch = false;
     let bounds = 8.0;
@@ -97,12 +98,15 @@ async fn main() {
 
         // Going 3d!
 
-        set_camera(&Camera3D {
-            position: position,
-            up: up,
-            target: position + front,
-            ..Default::default()
-        });
+        set_camera(
+            fc,
+            &Camera3D {
+                position: position,
+                up: up,
+                target: position + front,
+                ..Default::default()
+            },
+        );
 
         draw_grid(20, 1., BLACK, GRAY);
 
@@ -118,7 +122,7 @@ async fn main() {
 
         // Back to screen space, render some text
 
-        set_default_camera();
+        set_default_camera(fc);
         draw_text("First Person Camera", 10.0, 20.0, 30.0, BLACK);
 
         draw_text(

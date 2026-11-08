@@ -4,18 +4,22 @@ use frogquad::prelude::*;
 async fn main() {
     let rust_logo = load_texture("examples/rust.png").await.unwrap();
     let ferris = load_texture("examples/ferris.png").await.unwrap();
+    let fc = frogquad::get_context();
 
     loop {
         clear_background(LIGHTGRAY);
 
         // Going 3d!
 
-        set_camera(&Camera3D {
-            position: vec3(-20., 15., 0.),
-            up: vec3(0., 1., 0.),
-            target: vec3(0., 0., 0.),
-            ..Default::default()
-        });
+        set_camera(
+            fc,
+            &Camera3D {
+                position: vec3(-20., 15., 0.),
+                up: vec3(0., 1., 0.),
+                target: vec3(0., 0., 0.),
+                ..Default::default()
+            },
+        );
 
         draw_grid(20, 1., BLACK, GRAY);
 
@@ -38,7 +42,7 @@ async fn main() {
 
         // Back to screen space, render some text
 
-        set_default_camera();
+        set_default_camera(fc);
         draw_text("WELCOME TO 3D WORLD", 10.0, 20.0, 30.0, BLACK);
 
         next_frame().await
