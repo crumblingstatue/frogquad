@@ -2,9 +2,9 @@ use frogquad::prelude::*;
 
 #[frogquad::main("3D")]
 async fn main() {
-    let rust_logo = load_texture("examples/rust.png").await.unwrap();
-    let ferris = load_texture("examples/ferris.png").await.unwrap();
     let fc = frogquad::get_context();
+    let rust_logo = load_texture(fc, "examples/rust.png").await.unwrap();
+    let ferris = load_texture(fc, "examples/ferris.png").await.unwrap();
 
     loop {
         clear_background(LIGHTGRAY);

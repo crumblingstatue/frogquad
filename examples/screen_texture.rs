@@ -3,7 +3,7 @@ use frogquad::prelude::*;
 #[frogquad::main("Texture")]
 async fn main() {
     let fc = frogquad::get_context();
-    let texture: Texture2D = load_texture("examples/chess.png").await.unwrap();
+    let texture: Texture2D = load_texture(fc, "examples/chess.png").await.unwrap();
 
     let lens_material = load_material(
         ShaderSource::Glsl {

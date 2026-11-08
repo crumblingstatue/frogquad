@@ -1,7 +1,7 @@
 //! Loading and rendering textures. Also render textures, per-pixel image manipulations.
 
 use crate::{
-    Error, color::Color, file::load_file, get_context, math::Rect, text::atlas::SpriteKey,
+    Error, FrogCx, color::Color, file::load_file, get_context, math::Rect, text::atlas::SpriteKey,
 };
 
 pub use crate::quad_gl::FilterMode;
@@ -332,15 +332,15 @@ impl Image {
 }
 
 /// Loads an [Image] from a file into CPU memory.
-pub async fn load_image(path: &str) -> Result<Image, Error> {
-    let bytes = load_file(path).await?;
+pub async fn load_image(fc: &mut FrogCx, path: &str) -> Result<Image, Error> {
+    let bytes = load_file(fc, path).await?;
 
     Image::from_file_with_format(&bytes, None)
 }
 
 /// Loads a [Texture2D] from a file into GPU memory.
-pub async fn load_texture(path: &str) -> Result<Texture2D, Error> {
-    let bytes = load_file(path).await?;
+pub async fn load_texture(fc: &mut FrogCx, path: &str) -> Result<Texture2D, Error> {
+    let bytes = load_file(fc, path).await?;
 
     Ok(Texture2D::from_file_with_format(&bytes[..], None))
 }

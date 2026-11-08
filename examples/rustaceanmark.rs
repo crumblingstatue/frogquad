@@ -10,7 +10,9 @@ struct Rustaceane {
 async fn main() {
     let fc = frogquad::get_context();
     let mut rustaceanes: Vec<Rustaceane> = Vec::new();
-    let rustacean_tex = load_texture("examples/rustacean_happy.png").await.unwrap();
+    let rustacean_tex = load_texture(fc, "examples/rustacean_happy.png")
+        .await
+        .unwrap();
     rustacean_tex.set_filter(FilterMode::Nearest);
 
     loop {

@@ -244,7 +244,7 @@ impl<'a> Default for TextParams<'a> {
 
 /// Load font from file with "path"
 pub async fn load_ttf_font(fc: &mut crate::FrogCx, path: &str) -> Result<Font, Error> {
-    let bytes = crate::file::load_file(path)
+    let bytes = crate::file::load_file(fc, path)
         .await
         .map_err(|_| Error::FontError("The Font file couldn't be loaded"))?;
 

@@ -2,7 +2,8 @@ use frogquad::prelude::*;
 
 #[frogquad::main("Texture")]
 async fn main() {
-    let texture: Texture2D = load_texture("examples/ferris.png").await.unwrap();
+    let fc = frogquad::get_context();
+    let texture: Texture2D = load_texture(fc, "examples/ferris.png").await.unwrap();
 
     loop {
         clear_background(LIGHTGRAY);

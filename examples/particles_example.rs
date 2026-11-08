@@ -45,7 +45,8 @@ fn fire() -> particles::EmitterConfig {
 
 #[frogquad::main("Fountain")]
 async fn main() {
-    let texture = load_texture("examples/smoke_fire.png").await.unwrap();
+    let fc = frogquad::get_context();
+    let texture = load_texture(fc, "examples/smoke_fire.png").await.unwrap();
 
     let mut one_shot_emitter = particles::Emitter::new(EmitterConfig {
         texture: Some(texture.clone()),
