@@ -260,7 +260,7 @@ impl MagicSnapshotter {
             }
 
             let texture = self.screen_texture.unwrap();
-            Texture2D::unmanaged(texture).grab_screen(gl, textures);
+            Texture2D::unmanaged(texture).grab_screen(rend, gl, textures);
         }
     }
 }

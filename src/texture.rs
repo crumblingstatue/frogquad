@@ -1,7 +1,7 @@
 //! Loading and rendering textures. Also render textures, per-pixel image manipulations.
 
 use crate::{
-    Error, FrogCx, color::Color, file::load_file, get_context, math::Rect, quad_gl::QuadGl,
+    Error, FrogCx, color::Color, file::load_file, math::Rect, quad_gl::QuadGl,
     text::atlas::SpriteKey,
 };
 
@@ -385,7 +385,7 @@ impl Drop for RenderPass {
         // Safety: if strong_count < 2, this is the last strong ref.
         // No new strong references can be created after this point.
         if Arc::strong_count(&self.render_pass) < 2 {
-            let ctx = get_context();
+            let ctx = crate::get_context();
             ctx.textures.schedule_render_pass_removed(*self.render_pass);
         }
     }
@@ -628,7 +628,7 @@ pub fn get_screen_data(fc: &mut FrogCx) -> Image {
         texture: fc.textures.store_texture(texture_id),
     };
 
-    texture.grab_screen(&fc.gl, &fc.textures);
+    texture.grab_screen(&mut *fc.quad_context, &fc.gl, &fc.textures);
 
     texture.get_texture_data(&fc.gl, &fc.textures, &mut *fc.quad_context)
 }
@@ -641,7 +641,7 @@ pub struct Texture2D {
 
 impl Drop for TextureSlotGuarded {
     fn drop(&mut self) {
-        let ctx = get_context();
+        let ctx = crate::get_context();
         ctx.textures.schedule_removed(self.0);
     }
 }
@@ -860,12 +860,16 @@ impl Texture2D {
 
     /// Updates this texture from the screen.
     #[allow(unreachable_patterns)]
-    pub fn grab_screen(&self, gl: &QuadGl, textures: &TexturesContext) {
+    pub fn grab_screen(
+        &self,
+        rend: &mut dyn RenderingBackend,
+        gl: &QuadGl,
+        textures: &TexturesContext,
+    ) {
         use miniquad::*;
         let texture = FrogCx::raw_miniquad_id(gl, textures, &self.texture);
-        let ctx = &mut get_context().quad_context;
-        let params = ctx.texture_params(texture);
-        let raw_id = match unsafe { ctx.texture_raw_id(texture) } {
+        let params = rend.texture_params(texture);
+        let raw_id = match unsafe { rend.texture_raw_id(texture) } {
             miniquad::RawId::OpenGl(id) => id,
             _ => unimplemented!(),
         };
@@ -953,9 +957,7 @@ impl Batcher {
 /// the one from the atlas
 /// NOTE: the GPU memory and texture itself in Texture2D will still be allocated
 /// and Texture->Image conversions will work with Texture2D content, not the atlas
-pub fn build_textures_atlas() {
-    let fc = get_context();
-
+pub fn build_textures_atlas(fc: &mut FrogCx) {
     for texture in fc.texture_batcher.unbatched.drain(0..) {
         let sprite: Image = texture.get_texture_data(&fc.gl, &fc.textures, &mut *fc.quad_context);
         let id = SpriteKey::Texture(FrogCx::raw_miniquad_id(
@@ -972,15 +974,12 @@ pub fn build_textures_atlas() {
 /// frogquad do not have track of all loaded fonts.
 /// Fonts store their characters as ID's in the atlas.
 /// There fore resetting the atlas will render all fonts unusable.
-pub unsafe fn reset_textures_atlas() {
-    let context = get_context();
-    context.fonts_storage = crate::text::FontsStorage::new(&mut *context.quad_context);
-    context.texture_batcher = Batcher::new(&mut *context.quad_context);
+pub unsafe fn reset_textures_atlas(fc: &mut FrogCx) {
+    fc.fonts_storage = crate::text::FontsStorage::new(&mut *fc.quad_context);
+    fc.texture_batcher = Batcher::new(&mut *fc.quad_context);
 }
 
-pub fn set_default_filter_mode(filter: FilterMode) {
-    let context = get_context();
-
-    context.default_filter_mode = filter;
-    context.texture_batcher.atlas.set_filter(filter);
+pub fn set_default_filter_mode(fc: &mut FrogCx, filter: FilterMode) {
+    fc.default_filter_mode = filter;
+    fc.texture_batcher.atlas.set_filter(filter);
 }
