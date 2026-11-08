@@ -63,8 +63,6 @@ pub mod texture;
 pub mod time;
 pub mod window;
 
-pub mod experimental;
-
 pub mod prelude;
 
 mod error;
@@ -202,7 +200,6 @@ struct Context {
     gl: QuadGl,
     camera_matrix: Option<Mat4>,
 
-    coroutines_context: experimental::coroutines::CoroutinesContext,
     fonts_storage: text::FontsStorage,
 
     pc_assets_folder: Option<String>,
@@ -346,7 +343,6 @@ impl Context {
             camera_stack: vec![],
 
             audio_context: audio::AudioContext::new(),
-            coroutines_context: experimental::coroutines::CoroutinesContext::new(),
 
             pc_assets_folder: None,
 
@@ -395,8 +391,6 @@ impl Context {
     }
 
     fn end_frame(&mut self) {
-        crate::experimental::scene::update();
-
         self.perform_render_passes();
 
         let screen_mat = self.pixel_perfect_projection_matrix();
@@ -749,7 +743,6 @@ impl EventHandler for Stage {
                         miniquad::window::quit();
                         return;
                     }
-                    get_context().coroutines_context.update();
                 }),
             );
 
