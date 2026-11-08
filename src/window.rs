@@ -22,7 +22,7 @@ pub fn next_frame() -> crate::exec::FrameFuture {
 pub fn clear_background(color: Color) {
     let context = get_context();
 
-    context.gl.clear(get_quad_context(), color);
+    context.gl.clear(&mut *context.quad_context, color);
 }
 
 #[doc(hidden)]
