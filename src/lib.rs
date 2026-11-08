@@ -151,22 +151,21 @@ use crate::{
 use glam::{Mat4, Vec2, vec2};
 
 pub(crate) mod thread_assert {
-    static mut THREAD_ID: Option<std::thread::ThreadId> = None;
+    use std::sync::Mutex;
+
+    static THREAD_ID: Mutex<Option<std::thread::ThreadId>> = Mutex::new(None);
 
     pub fn set_thread_id() {
-        unsafe {
-            THREAD_ID = Some(std::thread::current().id());
-        }
+        *THREAD_ID.lock().unwrap() = Some(std::thread::current().id());
     }
 
     pub fn same_thread() {
-        unsafe {
-            thread_local! {
-                static CURRENT_THREAD_ID: std::thread::ThreadId = std::thread::current().id();
-            }
-            assert!(THREAD_ID.is_some());
-            assert!(THREAD_ID.unwrap() == CURRENT_THREAD_ID.with(|id| *id));
+        thread_local! {
+            static CURRENT_THREAD_ID: std::thread::ThreadId = std::thread::current().id();
         }
+        let glob_thread_id = THREAD_ID.lock().unwrap();
+        assert!(glob_thread_id.is_some());
+        assert!(glob_thread_id.unwrap() == CURRENT_THREAD_ID.with(|id| *id));
     }
 }
 
