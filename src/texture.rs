@@ -1,8 +1,7 @@
 //! Loading and rendering textures. Also render textures, per-pixel image manipulations.
 
 use crate::{
-    Error, color::Color, file::load_file, get_context, get_quad_context, math::Rect,
-    text::atlas::SpriteKey,
+    Error, color::Color, file::load_file, get_context, math::Rect, text::atlas::SpriteKey,
 };
 
 pub use crate::quad_gl::FilterMode;
@@ -414,49 +413,48 @@ pub fn render_target_msaa(width: u32, height: u32) -> RenderTarget {
 }
 
 pub fn render_target_ex(width: u32, height: u32, params: RenderTargetParams) -> RenderTarget {
-    let context = get_context();
+    let fc = get_context();
 
-    let color_texture = get_quad_context().new_render_texture(miniquad::TextureParams {
+    let color_texture = fc.quad_context.new_render_texture(miniquad::TextureParams {
         width,
         height,
         sample_count: params.sample_count,
         ..Default::default()
     });
     let depth_texture = if params.depth {
-        Some(
-            get_quad_context().new_render_texture(miniquad::TextureParams {
-                width,
-                height,
-                format: miniquad::TextureFormat::Depth,
-                sample_count: params.sample_count,
-                ..Default::default()
-            }),
-        )
+        Some(fc.quad_context.new_render_texture(miniquad::TextureParams {
+            width,
+            height,
+            format: miniquad::TextureFormat::Depth,
+            sample_count: params.sample_count,
+            ..Default::default()
+        }))
     } else {
         None
     };
     let render_pass;
     let texture;
     if params.sample_count > 1 {
-        let color_resolve_texture =
-            get_quad_context().new_render_texture(miniquad::TextureParams {
-                width,
-                height,
-                ..Default::default()
-            });
-        render_pass = get_quad_context().new_render_pass_mrt(
+        let color_resolve_texture = fc.quad_context.new_render_texture(miniquad::TextureParams {
+            width,
+            height,
+            ..Default::default()
+        });
+        render_pass = fc.quad_context.new_render_pass_mrt(
             &[color_texture],
             Some(&[color_resolve_texture]),
             depth_texture,
         );
         texture = color_resolve_texture;
     } else {
-        render_pass = get_quad_context().new_render_pass_mrt(&[color_texture], None, depth_texture);
+        render_pass = fc
+            .quad_context
+            .new_render_pass_mrt(&[color_texture], None, depth_texture);
         texture = color_texture;
     }
 
     let texture = Texture2D {
-        texture: context.textures.store_texture(texture),
+        texture: fc.textures.store_texture(texture),
     };
 
     let render_pass = RenderPass {
@@ -611,20 +609,20 @@ pub fn draw_texture_ex(
 
 /// Get pixel data from screen buffer and return an Image (screenshot)
 pub fn get_screen_data() -> Image {
-    let context = get_context();
+    let fc = get_context();
 
     unsafe {
-        crate::window::get_internal_gl(context).flush();
+        crate::window::get_internal_gl(fc).flush();
     }
 
-    let texture_id = get_quad_context().new_render_texture(miniquad::TextureParams {
-        width: context.screen_width as _,
-        height: context.screen_height as _,
+    let texture_id = fc.quad_context.new_render_texture(miniquad::TextureParams {
+        width: fc.screen_width as _,
+        height: fc.screen_height as _,
         ..Default::default()
     });
 
     let texture = Texture2D {
-        texture: context.textures.store_texture(texture_id),
+        texture: fc.textures.store_texture(texture_id),
     };
 
     texture.grab_screen();
@@ -739,20 +737,20 @@ impl Texture2D {
     /// # }
     /// ```
     pub fn from_rgba8(width: u16, height: u16, bytes: &[u8]) -> Texture2D {
-        let texture = get_quad_context().new_texture_from_rgba8(width, height, bytes);
-        let ctx = get_context();
-        let texture = ctx.textures.store_texture(texture);
+        let fc = get_context();
+        let texture = fc.quad_context.new_texture_from_rgba8(width, height, bytes);
+        let texture = fc.textures.store_texture(texture);
         let texture = Texture2D { texture };
-        texture.set_filter(ctx.default_filter_mode);
+        texture.set_filter(fc.default_filter_mode);
 
-        ctx.texture_batcher.add_unbatched(&texture);
+        fc.texture_batcher.add_unbatched(&texture);
 
         texture
     }
 
     /// Uploads [Image] data to this texture.
     pub fn update(&self, image: &Image) {
-        let ctx = get_quad_context();
+        let ctx = &mut get_context().quad_context;
         let (width, height) = ctx.texture_size(self.raw_miniquad_id());
 
         assert_eq!(width, image.width as u32);
@@ -763,7 +761,7 @@ impl Texture2D {
 
     // Updates the texture from an array of bytes.
     pub fn update_from_bytes(&self, width: u32, height: u32, bytes: &[u8]) {
-        let ctx = get_quad_context();
+        let ctx = &mut get_context().quad_context;
         let (texture_width, texture_height) = ctx.texture_size(self.raw_miniquad_id());
 
         assert_eq!(texture_width, width);
@@ -781,7 +779,7 @@ impl Texture2D {
         width: i32,
         height: i32,
     ) {
-        let ctx = get_quad_context();
+        let ctx = &mut get_context().quad_context;
 
         ctx.texture_update_part(
             self.raw_miniquad_id(),
@@ -795,7 +793,7 @@ impl Texture2D {
 
     /// Returns the width of this texture.
     pub fn width(&self) -> f32 {
-        let ctx = get_quad_context();
+        let ctx = &mut get_context().quad_context;
         let (width, _) = ctx.texture_size(self.raw_miniquad_id());
 
         width as f32
@@ -803,14 +801,14 @@ impl Texture2D {
 
     /// Returns the height of this texture.
     pub fn height(&self) -> f32 {
-        let ctx = get_quad_context();
+        let ctx = &mut get_context().quad_context;
         let (_, height) = ctx.texture_size(self.raw_miniquad_id());
 
         height as f32
     }
 
     pub fn size(&self) -> Vec2 {
-        let ctx = get_quad_context();
+        let ctx = &mut get_context().quad_context;
         let (width, height) = ctx.texture_size(self.raw_miniquad_id());
 
         vec2(width as f32, height as f32)
@@ -830,7 +828,7 @@ impl Texture2D {
     /// # }
     /// ```
     pub fn set_filter(&self, filter_mode: FilterMode) {
-        let ctx = get_quad_context();
+        let ctx = &mut get_context().quad_context;
 
         ctx.texture_set_filter(
             self.raw_miniquad_id(),
@@ -851,7 +849,7 @@ impl Texture2D {
     pub fn grab_screen(&self) {
         use miniquad::*;
         let texture = self.raw_miniquad_id();
-        let ctx = get_quad_context();
+        let ctx = &mut get_context().quad_context;
         let params = ctx.texture_params(texture);
         let raw_id = match unsafe { ctx.texture_raw_id(texture) } {
             miniquad::RawId::OpenGl(id) => id,
@@ -887,7 +885,7 @@ impl Texture2D {
     ///
     /// This operation can be expensive.
     pub fn get_texture_data(&self) -> Image {
-        let ctx = get_quad_context();
+        let ctx = &mut get_context().quad_context;
         let (width, height) = ctx.texture_size(self.raw_miniquad_id());
         let mut image = Image {
             width: width as _,
