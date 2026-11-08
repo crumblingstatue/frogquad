@@ -49,7 +49,6 @@ mod exec;
 mod quad_gl;
 mod tobytes;
 
-pub mod audio;
 pub mod camera;
 pub mod color;
 pub mod file;
@@ -171,8 +170,6 @@ pub(crate) mod thread_assert {
     }
 }
 struct Context {
-    audio_context: audio::AudioContext,
-
     screen_width: f32,
     screen_height: f32,
 
@@ -341,8 +338,6 @@ impl Context {
             fonts_storage: text::FontsStorage::new(&mut *ctx),
             texture_batcher: texture::Batcher::new(&mut *ctx),
             camera_stack: vec![],
-
-            audio_context: audio::AudioContext::new(),
 
             pc_assets_folder: None,
 
@@ -764,8 +759,6 @@ impl EventHandler for Stage {
         let context = get_context();
 
         #[cfg(target_os = "android")]
-        context.audio_context.resume();
-        #[cfg(target_os = "android")]
         if miniquad::window::blocking_event_loop() {
             miniquad::window::schedule_update();
         }
@@ -778,9 +771,6 @@ impl EventHandler for Stage {
 
     fn window_minimized_event(&mut self) {
         let context = get_context();
-
-        #[cfg(target_os = "android")]
-        context.audio_context.pause();
 
         // Clear held down keys and button and announce them as released
         context.mouse_released.extend(context.mouse_down.drain());
