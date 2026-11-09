@@ -87,15 +87,15 @@ async fn main() {
         }
 
         let local_emitter_pos = vec2(
-            (get_time() * 0.3).sin() as f32 * screen_width() / 2.5 + screen_width() / 2.0,
-            (get_time() * 0.5).cos() as f32 * screen_height() / 2.5 + screen_height() / 2.0,
+            (get_time(fc) * 0.3).sin() as f32 * screen_width() / 2.5 + screen_width() / 2.0,
+            (get_time(fc) * 0.5).cos() as f32 * screen_height() / 2.5 + screen_height() / 2.0,
         );
         flying_emitter_local.draw(local_emitter_pos);
         draw_circle(local_emitter_pos.x, local_emitter_pos.y, 15.0, RED);
 
         let world_emitter_pos = vec2(
-            (get_time() * 0.6 + 1.0).sin() as f32 * screen_width() / 2.5 + screen_width() / 2.0,
-            (get_time() * 0.4 + 1.0).cos() as f32 * screen_height() / 2.5 + screen_height() / 2.0,
+            (get_time(fc) * 0.6 + 1.0).sin() as f32 * screen_width() / 2.5 + screen_width() / 2.0,
+            (get_time(fc) * 0.4 + 1.0).cos() as f32 * screen_height() / 2.5 + screen_height() / 2.0,
         );
 
         flying_emitter_world.draw(world_emitter_pos);

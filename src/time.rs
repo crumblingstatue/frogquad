@@ -1,30 +1,21 @@
 //! Cross platform system time access and FPS counters.
 
-use crate::{FrogCx, get_context, text::draw_text};
+use crate::{FrogCx, text::draw_text};
 
 /// Draws the current FPS on the screen. For extra customization, please use `draw_text` instead.
 pub fn draw_fps(fc: &mut FrogCx) {
-    draw_text(
-        fc,
-        &format!("FPS: {}", get_fps()),
-        0.,
-        16.,
-        32.,
-        crate::WHITE,
-    );
+    let fps = get_fps(fc);
+    draw_text(fc, format!("FPS: {fps}"), 0., 16., 32., crate::WHITE);
 }
 
 /// Returns current FPS
-pub fn get_fps() -> i32 {
-    let context = get_context();
-
-    (1. / context.frame_time) as i32
+pub fn get_fps(fc: &mut FrogCx) -> i32 {
+    (1. / fc.frame_time) as i32
 }
 
 /// Returns duration in seconds of the last frame drawn
-pub fn get_frame_time() -> f32 {
-    let context = get_context();
-    context.frame_time as f32
+pub fn get_frame_time(fc: &mut FrogCx) -> f32 {
+    fc.frame_time as f32
 }
 
 /// Returns elapsed wall-clock time in seconds since start
@@ -34,8 +25,6 @@ pub fn get_frame_time() -> f32 {
 /// your game logic update to happen at the same *in-game* time
 /// for all game objects, you should call this function once
 /// save the value and reuse it throughout your code.
-pub fn get_time() -> f64 {
-    let context = get_context();
-
-    miniquad::date::now() - context.start_time
+pub fn get_time(fc: &mut FrogCx) -> f64 {
+    miniquad::date::now() - fc.start_time
 }

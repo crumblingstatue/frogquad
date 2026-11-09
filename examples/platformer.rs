@@ -94,7 +94,7 @@ async fn main() {
             let on_ground = world.collide_check(player.collider, pos + vec2(0., 1.));
 
             if on_ground == false {
-                player.speed.y += 500. * get_frame_time();
+                player.speed.y += 500. * get_frame_time(fc);
             }
 
             if is_key_down(fc, KeyCode::Right) {
@@ -111,13 +111,13 @@ async fn main() {
                 }
             }
 
-            world.move_h(player.collider, player.speed.x * get_frame_time());
-            world.move_v(player.collider, player.speed.y * get_frame_time());
+            world.move_h(player.collider, player.speed.x * get_frame_time(fc));
+            world.move_v(player.collider, player.speed.y * get_frame_time(fc));
         }
 
         // platform movement
         {
-            world.solid_move(platform.collider, platform.speed * get_frame_time(), 0.0);
+            world.solid_move(platform.collider, platform.speed * get_frame_time(fc), 0.0);
             let pos = world.solid_pos(platform.collider);
             if platform.speed > 1. && pos.x >= 220. {
                 platform.speed *= -1.;

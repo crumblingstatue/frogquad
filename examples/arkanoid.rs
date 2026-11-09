@@ -33,7 +33,7 @@ async fn main() {
     loop {
         clear_background(SKYBLUE);
 
-        let delta = get_frame_time();
+        let delta = get_frame_time(fc);
 
         if is_key_down(fc, KeyCode::Right) && platform_x < SCR_W - platform_width / 2. {
             platform_x += 3.0 * delta;

@@ -42,7 +42,7 @@ async fn main() {
     show_mouse(false);
 
     loop {
-        let delta = get_frame_time();
+        let delta = get_frame_time(fc);
 
         if is_key_pressed(fc, KeyCode::Escape) {
             break;

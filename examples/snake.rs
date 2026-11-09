@@ -23,7 +23,7 @@ async fn main() {
     let mut fruit: Point = (rand::gen_range(0, SQUARES), rand::gen_range(0, SQUARES));
     let mut score = 0;
     let mut speed = 0.3;
-    let mut last_update = get_time();
+    let mut last_update = get_time(fc);
     let mut navigation_lock = false;
     let mut game_over = false;
 
@@ -48,8 +48,8 @@ async fn main() {
                 navigation_lock = true;
             }
 
-            if get_time() - last_update > speed {
-                last_update = get_time();
+            if get_time(fc) - last_update > speed {
+                last_update = get_time(fc);
                 snake.body.push_front(snake.head);
                 snake.head = (snake.head.0 + snake.dir.0, snake.head.1 + snake.dir.1);
                 if snake.head == fruit {
@@ -166,7 +166,7 @@ async fn main() {
                 fruit = (rand::gen_range(0, SQUARES), rand::gen_range(0, SQUARES));
                 score = 0;
                 speed = 0.3;
-                last_update = get_time();
+                last_update = get_time(fc);
                 game_over = false;
             }
         }

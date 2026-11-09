@@ -36,6 +36,7 @@ async fn main() {
             400.0,
             TextParams::default(),
         );
+        let time = get_time(fc);
         draw_text_ex(
             fc,
             "abcd",
@@ -43,7 +44,7 @@ async fn main() {
             450.0,
             TextParams {
                 font_size: 50,
-                font_scale: get_time().sin() as f32 / 2.0 + 1.0,
+                font_scale: time.sin() as f32 / 2.0 + 1.0,
                 ..Default::default()
             },
         );

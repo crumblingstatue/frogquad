@@ -40,13 +40,8 @@ async fn main() {
         clear_background(LIGHTGRAY);
 
         draw_circle(0., 0., 0.03, DARKGRAY);
-        tree(
-            unsafe { get_internal_gl(fc).quad_gl },
-            get_time(),
-            0,
-            1.,
-            0.3,
-        );
+        let time = get_time(fc);
+        tree(unsafe { get_internal_gl(fc).quad_gl }, time, 0, 1., 0.3);
 
         next_frame().await
     }

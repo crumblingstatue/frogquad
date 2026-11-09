@@ -33,8 +33,8 @@ async fn main() {
             // Ensure that frogquad's shapes are not going to be lost
             gl.flush();
 
-            let t = get_time();
-
+            let t = get_time(fc);
+            let gl = unsafe { get_internal_gl(fc) };
             gl.quad_context.apply_pipeline(&stage.pipeline);
 
             gl.quad_context

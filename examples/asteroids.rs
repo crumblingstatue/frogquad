@@ -52,7 +52,7 @@ async fn main() {
     };
 
     let mut bullets = Vec::new();
-    let mut last_shot = get_time();
+    let mut last_shot = get_time(fc);
     let mut asteroids = Vec::new();
     let mut gameover = false;
 
@@ -105,7 +105,7 @@ async fn main() {
             next_frame().await;
             continue;
         }
-        let frame_t = get_time();
+        let frame_t = get_time(fc);
         let rotation = ship.rot.to_radians();
 
         let mut acc = -ship.vel / 100.; // Friction
