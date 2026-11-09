@@ -13,7 +13,7 @@ async fn main() {
     let mut angle = 0.0;
 
     loop {
-        clear_background(BLACK);
+        clear_background(fc, BLACK);
 
         draw_text_ex(fc, "Custom font size:", 20.0, 20.0, TextParams::default());
         let mut y = 20.0;

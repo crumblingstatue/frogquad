@@ -18,7 +18,7 @@ async fn main() {
     .unwrap();
 
     loop {
-        clear_background(WHITE);
+        clear_background(fc, WHITE);
         draw_texture_ex(
             fc,
             &texture,

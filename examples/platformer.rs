@@ -48,7 +48,7 @@ async fn main() {
     let camera = Camera2D::from_display_rect(Rect::new(0.0, 152.0, 320.0, -152.0));
 
     loop {
-        clear_background(BLACK);
+        clear_background(fc, BLACK);
 
         set_camera(fc, &camera);
 

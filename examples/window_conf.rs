@@ -1,4 +1,4 @@
-use frogquad::prelude::*;
+use frogquad::{get_context, prelude::*};
 
 fn window_conf() -> Conf {
     Conf {
@@ -14,8 +14,9 @@ fn window_conf() -> Conf {
 
 #[frogquad::main(window_conf)]
 async fn main() {
+    let fc = get_context();
     loop {
-        clear_background(WHITE);
+        clear_background(fc, WHITE);
         next_frame().await
     }
 }

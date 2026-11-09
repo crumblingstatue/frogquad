@@ -25,7 +25,7 @@ async fn main() {
     let texture = Texture2D::from_image(fc, &image);
 
     loop {
-        clear_background(WHITE);
+        clear_background(fc, WHITE);
 
         let w = image.width();
         let h = image.height();

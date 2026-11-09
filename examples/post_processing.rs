@@ -29,7 +29,7 @@ async fn main() {
             },
         );
 
-        clear_background(LIGHTGRAY);
+        clear_background(fc, LIGHTGRAY);
         draw_line(fc, -30.0, 45.0, 30.0, 45.0, 3.0, BLUE);
         draw_circle(fc, -45.0, -35.0, 20.0, YELLOW);
         draw_circle(fc, 45.0, -35.0, 20.0, GREEN);
@@ -38,7 +38,7 @@ async fn main() {
 
         set_default_camera(fc);
 
-        clear_background(WHITE);
+        clear_background(fc, WHITE);
         gl_use_material(&material);
         draw_texture_ex(
             fc,

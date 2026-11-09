@@ -83,7 +83,7 @@ async fn main() {
 
         smooth_rotation = angle_lerp(smooth_rotation, rotation, 0.1);
 
-        clear_background(LIGHTGRAY);
+        clear_background(fc, LIGHTGRAY);
 
         set_camera(
             fc,

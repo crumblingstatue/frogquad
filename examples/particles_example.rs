@@ -65,7 +65,7 @@ async fn main() {
     });
 
     loop {
-        clear_background(BLACK);
+        clear_background(fc, BLACK);
 
         draw_text(fc, "Local coord emitter", 20.0, 30.0, 30.0, RED);
 

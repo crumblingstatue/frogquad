@@ -4,7 +4,7 @@ use frogquad::prelude::*;
 async fn main() {
     let fc = frogquad::get_context();
     loop {
-        clear_background(LIGHTGRAY);
+        clear_background(fc, LIGHTGRAY);
 
         // Render some primitives in camera space
 

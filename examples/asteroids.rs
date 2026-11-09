@@ -60,7 +60,7 @@ async fn main() {
 
     loop {
         if gameover {
-            clear_background(LIGHTGRAY);
+            clear_background(fc, LIGHTGRAY);
             let mut text = "You Win!. Press [enter] to play again.";
             let font_size = 30.;
 
@@ -213,7 +213,7 @@ async fn main() {
             continue;
         }
 
-        clear_background(LIGHTGRAY);
+        clear_background(fc, LIGHTGRAY);
 
         for bullet in bullets.iter() {
             draw_circle(fc, bullet.pos.x, bullet.pos.y, 2., BLACK);

@@ -94,7 +94,7 @@ async fn main() {
             }
         }
 
-        clear_background(LIGHTGRAY);
+        clear_background(fc, LIGHTGRAY);
 
         // Going 3d!
 

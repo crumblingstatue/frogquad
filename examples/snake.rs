@@ -75,7 +75,7 @@ async fn main() {
             }
         }
         if !game_over {
-            clear_background(LIGHTGRAY);
+            clear_background(fc, LIGHTGRAY);
 
             let game_size = screen_width().min(screen_height());
             let offset_x = (screen_width() - game_size) / 2. + 10.;
@@ -153,7 +153,7 @@ async fn main() {
                 DARKGRAY,
             );
         } else {
-            clear_background(WHITE);
+            clear_background(fc, WHITE);
             let text = "Game Over. Press [enter] to play again.";
             let font_size = 30.;
             let text_size = measure_text(text, fc.default_font(), font_size as _, 1.0);

@@ -198,7 +198,7 @@ async fn main() {
     .unwrap();
 
     loop {
-        clear_background(GRAY);
+        clear_background(fc, GRAY);
 
         gl_use_material(&mat);
 

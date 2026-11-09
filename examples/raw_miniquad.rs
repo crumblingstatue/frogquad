@@ -12,7 +12,7 @@ async fn main() {
     };
 
     loop {
-        clear_background(LIGHTGRAY);
+        clear_background(fc, LIGHTGRAY);
 
         // Render some primitives in camera space
 

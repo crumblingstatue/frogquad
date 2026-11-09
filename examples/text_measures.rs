@@ -106,7 +106,7 @@ async fn main() {
     .unwrap();
 
     loop {
-        clear_background(BLACK);
+        clear_background(fc, BLACK);
 
         let text = "abcdIj";
 

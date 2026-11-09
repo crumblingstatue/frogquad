@@ -7,7 +7,7 @@ async fn main() {
     let mut y = screen_height() / 2.0;
 
     loop {
-        clear_background(LIGHTGRAY);
+        clear_background(fc, LIGHTGRAY);
 
         if is_key_down(fc, KeyCode::Right) {
             x += 1.0;

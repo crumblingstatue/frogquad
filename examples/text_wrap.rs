@@ -10,7 +10,7 @@ async fn main() {
     let fc = frogquad::get_context();
     let font_size = 24;
     loop {
-        clear_background(BLACK);
+        clear_background(fc, BLACK);
 
         let maximum_line_length = f32::max(20.0, mouse_position(fc).0 - 20.0);
         let text = wrap_text(

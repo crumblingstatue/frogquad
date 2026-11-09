@@ -12,7 +12,7 @@ async fn main() {
     set_default_font(fc, font);
 
     loop {
-        clear_background(WHITE);
+        clear_background(fc, WHITE);
 
         draw_text(
             fc,

@@ -31,7 +31,7 @@ async fn main() {
     );
 
     loop {
-        clear_background(SKYBLUE);
+        clear_background(fc, SKYBLUE);
 
         let delta = get_frame_time(fc);
 

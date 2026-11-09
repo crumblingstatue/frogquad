@@ -39,7 +39,7 @@ async fn main() {
 
     set_camera(fc, &camera);
     loop {
-        clear_background(LIGHTGRAY);
+        clear_background(fc, LIGHTGRAY);
 
         draw_circle(fc, 0., 0., 0.03, DARKGRAY);
         let time = get_time(fc);

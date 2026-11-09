@@ -16,7 +16,7 @@ async fn main() {
     rustacean_tex.set_filter(fc, FilterMode::Nearest);
 
     loop {
-        clear_background(Color::default());
+        clear_background(fc, Color::default());
 
         if frogquad::input::is_mouse_button_down(fc, MouseButton::Left) {
             for _i in 0..100 {

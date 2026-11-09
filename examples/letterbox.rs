@@ -33,7 +33,7 @@ async fn main() {
         // ------------------------------------------------------------------------
         set_camera(fc, &render_target_cam);
 
-        clear_background(LIGHTGRAY);
+        clear_background(fc, LIGHTGRAY);
 
         draw_text(fc, "Hello Letterbox", 20.0, 20.0, 30.0, DARKGRAY);
         draw_circle(
@@ -65,7 +65,7 @@ async fn main() {
         // ------------------------------------------------------------------------
         set_default_camera(fc);
 
-        clear_background(BLACK); // Will be the letterbox color
+        clear_background(fc, BLACK); // Will be the letterbox color
 
         // Draw 'render_target' to window screen, porperly scaled and letterboxed
         draw_texture_ex(
