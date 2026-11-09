@@ -6,7 +6,7 @@ async fn main() {
     let stage = {
         let InternalGlContext {
             quad_context: ctx, ..
-        } = unsafe { get_internal_gl(fc) };
+        } = get_internal_gl(fc);
 
         raw_miniquad::Stage::new(ctx)
     };
@@ -28,13 +28,13 @@ async fn main() {
         draw_circle(fc, 0., 0., 0.1, YELLOW);
 
         {
-            let mut gl = unsafe { get_internal_gl(fc) };
+            let mut gl = get_internal_gl(fc);
 
             // Ensure that frogquad's shapes are not going to be lost
             gl.flush();
 
             let t = get_time(fc);
-            let gl = unsafe { get_internal_gl(fc) };
+            let gl = get_internal_gl(fc);
             gl.quad_context.apply_pipeline(&stage.pipeline);
 
             gl.quad_context

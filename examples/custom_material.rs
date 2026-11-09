@@ -159,7 +159,7 @@ async fn main() {
         ..Default::default()
     };
 
-    let ctx = unsafe { get_internal_gl(fc).quad_context };
+    let ctx = get_internal_gl(fc).quad_context;
     let mat = load_material(
         match ctx.info().backend {
             Backend::OpenGl => ShaderSource::Glsl {

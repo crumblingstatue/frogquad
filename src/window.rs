@@ -24,11 +24,9 @@ pub fn clear_background(fc: &mut FrogCx, color: Color) {
 }
 
 #[doc(hidden)]
-pub fn gl_set_drawcall_buffer_capacity(max_vertices: usize, max_indices: usize) {
-    let context = get_context();
-    context
-        .gl
-        .update_drawcall_capacity(&mut *context.quad_context, max_vertices, max_indices);
+pub fn gl_set_drawcall_buffer_capacity(fc: &mut FrogCx, max_vertices: usize, max_indices: usize) {
+    fc.gl
+        .update_drawcall_capacity(&mut *fc.quad_context, max_vertices, max_indices);
 }
 
 pub struct InternalGlContext<'a> {
@@ -44,7 +42,7 @@ impl<'a> InternalGlContext<'a> {
     }
 }
 
-pub unsafe fn get_internal_gl<'a>(fc: &'a mut FrogCx) -> InternalGlContext<'a> {
+pub fn get_internal_gl<'a>(fc: &'a mut FrogCx) -> InternalGlContext<'a> {
     InternalGlContext {
         quad_context: &mut *fc.quad_context,
         quad_gl: &mut fc.gl,

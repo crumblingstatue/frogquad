@@ -614,9 +614,7 @@ pub fn draw_texture_ex(
 
 /// Get pixel data from screen buffer and return an Image (screenshot)
 pub fn get_screen_data(fc: &mut FrogCx) -> Image {
-    unsafe {
-        crate::window::get_internal_gl(fc).flush();
-    }
+    crate::window::get_internal_gl(fc).flush();
 
     let texture_id = fc.quad_context.new_render_texture(miniquad::TextureParams {
         width: fc.screen_width as _,
