@@ -2,7 +2,7 @@
 
 use crate::{
     Error, FrogCx, color::Color, file::load_file, math::Rect, quad_gl::QuadGl,
-    text::atlas::SpriteKey,
+    text::atlas::SpriteKey, window::flush_internal_gl,
 };
 
 pub use crate::quad_gl::FilterMode;
@@ -614,7 +614,7 @@ pub fn draw_texture_ex(
 
 /// Get pixel data from screen buffer and return an Image (screenshot)
 pub fn get_screen_data(fc: &mut FrogCx) -> Image {
-    crate::window::get_internal_gl(fc).flush();
+    flush_internal_gl(fc);
 
     let texture_id = fc.quad_context.new_render_texture(miniquad::TextureParams {
         width: fc.screen_width as _,

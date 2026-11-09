@@ -28,10 +28,8 @@ async fn main() {
         draw_circle(fc, 0., 0., 0.1, YELLOW);
 
         {
-            let mut gl = get_internal_gl(fc);
-
             // Ensure that frogquad's shapes are not going to be lost
-            gl.flush();
+            flush_internal_gl(fc);
 
             let t = get_time(fc);
             let gl = get_internal_gl(fc);

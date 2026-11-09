@@ -34,12 +34,10 @@ pub struct InternalGlContext<'a> {
     pub quad_gl: &'a mut crate::quad_gl::QuadGl,
 }
 
-impl<'a> InternalGlContext<'a> {
-    /// Draw all the batched stuff and reset the internal state cache.
-    /// May be helpful for combining frogquad's drawing with raw miniquad/opengl calls.
-    pub fn flush(&mut self) {
-        get_context().perform_render_passes();
-    }
+/// Draw all the batched stuff and reset the internal state cache.
+/// May be helpful for combining frogquad's drawing with raw miniquad/opengl calls.
+pub fn flush_internal_gl(fc: &mut FrogCx) {
+    fc.perform_render_passes();
 }
 
 pub fn get_internal_gl<'a>(fc: &'a mut FrogCx) -> InternalGlContext<'a> {
