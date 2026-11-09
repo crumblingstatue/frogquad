@@ -14,7 +14,7 @@ async fn main() {
                 TouchPhase::Ended => (BLUE, 80.0),
                 TouchPhase::Cancelled => (BLACK, 80.0),
             };
-            draw_circle(touch.position.x, touch.position.y, size, fill_color);
+            draw_circle(fc, touch.position.x, touch.position.y, size, fill_color);
         }
 
         draw_text(fc, "touch the screen!", 20.0, 20.0, 20.0, DARKGRAY);

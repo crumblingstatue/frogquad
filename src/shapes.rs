@@ -1,7 +1,7 @@
 //! 2D shapes rendering.
 
 use crate::FrogCx;
-use crate::{color::Color, get_context};
+use crate::color::Color;
 
 use crate::quad_gl::{DrawMode, Vertex};
 use glam::{Mat4, Vec2, vec2, vec3, vec4};
@@ -37,9 +37,7 @@ pub fn draw_triangle_lines(
 
 /// Draws a solid rectangle with its top-left corner at `[x, y]` with size `[w, h]` (width going to
 /// the right, height going down), with a given `color`.
-pub fn draw_rectangle(x: f32, y: f32, w: f32, h: f32, color: Color) {
-    let context = get_context();
-
+pub fn draw_rectangle(fc: &mut FrogCx, x: f32, y: f32, w: f32, h: f32, color: Color) {
     #[rustfmt::skip]
     let vertices = [
         Vertex::new(x    , y    , 0., 0.0, 0.0, color),
@@ -49,15 +47,22 @@ pub fn draw_rectangle(x: f32, y: f32, w: f32, h: f32, color: Color) {
     ];
     let indices: [u16; 6] = [0, 1, 2, 0, 2, 3];
 
-    context.gl.texture(None);
-    context.gl.draw_mode(DrawMode::Triangles);
-    context.gl.geometry(&vertices, &indices);
+    fc.gl.texture(None);
+    fc.gl.draw_mode(DrawMode::Triangles);
+    fc.gl.geometry(&vertices, &indices);
 }
 
 /// Draws a rectangle outline with its top-left corner at `[x, y]` with size `[w, h]` (width going to
 /// the right, height going down), with a given line `thickness` and `color`.
-pub fn draw_rectangle_lines(x: f32, y: f32, w: f32, h: f32, thickness: f32, color: Color) {
-    let context = get_context();
+pub fn draw_rectangle_lines(
+    fc: &mut FrogCx,
+    x: f32,
+    y: f32,
+    w: f32,
+    h: f32,
+    thickness: f32,
+    color: Color,
+) {
     let t = thickness / 2.;
 
     #[rustfmt::skip]
@@ -76,12 +81,13 @@ pub fn draw_rectangle_lines(x: f32, y: f32, w: f32, h: f32, thickness: f32, colo
         0, 1, 4, 1, 4, 5, 1, 5, 6, 1, 2, 6, 3, 7, 2, 2, 7, 6, 0, 4, 3, 3, 4, 7,
     ];
 
-    context.gl.texture(None);
-    context.gl.draw_mode(DrawMode::Triangles);
-    context.gl.geometry(&vertices, &indices);
+    fc.gl.texture(None);
+    fc.gl.draw_mode(DrawMode::Triangles);
+    fc.gl.geometry(&vertices, &indices);
 }
 
 pub fn draw_rectangle_lines_ex(
+    fc: &mut FrogCx,
     x: f32,
     y: f32,
     w: f32,
@@ -89,7 +95,6 @@ pub fn draw_rectangle_lines_ex(
     thickness: f32,
     params: DrawRectangleParams,
 ) {
-    let context = get_context();
     let tx = thickness / w;
     let ty = thickness / h;
 
@@ -135,9 +140,9 @@ pub fn draw_rectangle_lines_ex(
         3, 6, 7,
     ];
 
-    context.gl.texture(None);
-    context.gl.draw_mode(DrawMode::Triangles);
-    context.gl.geometry(&vertices, &indices);
+    fc.gl.texture(None);
+    fc.gl.draw_mode(DrawMode::Triangles);
+    fc.gl.geometry(&vertices, &indices);
 }
 
 #[derive(Debug, Clone)]
@@ -165,8 +170,14 @@ impl Default for DrawRectangleParams {
 
 /// Draws a solid rectangle with its position at `[x, y]` with size `[w, h]`,
 /// with parameters.
-pub fn draw_rectangle_ex(x: f32, y: f32, w: f32, h: f32, params: DrawRectangleParams) {
-    let context = get_context();
+pub fn draw_rectangle_ex(
+    fc: &mut FrogCx,
+    x: f32,
+    y: f32,
+    w: f32,
+    h: f32,
+    params: DrawRectangleParams,
+) {
     let transform_matrix = Mat4::from_translation(vec3(x, y, 0.0))
         * Mat4::from_axis_angle(vec3(0.0, 0.0, 1.0), params.rotation)
         * Mat4::from_scale(vec3(w, h, 1.0));
@@ -188,15 +199,16 @@ pub fn draw_rectangle_ex(x: f32, y: f32, w: f32, h: f32, params: DrawRectanglePa
     ];
     let indices: [u16; 6] = [0, 1, 2, 0, 2, 3];
 
-    context.gl.texture(None);
-    context.gl.draw_mode(DrawMode::Triangles);
-    context.gl.geometry(&vertices, &indices);
+    fc.gl.texture(None);
+    fc.gl.draw_mode(DrawMode::Triangles);
+    fc.gl.geometry(&vertices, &indices);
 }
 
 /// Draws an outlined solid hexagon centered at `[x, y]` with a radius `size`, outline thickness
 /// defined by `border`, orientation defined by `vertical` (when `true`, the hexagon points along
 /// the `y` axis), and colors for outline given by `border_color` and fill by `fill_color`.
 pub fn draw_hexagon(
+    fc: &mut FrogCx,
     x: f32,
     y: f32,
     size: f32,
@@ -206,17 +218,23 @@ pub fn draw_hexagon(
     fill_color: Color,
 ) {
     let rotation = if vertical { 90. } else { 0. };
-    draw_poly(x, y, 6, size, rotation, fill_color);
+    draw_poly(fc, x, y, 6, size, rotation, fill_color);
     if border > 0. {
-        draw_poly_lines(x, y, 6, size, rotation, border, border_color);
+        draw_poly_lines(fc, x, y, 6, size, rotation, border, border_color);
     }
 }
 
 /// Draws a solid regular polygon centered at `[x, y]` with a given number of `sides`, `radius`,
 /// clockwise `rotation` (in degrees) and `color`.
-pub fn draw_poly(x: f32, y: f32, sides: u8, radius: f32, rotation: f32, color: Color) {
-    let context = get_context();
-
+pub fn draw_poly(
+    fc: &mut FrogCx,
+    x: f32,
+    y: f32,
+    sides: u8,
+    radius: f32,
+    rotation: f32,
+    color: Color,
+) {
     let mut vertices = Vec::<Vertex>::with_capacity(sides as usize + 2);
     let mut indices = Vec::<u16>::with_capacity(sides as usize * 3);
 
@@ -235,14 +253,15 @@ pub fn draw_poly(x: f32, y: f32, sides: u8, radius: f32, rotation: f32, color: C
         }
     }
 
-    context.gl.texture(None);
-    context.gl.draw_mode(DrawMode::Triangles);
-    context.gl.geometry(&vertices, &indices);
+    fc.gl.texture(None);
+    fc.gl.draw_mode(DrawMode::Triangles);
+    fc.gl.geometry(&vertices, &indices);
 }
 
 /// Draws a regular polygon outline centered at `[x, y]` with a given number of `sides`, `radius`,
 /// clockwise `rotation` (in degrees), line `thickness`, and `color`.
 pub fn draw_poly_lines(
+    fc: &mut FrogCx,
     x: f32,
     y: f32,
     sides: u8,
@@ -251,30 +270,29 @@ pub fn draw_poly_lines(
     thickness: f32,
     color: Color,
 ) {
-    draw_arc(x, y, sides, radius, rotation, thickness, 360.0, color);
+    draw_arc(fc, x, y, sides, radius, rotation, thickness, 360.0, color);
 }
 
 /// Draws a solid circle centered at `[x, y]` with a given radius `r` and `color`.
 ///
 /// This is not a perfect circle, but only a polygon approximation.
 /// If this is an issue for you, consider using `draw_poly(x, y, 255, r, 0., color)` instead.
-pub fn draw_circle(x: f32, y: f32, r: f32, color: Color) {
-    draw_poly(x, y, 20, r, 0., color);
+pub fn draw_circle(fc: &mut FrogCx, x: f32, y: f32, r: f32, color: Color) {
+    draw_poly(fc, x, y, 20, r, 0., color);
 }
 
 /// Draws a circle outline centered at `[x, y]` with a given radius, line `thickness` and `color`.
 ///
 /// This is not a perfect circle, but only a polygon approximation.
 /// If this is an issue for you, consider using `draw_poly_lines(x, y, 255, r, 0., thickness, color)` instead.
-pub fn draw_circle_lines(x: f32, y: f32, r: f32, thickness: f32, color: Color) {
-    draw_poly_lines(x, y, 30, r, 0., thickness, color);
+pub fn draw_circle_lines(fc: &mut FrogCx, x: f32, y: f32, r: f32, thickness: f32, color: Color) {
+    draw_poly_lines(fc, x, y, 30, r, 0., thickness, color);
 }
 
 /// Draws a solid ellipse centered at `[x, y]` with a given size `[w, h]`,
 /// clockwise `rotation` (in degrees) and `color`.
-pub fn draw_ellipse(x: f32, y: f32, w: f32, h: f32, rotation: f32, color: Color) {
+pub fn draw_ellipse(fc: &mut FrogCx, x: f32, y: f32, w: f32, h: f32, rotation: f32, color: Color) {
     let sides = 20;
-    let context = get_context();
 
     let mut vertices = Vec::<Vertex>::with_capacity(sides as usize + 2);
     let mut indices = Vec::<u16>::with_capacity(sides as usize * 3);
@@ -300,9 +318,9 @@ pub fn draw_ellipse(x: f32, y: f32, w: f32, h: f32, rotation: f32, color: Color)
         }
     }
 
-    context.gl.texture(None);
-    context.gl.draw_mode(DrawMode::Triangles);
-    context.gl.geometry(&vertices, &indices);
+    fc.gl.texture(None);
+    fc.gl.draw_mode(DrawMode::Triangles);
+    fc.gl.geometry(&vertices, &indices);
 }
 
 /// Draws an ellipse outline centered at `[x, y]` with a given size `[w, h]`,
@@ -386,6 +404,7 @@ pub fn draw_line(
 /// Draw arc from `rotation`(in degrees) to `arc + rotation` (`arc` in degrees),
 /// centered at `[x, y]` with a given number of `sides`, `radius`, line `thickness`, and `color`.
 pub fn draw_arc(
+    fc: &mut FrogCx,
     x: f32,
     y: f32,
     sides: u8,
@@ -404,9 +423,8 @@ pub fn draw_arc(
     let span = part / sides;
     let sides = sides as usize;
 
-    let context = get_context();
-    context.gl.texture(None);
-    context.gl.draw_mode(DrawMode::Triangles);
+    fc.gl.texture(None);
+    fc.gl.draw_mode(DrawMode::Triangles);
 
     let mut verticies = Vec::<Vertex>::with_capacity(sides * 2);
     let mut indicies = Vec::<u16>::with_capacity(sides * 2);
@@ -428,5 +446,5 @@ pub fn draw_arc(
         }
     }
 
-    context.gl.geometry(&verticies, &indicies);
+    fc.gl.geometry(&verticies, &indicies);
 }

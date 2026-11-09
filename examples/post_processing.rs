@@ -31,8 +31,8 @@ async fn main() {
 
         clear_background(LIGHTGRAY);
         draw_line(fc, -30.0, 45.0, 30.0, 45.0, 3.0, BLUE);
-        draw_circle(-45.0, -35.0, 20.0, YELLOW);
-        draw_circle(45.0, -35.0, 20.0, GREEN);
+        draw_circle(fc, -45.0, -35.0, 20.0, YELLOW);
+        draw_circle(fc, 45.0, -35.0, 20.0, GREEN);
 
         // drawing to the screen
 

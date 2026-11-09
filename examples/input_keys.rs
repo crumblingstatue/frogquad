@@ -22,7 +22,7 @@ async fn main() {
             y -= 1.0;
         }
 
-        draw_circle(x, y, 15.0, YELLOW);
+        draw_circle(fc, x, y, 15.0, YELLOW);
         draw_text(
             fc,
             "move the ball with arrow keys",

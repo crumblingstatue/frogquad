@@ -36,16 +36,29 @@ async fn main() {
         clear_background(LIGHTGRAY);
 
         draw_text(fc, "Hello Letterbox", 20.0, 20.0, 30.0, DARKGRAY);
-        draw_circle(VIRTUAL_WIDTH / 2.0 - 65.0, VIRTUAL_HEIGHT / 2.0, 35.0, RED);
-        draw_circle(VIRTUAL_WIDTH / 2.0 + 65.0, VIRTUAL_HEIGHT / 2.0, 35.0, BLUE);
         draw_circle(
+            fc,
+            VIRTUAL_WIDTH / 2.0 - 65.0,
+            VIRTUAL_HEIGHT / 2.0,
+            35.0,
+            RED,
+        );
+        draw_circle(
+            fc,
+            VIRTUAL_WIDTH / 2.0 + 65.0,
+            VIRTUAL_HEIGHT / 2.0,
+            35.0,
+            BLUE,
+        );
+        draw_circle(
+            fc,
             VIRTUAL_WIDTH / 2.0,
             VIRTUAL_HEIGHT / 2.0 - 65.0,
             35.0,
             YELLOW,
         );
 
-        draw_circle(virtual_mouse_pos.x, virtual_mouse_pos.y, 15.0, BLACK);
+        draw_circle(fc, virtual_mouse_pos.x, virtual_mouse_pos.y, 15.0, BLACK);
 
         // ------------------------------------------------------------------------
         // Begin drawing the window screen

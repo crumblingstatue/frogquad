@@ -128,8 +128,8 @@ async fn main() {
 
         // Render some primitives in camera space
         draw_line(fc, -0.4, 0.4, -0.8, 0.9, 0.05, BLUE);
-        draw_rectangle(-0.3, 0.3, 0.2, 0.2, GREEN);
-        draw_circle(0., 0., 0.1, YELLOW);
+        draw_rectangle(fc, -0.3, 0.3, 0.2, 0.2, GREEN);
+        draw_circle(fc, 0., 0., 0.1, YELLOW);
 
         // Back to screen space, render some text
         set_default_camera(fc);

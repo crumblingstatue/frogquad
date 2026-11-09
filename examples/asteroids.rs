@@ -216,11 +216,12 @@ async fn main() {
         clear_background(LIGHTGRAY);
 
         for bullet in bullets.iter() {
-            draw_circle(bullet.pos.x, bullet.pos.y, 2., BLACK);
+            draw_circle(fc, bullet.pos.x, bullet.pos.y, 2., BLACK);
         }
 
         for asteroid in asteroids.iter() {
             draw_poly_lines(
+                fc,
                 asteroid.pos.x,
                 asteroid.pos.y,
                 asteroid.sides,

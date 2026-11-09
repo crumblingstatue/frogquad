@@ -82,7 +82,14 @@ async fn main() {
             let offset_y = (screen_height() - game_size) / 2. + 10.;
             let sq_size = (screen_height() - offset_y * 2.) / SQUARES as f32;
 
-            draw_rectangle(offset_x, offset_y, game_size - 20., game_size - 20., WHITE);
+            draw_rectangle(
+                fc,
+                offset_x,
+                offset_y,
+                game_size - 20.,
+                game_size - 20.,
+                WHITE,
+            );
 
             for i in 1..SQUARES {
                 draw_line(
@@ -109,6 +116,7 @@ async fn main() {
             }
 
             draw_rectangle(
+                fc,
                 offset_x + snake.head.0 as f32 * sq_size,
                 offset_y + snake.head.1 as f32 * sq_size,
                 sq_size,
@@ -118,6 +126,7 @@ async fn main() {
 
             for (x, y) in &snake.body {
                 draw_rectangle(
+                    fc,
                     offset_x + *x as f32 * sq_size,
                     offset_y + *y as f32 * sq_size,
                     sq_size,
@@ -127,6 +136,7 @@ async fn main() {
             }
 
             draw_rectangle(
+                fc,
                 offset_x + fruit.0 as f32 * sq_size,
                 offset_y + fruit.1 as f32 * sq_size,
                 sq_size,

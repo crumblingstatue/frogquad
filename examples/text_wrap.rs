@@ -32,7 +32,15 @@ async fn main() {
             Some(1.0),
             WHITE,
         );
-        draw_rectangle_lines(20.0, 20.0, dimensions.width, dimensions.height, 2.0, BLUE);
+        draw_rectangle_lines(
+            fc,
+            20.0,
+            20.0,
+            dimensions.width,
+            dimensions.height,
+            2.0,
+            BLUE,
+        );
         draw_line(
             fc,
             20.0 + maximum_line_length,

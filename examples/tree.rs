@@ -1,29 +1,31 @@
-use frogquad::prelude::*;
+use frogquad::{FrogCx, prelude::*};
 
-fn tree(gl: &mut QuadGl, time: f64, deep: u32, angle: f32, tall: f32) {
+fn tree(fc: &mut FrogCx, time: f64, deep: u32, angle: f32, tall: f32) {
     if deep >= 8 {
         return;
     }
 
     // we can use normal frogquad drawing API here
-    draw_rectangle(-0.01 / 2., 0., 0.01, tall, DARKGRAY);
+    draw_rectangle(fc, -0.01 / 2., 0., 0.01, tall, DARKGRAY);
 
     // and we can also modify internal frogquad render state with "gl" reference
-    gl.push_model_matrix(glam::Mat4::from_translation(glam::vec3(0., tall, 0.)));
+    unsafe { get_internal_gl(fc).quad_gl }
+        .push_model_matrix(glam::Mat4::from_translation(glam::vec3(0., tall, 0.)));
 
     // right leaf
-    gl.push_model_matrix(glam::Mat4::from_rotation_z(angle + time.sin() as f32 * 0.1));
-    tree(gl, time, deep + 1, angle * 0.7, tall * 0.8);
-    gl.pop_model_matrix();
+    unsafe { get_internal_gl(fc).quad_gl }
+        .push_model_matrix(glam::Mat4::from_rotation_z(angle + time.sin() as f32 * 0.1));
+    tree(fc, time, deep + 1, angle * 0.7, tall * 0.8);
+    unsafe { get_internal_gl(fc).quad_gl }.pop_model_matrix();
 
     // left leaf
-    gl.push_model_matrix(glam::Mat4::from_rotation_z(
+    unsafe { get_internal_gl(fc).quad_gl }.push_model_matrix(glam::Mat4::from_rotation_z(
         -angle - time.cos() as f32 * 0.1,
     ));
-    tree(gl, time, deep + 1, angle * 0.7, tall * 0.8);
-    gl.pop_model_matrix();
+    tree(fc, time, deep + 1, angle * 0.7, tall * 0.8);
+    unsafe { get_internal_gl(fc).quad_gl }.pop_model_matrix();
 
-    gl.pop_model_matrix();
+    unsafe { get_internal_gl(fc).quad_gl }.pop_model_matrix();
 }
 
 #[frogquad::main("Tree")]
@@ -39,9 +41,9 @@ async fn main() {
     loop {
         clear_background(LIGHTGRAY);
 
-        draw_circle(0., 0., 0.03, DARKGRAY);
+        draw_circle(fc, 0., 0., 0.03, DARKGRAY);
         let time = get_time(fc);
-        tree(unsafe { get_internal_gl(fc).quad_gl }, time, 0, 1., 0.3);
+        tree(fc, time, 0, 1., 0.3);
 
         next_frame().await
     }

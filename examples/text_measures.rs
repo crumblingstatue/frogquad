@@ -10,13 +10,20 @@ fn draw_text_annotated(
     let size = measure_text(text, font.unwrap_or_else(|| fc.default_font()), 100, 1.0);
 
     // Full background rect
-    draw_rectangle(x, baseline - size.offset_y, size.width, size.height, BLUE);
+    draw_rectangle(
+        fc,
+        x,
+        baseline - size.offset_y,
+        size.width,
+        size.height,
+        BLUE,
+    );
 
     // Base line
-    draw_rectangle(x, baseline - 2.0, size.width, 4.0, RED);
+    draw_rectangle(fc, x, baseline - 2.0, size.width, 4.0, RED);
 
     // Base line annotation
-    draw_rectangle(x + size.width, baseline - 1.0, 120.0, 1.0, GRAY);
+    draw_rectangle(fc, x + size.width, baseline - 1.0, 120.0, 1.0, GRAY);
     draw_text(
         fc,
         "baseline",
@@ -27,10 +34,11 @@ fn draw_text_annotated(
     );
 
     // Top line
-    draw_rectangle(x, baseline - 2.0 - size.offset_y, size.width, 4.0, RED);
+    draw_rectangle(fc, x, baseline - 2.0 - size.offset_y, size.width, 4.0, RED);
 
     // Top line annotation
     draw_rectangle(
+        fc,
         x + size.width,
         baseline - size.offset_y - 1.0,
         120.0,
@@ -48,6 +56,7 @@ fn draw_text_annotated(
 
     // Bottom line
     draw_rectangle(
+        fc,
         x,
         baseline - 2.0 - size.offset_y + size.height,
         size.width,
@@ -57,6 +66,7 @@ fn draw_text_annotated(
 
     // Bottom line annotation
     draw_rectangle(
+        fc,
         x + size.width,
         baseline - size.offset_y + size.height - 1.0,
         120.0,
