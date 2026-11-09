@@ -77,8 +77,8 @@ async fn main() {
         draw_text_ex(
             fc,
             "abcd",
-            screen_width() / 4.0 * 2.0,
-            screen_height() / 3.0 * 2.0,
+            screen_width(fc) / 4.0 * 2.0,
+            screen_height(fc) / 3.0 * 2.0,
             TextParams {
                 font_size: 70,
                 font: Some(&font),
@@ -91,8 +91,8 @@ async fn main() {
         draw_text_ex(
             fc,
             "abcd",
-            screen_width() / 4.0 * 3.0 - center.x,
-            screen_height() / 3.0 * 2.0 - center.y,
+            screen_width(fc) / 4.0 * 3.0 - center.x,
+            screen_height(fc) / 3.0 * 2.0 - center.y,
             TextParams {
                 font_size: 70,
                 rotation: angle * 2.0,

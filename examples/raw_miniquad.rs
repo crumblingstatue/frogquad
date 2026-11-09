@@ -19,7 +19,7 @@ async fn main() {
         set_camera(
             fc,
             &Camera2D {
-                zoom: vec2(1., screen_width() / screen_height()),
+                zoom: vec2(1., screen_width(fc) / screen_height(fc)),
                 ..Default::default()
             },
         );

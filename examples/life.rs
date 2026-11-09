@@ -9,8 +9,8 @@ enum CellState {
 #[frogquad::main("Life")]
 async fn main() {
     let fc = frogquad::get_context();
-    let w = screen_width() as usize;
-    let h = screen_height() as usize;
+    let w = screen_width(fc) as usize;
+    let h = screen_height(fc) as usize;
 
     let mut cells = vec![CellState::Dead; w * h];
     let mut buffer = vec![CellState::Dead; w * h];

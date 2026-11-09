@@ -1,6 +1,6 @@
 //! Window and associated to window rendering context related functions.
 
-use crate::{FrogCx, get_context};
+use crate::FrogCx;
 
 use crate::color::Color;
 
@@ -47,15 +47,12 @@ pub fn get_internal_gl<'a>(fc: &'a mut FrogCx) -> InternalGlContext<'a> {
     }
 }
 
-pub fn screen_width() -> f32 {
-    let context = get_context();
-    context.screen_width / miniquad::window::dpi_scale()
+pub fn screen_width(fc: &FrogCx) -> f32 {
+    fc.screen_width / miniquad::window::dpi_scale()
 }
 
-pub fn screen_height() -> f32 {
-    let context = get_context();
-
-    context.screen_height / miniquad::window::dpi_scale()
+pub fn screen_height(fc: &FrogCx) -> f32 {
+    fc.screen_height / miniquad::window::dpi_scale()
 }
 
 pub fn screen_dpi_scale() -> f32 {

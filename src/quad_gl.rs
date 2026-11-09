@@ -862,12 +862,12 @@ impl QuadGl {
         self.state.viewport = viewport;
     }
 
-    pub fn get_viewport(&self) -> (i32, i32, i32, i32) {
+    pub fn get_viewport(&self, fc: &FrogCx) -> (i32, i32, i32, i32) {
         self.state.viewport.unwrap_or((
             0,
             0,
-            crate::window::screen_width() as _,
-            crate::window::screen_height() as _,
+            crate::window::screen_width(fc) as _,
+            crate::window::screen_height(fc) as _,
         ))
     }
 

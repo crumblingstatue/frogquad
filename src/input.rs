@@ -59,7 +59,7 @@ pub fn mouse_position(fc: &mut FrogCx) -> (f32, f32) {
 pub fn mouse_position_local(fc: &mut FrogCx) -> Vec2 {
     let (pixels_x, pixels_y) = mouse_position(fc);
 
-    convert_to_local(Vec2::new(pixels_x, pixels_y))
+    convert_to_local(Vec2::new(pixels_x, pixels_y), fc)
 }
 
 /// Returns the difference between the current mouse position and the mouse position on the previous frame.
@@ -84,17 +84,17 @@ pub fn simulate_mouse_with_touch(fc: &mut FrogCx, option: bool) {
 }
 
 /// Return touches with positions in pixels.
-pub fn touches(fc: &mut FrogCx) -> Vec<Touch> {
+pub fn touches(fc: &FrogCx) -> Vec<Touch> {
     fc.touches.values().cloned().collect()
 }
 
 /// Return touches with positions in range [-1; 1].
-pub fn touches_local(fc: &mut FrogCx) -> Vec<Touch> {
+pub fn touches_local(fc: &FrogCx) -> Vec<Touch> {
     fc.touches
         .values()
         .map(|touch| {
             let mut touch = touch.clone();
-            touch.position = convert_to_local(touch.position);
+            touch.position = convert_to_local(touch.position, fc);
             touch
         })
         .collect()
@@ -171,8 +171,11 @@ pub fn is_mouse_button_released(fc: &mut FrogCx, btn: MouseButton) -> bool {
 }
 
 /// Convert a position in pixels to a position in the range [-1; 1].
-fn convert_to_local(pixel_pos: Vec2) -> Vec2 {
-    Vec2::new(pixel_pos.x / screen_width(), pixel_pos.y / screen_height()) * 2.0
+fn convert_to_local(pixel_pos: Vec2, fc: &FrogCx) -> Vec2 {
+    Vec2::new(
+        pixel_pos.x / screen_width(fc),
+        pixel_pos.y / screen_height(fc),
+    ) * 2.0
         - Vec2::new(1.0, 1.0)
 }
 

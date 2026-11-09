@@ -46,7 +46,7 @@ async fn main() {
             20.0 + maximum_line_length,
             0.0,
             20.0 + maximum_line_length,
-            screen_height(),
+            screen_height(fc),
             1.0,
             RED,
         );

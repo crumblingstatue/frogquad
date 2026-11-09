@@ -39,12 +39,12 @@ async fn main() {
         for rustaceane in &mut rustaceanes {
             rustaceane.pos += rustaceane.speed;
 
-            if ((rustaceane.pos.x + rustacean_tex.width(fc) / 2.) > screen_width())
+            if ((rustaceane.pos.x + rustacean_tex.width(fc) / 2.) > screen_width(fc))
                 || ((rustaceane.pos.x + rustacean_tex.width(fc) / 2.) < 0.)
             {
                 rustaceane.speed.x *= -1.;
             }
-            if ((rustaceane.pos.y + rustacean_tex.height(fc) / 2.) > screen_height())
+            if ((rustaceane.pos.y + rustacean_tex.height(fc) / 2.) > screen_height(fc))
                 || ((rustaceane.pos.y + rustacean_tex.height(fc) / 2.) < 0.)
             {
                 rustaceane.speed.y *= -1.;

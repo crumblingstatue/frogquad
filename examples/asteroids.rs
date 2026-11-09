@@ -1,4 +1,4 @@
-use frogquad::prelude::*;
+use frogquad::{FrogCx, prelude::*};
 
 const SHIP_HEIGHT: f32 = 25.;
 const SHIP_BASE: f32 = 22.;
@@ -25,19 +25,19 @@ struct Asteroid {
     collided: bool,
 }
 
-fn wrap_around(v: &Vec2) -> Vec2 {
+fn wrap_around(v: &Vec2, fc: &FrogCx) -> Vec2 {
     let mut vr = Vec2::new(v.x, v.y);
-    if vr.x > screen_width() {
+    if vr.x > screen_width(fc) {
         vr.x = 0.;
     }
     if vr.x < 0. {
-        vr.x = screen_width()
+        vr.x = screen_width(fc)
     }
-    if vr.y > screen_height() {
+    if vr.y > screen_height(fc) {
         vr.y = 0.;
     }
     if vr.y < 0. {
-        vr.y = screen_height()
+        vr.y = screen_height(fc)
     }
     vr
 }
@@ -46,7 +46,7 @@ fn wrap_around(v: &Vec2) -> Vec2 {
 async fn main() {
     let fc = frogquad::get_context();
     let mut ship = Ship {
-        pos: Vec2::new(screen_width() / 2., screen_height() / 2.),
+        pos: Vec2::new(screen_width(fc) / 2., screen_height(fc) / 2.),
         rot: 0.,
         vel: Vec2::new(0., 0.),
     };
@@ -71,32 +71,32 @@ async fn main() {
             draw_text(
                 fc,
                 text,
-                screen_width() / 2. - text_size.width / 2.,
-                screen_height() / 2. - text_size.height / 2.,
+                screen_width(fc) / 2. - text_size.width / 2.,
+                screen_height(fc) / 2. - text_size.height / 2.,
                 font_size,
                 DARKGRAY,
             );
             if is_key_down(fc, KeyCode::Enter) {
                 ship = Ship {
-                    pos: Vec2::new(screen_width() / 2., screen_height() / 2.),
+                    pos: Vec2::new(screen_width(fc) / 2., screen_height(fc) / 2.),
                     rot: 0.,
                     vel: Vec2::new(0., 0.),
                 };
                 bullets = Vec::new();
                 asteroids = Vec::new();
                 gameover = false;
-                screen_center = Vec2::new(screen_width() / 2., screen_height() / 2.);
+                screen_center = Vec2::new(screen_width(fc) / 2., screen_height(fc) / 2.);
                 for _ in 0..10 {
                     asteroids.push(Asteroid {
                         pos: screen_center
                             + Vec2::new(rand::gen_range(-1., 1.), rand::gen_range(-1., 1.))
                                 .normalize()
-                                * screen_width().min(screen_height())
+                                * screen_width(fc).min(screen_height(fc))
                                 / 2.,
                         vel: Vec2::new(rand::gen_range(-1., 1.), rand::gen_range(-1., 1.)),
                         rot: 0.,
                         rot_speed: rand::gen_range(-2., 2.),
-                        size: screen_width().min(screen_height()) / 10.,
+                        size: screen_width(fc).min(screen_height(fc)) / 10.,
                         sides: rand::gen_range(3, 8),
                         collided: false,
                     })
@@ -140,7 +140,7 @@ async fn main() {
             ship.vel = ship.vel.normalize() * 5.;
         }
         ship.pos += ship.vel;
-        ship.pos = wrap_around(&ship.pos);
+        ship.pos = wrap_around(&ship.pos, fc);
 
         // Move each bullet
         for bullet in bullets.iter_mut() {
@@ -150,7 +150,7 @@ async fn main() {
         // Move each asteroid
         for asteroid in asteroids.iter_mut() {
             asteroid.pos += asteroid.vel;
-            asteroid.pos = wrap_around(&asteroid.pos);
+            asteroid.pos = wrap_around(&asteroid.pos, fc);
             asteroid.rot += asteroid.rot_speed;
         }
 

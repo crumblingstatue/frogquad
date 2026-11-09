@@ -963,26 +963,28 @@ impl Emitter {
         ctx.apply_pipeline(&self.pipeline);
     }
 
-    pub fn end_render_pass(&mut self, quad_gl: &QuadGl, ctx: &mut dyn miniquad::RenderingBackend) {
-        ctx.end_render_pass();
+    pub fn end_render_pass(&mut self, fc: &mut FrogCx) {
+        fc.quad_context.end_render_pass();
 
         if self.config.post_processing.is_some() {
-            let pass = quad_gl.get_active_render_pass();
+            let pass = fc.gl.get_active_render_pass();
             if let Some(pass) = pass {
-                ctx.begin_pass(Some(pass), PassAction::Nothing);
+                fc.quad_context.begin_pass(Some(pass), PassAction::Nothing);
             } else {
-                ctx.begin_default_pass(PassAction::Nothing);
+                fc.quad_context.begin_default_pass(PassAction::Nothing);
             }
 
-            ctx.apply_pipeline(&self.post_processing_pipeline);
-            let (x, y, w, h) = quad_gl.get_viewport();
-            ctx.apply_viewport(x, y, w, h);
+            fc.quad_context
+                .apply_pipeline(&self.post_processing_pipeline);
+            let (x, y, w, h) = fc.gl.get_viewport(fc);
+            fc.quad_context.apply_viewport(x, y, w, h);
 
-            ctx.apply_bindings(&self.post_processing_bindings);
+            fc.quad_context
+                .apply_bindings(&self.post_processing_bindings);
 
-            ctx.draw(0, 6, 1);
+            fc.quad_context.draw(0, 6, 1);
 
-            ctx.end_render_pass();
+            fc.quad_context.end_render_pass();
         }
     }
 
@@ -997,7 +999,7 @@ impl Emitter {
 
         self.setup_render_pass(&fc.gl, &mut *fc.quad_context);
         self.perform_render_pass(&fc.gl, &mut *fc.quad_context);
-        self.end_render_pass(&fc.gl, &mut *fc.quad_context);
+        self.end_render_pass(fc);
     }
 }
 
@@ -1068,7 +1070,7 @@ impl EmittersCache {
             }
         }
         if self.active_emitters.len() > 0 {
-            self.emitter.end_render_pass(&fc.gl, &mut *fc.quad_context);
+            self.emitter.end_render_pass(fc);
         }
 
         self.active_emitters.retain(|emitter| emitter.is_some())

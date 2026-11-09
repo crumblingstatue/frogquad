@@ -77,10 +77,10 @@ async fn main() {
         if !game_over {
             clear_background(fc, LIGHTGRAY);
 
-            let game_size = screen_width().min(screen_height());
-            let offset_x = (screen_width() - game_size) / 2. + 10.;
-            let offset_y = (screen_height() - game_size) / 2. + 10.;
-            let sq_size = (screen_height() - offset_y * 2.) / SQUARES as f32;
+            let game_size = screen_width(fc).min(screen_height(fc));
+            let offset_x = (screen_width(fc) - game_size) / 2. + 10.;
+            let offset_y = (screen_height(fc) - game_size) / 2. + 10.;
+            let sq_size = (screen_height(fc) - offset_y * 2.) / SQUARES as f32;
 
             draw_rectangle(
                 fc,
@@ -96,7 +96,7 @@ async fn main() {
                     fc,
                     offset_x,
                     offset_y + sq_size * i as f32,
-                    screen_width() - offset_x,
+                    screen_width(fc) - offset_x,
                     offset_y + sq_size * i as f32,
                     2.,
                     LIGHTGRAY,
@@ -109,7 +109,7 @@ async fn main() {
                     offset_x + sq_size * i as f32,
                     offset_y,
                     offset_x + sq_size * i as f32,
-                    screen_height() - offset_y,
+                    screen_height(fc) - offset_y,
                     2.,
                     LIGHTGRAY,
                 );
@@ -161,8 +161,8 @@ async fn main() {
             draw_text(
                 fc,
                 text,
-                screen_width() / 2. - text_size.width / 2.,
-                screen_height() / 2. + text_size.height / 2.,
+                screen_width(fc) / 2. - text_size.width / 2.,
+                screen_height(fc) / 2. + text_size.height / 2.,
                 font_size,
                 DARKGRAY,
             );

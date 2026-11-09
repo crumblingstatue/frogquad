@@ -109,7 +109,7 @@ async fn main() {
             &Camera2D {
                 target: vec2(target.0, target.1),
                 rotation: smooth_rotation,
-                zoom: vec2(zoom, zoom * screen_width() / screen_height()),
+                zoom: vec2(zoom, zoom * screen_width(fc) / screen_height(fc)),
                 ..Default::default()
             },
         );
@@ -120,7 +120,7 @@ async fn main() {
             &Camera2D {
                 target: vec2(target.0, target.1),
                 rotation: smooth_rotation,
-                zoom: vec2(zoom, zoom * screen_width() / screen_height()),
+                zoom: vec2(zoom, zoom * screen_width(fc) / screen_height(fc)),
                 offset: vec2(offset.0, offset.1),
                 ..Default::default()
             },

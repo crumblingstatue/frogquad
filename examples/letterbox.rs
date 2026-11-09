@@ -18,14 +18,15 @@ async fn main() {
     loop {
         // Get required scaling value
         let scale: f32 = f32::min(
-            screen_width() / VIRTUAL_WIDTH,
-            screen_height() / VIRTUAL_HEIGHT,
+            screen_width(fc) / VIRTUAL_WIDTH,
+            screen_height(fc) / VIRTUAL_HEIGHT,
         );
 
         // Mouse position in the virtual screen
         let virtual_mouse_pos = Vec2 {
-            x: (mouse_position(fc).0 - (screen_width() - (VIRTUAL_WIDTH * scale)) * 0.5) / scale,
-            y: (mouse_position(fc).1 - (screen_height() - (VIRTUAL_HEIGHT * scale)) * 0.5) / scale,
+            x: (mouse_position(fc).0 - (screen_width(fc) - (VIRTUAL_WIDTH * scale)) * 0.5) / scale,
+            y: (mouse_position(fc).1 - (screen_height(fc) - (VIRTUAL_HEIGHT * scale)) * 0.5)
+                / scale,
         };
 
         // ------------------------------------------------------------------------
@@ -71,8 +72,8 @@ async fn main() {
         draw_texture_ex(
             fc,
             &render_target.texture,
-            (screen_width() - (VIRTUAL_WIDTH * scale)) * 0.5,
-            (screen_height() - (VIRTUAL_HEIGHT * scale)) * 0.5,
+            (screen_width(fc) - (VIRTUAL_WIDTH * scale)) * 0.5,
+            (screen_height(fc) - (VIRTUAL_HEIGHT * scale)) * 0.5,
             WHITE,
             DrawTextureParams {
                 dest_size: Some(vec2(VIRTUAL_WIDTH * scale, VIRTUAL_HEIGHT * scale)),

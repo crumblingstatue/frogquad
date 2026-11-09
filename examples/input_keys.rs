@@ -3,8 +3,8 @@ use frogquad::prelude::*;
 #[frogquad::main("InputKeys")]
 async fn main() {
     let fc = frogquad::get_context();
-    let mut x = screen_width() / 2.0;
-    let mut y = screen_height() / 2.0;
+    let mut x = screen_width(fc) / 2.0;
+    let mut y = screen_height(fc) / 2.0;
 
     loop {
         clear_background(fc, LIGHTGRAY);

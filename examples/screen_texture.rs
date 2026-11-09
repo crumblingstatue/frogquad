@@ -26,7 +26,7 @@ async fn main() {
             0.0,
             WHITE,
             DrawTextureParams {
-                dest_size: Some(vec2(screen_width(), screen_height())),
+                dest_size: Some(vec2(screen_width(fc), screen_height(fc))),
                 ..Default::default()
             },
         );
