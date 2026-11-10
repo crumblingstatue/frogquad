@@ -108,17 +108,18 @@ async fn main() {
             },
         );
 
-        draw_grid(20, 1., BLACK, GRAY);
+        draw_grid(fc, 20, 1., BLACK, GRAY);
 
         draw_line_3d(
+            fc,
             vec3(x, 0.0, x),
             vec3(5.0, 5.0, 5.0),
             Color::new(1.0, 1.0, 0.0, 1.0),
         );
 
-        draw_cube_wires(vec3(0., 1., -6.), vec3(2., 2., 2.), GREEN);
-        draw_cube_wires(vec3(0., 1., 6.), vec3(2., 2., 2.), BLUE);
-        draw_cube_wires(vec3(2., 1., 2.), vec3(2., 2., 2.), RED);
+        draw_cube_wires(fc, vec3(0., 1., -6.), vec3(2., 2., 2.), GREEN);
+        draw_cube_wires(fc, vec3(0., 1., 6.), vec3(2., 2., 2.), BLUE);
+        draw_cube_wires(fc, vec3(2., 1., 2.), vec3(2., 2., 2.), RED);
 
         // Back to screen space, render some text
 
