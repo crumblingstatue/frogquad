@@ -16,7 +16,7 @@ pub fn draw_triangle(fc: &mut FrogCx, v1: Vec2, v2: Vec2, v3: Vec2, color: Color
 
     let indices: [u16; 3] = [0, 1, 2];
 
-    fc.gl.texture(None);
+    fc.gl.texture(&fc.textures, None);
     fc.gl.draw_mode(DrawMode::Triangles);
     fc.gl.geometry(&vertices, &indices);
 }
@@ -47,7 +47,7 @@ pub fn draw_rectangle(fc: &mut FrogCx, x: f32, y: f32, w: f32, h: f32, color: Co
     ];
     let indices: [u16; 6] = [0, 1, 2, 0, 2, 3];
 
-    fc.gl.texture(None);
+    fc.gl.texture(&fc.textures, None);
     fc.gl.draw_mode(DrawMode::Triangles);
     fc.gl.geometry(&vertices, &indices);
 }
@@ -81,7 +81,7 @@ pub fn draw_rectangle_lines(
         0, 1, 4, 1, 4, 5, 1, 5, 6, 1, 2, 6, 3, 7, 2, 2, 7, 6, 0, 4, 3, 3, 4, 7,
     ];
 
-    fc.gl.texture(None);
+    fc.gl.texture(&fc.textures, None);
     fc.gl.draw_mode(DrawMode::Triangles);
     fc.gl.geometry(&vertices, &indices);
 }
@@ -140,7 +140,7 @@ pub fn draw_rectangle_lines_ex(
         3, 6, 7,
     ];
 
-    fc.gl.texture(None);
+    fc.gl.texture(&fc.textures, None);
     fc.gl.draw_mode(DrawMode::Triangles);
     fc.gl.geometry(&vertices, &indices);
 }
@@ -199,7 +199,7 @@ pub fn draw_rectangle_ex(
     ];
     let indices: [u16; 6] = [0, 1, 2, 0, 2, 3];
 
-    fc.gl.texture(None);
+    fc.gl.texture(&fc.textures, None);
     fc.gl.draw_mode(DrawMode::Triangles);
     fc.gl.geometry(&vertices, &indices);
 }
@@ -253,7 +253,7 @@ pub fn draw_poly(
         }
     }
 
-    fc.gl.texture(None);
+    fc.gl.texture(&fc.textures, None);
     fc.gl.draw_mode(DrawMode::Triangles);
     fc.gl.geometry(&vertices, &indices);
 }
@@ -318,7 +318,7 @@ pub fn draw_ellipse(fc: &mut FrogCx, x: f32, y: f32, w: f32, h: f32, rotation: f
         }
     }
 
-    fc.gl.texture(None);
+    fc.gl.texture(&fc.textures, None);
     fc.gl.draw_mode(DrawMode::Triangles);
     fc.gl.geometry(&vertices, &indices);
 }
@@ -388,7 +388,7 @@ pub fn draw_line(
     let tx = nx / tlen;
     let ty = ny / tlen;
 
-    fc.gl.texture(None);
+    fc.gl.texture(&fc.textures, None);
     fc.gl.draw_mode(DrawMode::Triangles);
     fc.gl.geometry(
         &[
@@ -423,7 +423,7 @@ pub fn draw_arc(
     let span = part / sides;
     let sides = sides as usize;
 
-    fc.gl.texture(None);
+    fc.gl.texture(&fc.textures, None);
     fc.gl.draw_mode(DrawMode::Triangles);
 
     let mut verticies = Vec::<Vertex>::with_capacity(sides * 2);

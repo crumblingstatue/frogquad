@@ -596,7 +596,7 @@ pub fn draw_texture_ex(
     ];
     let indices: [u16; 6] = [0, 1, 2, 0, 2, 3];
 
-    fc.gl.texture(Some(texture));
+    fc.gl.texture(&fc.textures, Some(texture));
     fc.gl.draw_mode(DrawMode::Triangles);
     fc.gl.geometry(&vertices, &indices);
 }

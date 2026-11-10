@@ -840,10 +840,9 @@ impl QuadGl {
         self.state.depth_test_enable = enable;
     }
 
-    pub fn texture(&mut self, texture: Option<&Texture2D>) {
-        let ctx = crate::get_context();
+    pub fn texture(&mut self, texture_ctx: &TexturesContext, texture: Option<&Texture2D>) {
         self.state.texture =
-            texture.map(|t| FrogCx::raw_miniquad_id(&ctx.gl, &ctx.textures, &t.texture));
+            texture.map(|t| FrogCx::raw_miniquad_id(self, texture_ctx, &t.texture));
     }
 
     pub fn scissor(&mut self, clip: Option<(i32, i32, i32, i32)>) {

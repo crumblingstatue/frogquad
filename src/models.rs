@@ -46,7 +46,7 @@ pub struct Mesh {
 }
 
 pub fn draw_mesh(fc: &mut FrogCx, mesh: &Mesh) {
-    fc.gl.texture(mesh.texture.as_ref());
+    fc.gl.texture(&fc.textures, mesh.texture.as_ref());
     fc.gl.draw_mode(DrawMode::Triangles);
     fc.gl.geometry(&mesh.vertices[..], &mesh.indices[..]);
 }
@@ -63,7 +63,7 @@ pub fn draw_line_3d(fc: &mut FrogCx, start: Vec3, end: Vec3, color: Color) {
 
     let line = [Vertex::new2(start, uv, color), Vertex::new2(end, uv, color)];
 
-    fc.gl.texture(None);
+    fc.gl.texture(&fc.textures, None);
     fc.gl.draw_mode(DrawMode::Lines);
     fc.gl.geometry(&line, &indices);
 }
@@ -136,7 +136,7 @@ pub fn draw_plane(
     let v4 = Vertex::new2(center + vec3(size.x, 0., -size.y), vec2(1., 0.), color);
 
     {
-        fc.gl.texture(texture);
+        fc.gl.texture(&fc.textures, texture);
     }
     draw_quad(fc, [v1, v2, v3, v4]);
 }
@@ -175,7 +175,7 @@ pub fn draw_affine_parallelogram(
     let v4 = Vertex::new2(offset + e2, vec2(1., 0.), color);
 
     {
-        fc.gl.texture(texture);
+        fc.gl.texture(&fc.textures, texture);
     }
     draw_quad(fc, [v1, v2, v3, v4]);
 }
@@ -232,7 +232,7 @@ pub fn draw_cube(
     texture: Option<&Texture2D>,
     color: Color,
 ) {
-    fc.gl.texture(texture);
+    fc.gl.texture(&fc.textures, texture);
 
     let (x, y, z) = (position.x, position.y, position.z);
     let (width, height, length) = (size.x, size.y, size.z);
@@ -530,7 +530,7 @@ pub fn draw_sphere_ex(
 
     let scale = vec3(radius, radius, radius);
 
-    fc.gl.texture(texture);
+    fc.gl.texture(&fc.textures, texture);
     fc.gl.draw_mode(params.draw_mode);
 
     for i in 0..rings + 1 {
@@ -677,7 +677,7 @@ pub fn draw_cylinder_ex(
 ) {
     let sides = params.sides;
 
-    fc.gl.texture(texture);
+    fc.gl.texture(&fc.textures, texture);
     fc.gl.draw_mode(params.draw_mode);
 
     use std::f32::consts::PI;
