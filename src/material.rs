@@ -1,6 +1,11 @@
 //! Custom materials - shaders, uniforms.
 
-use crate::{Error, get_context, quad_gl::GlPipeline, texture::Texture2D, tobytes::ToBytes};
+use crate::{
+    Error, FrogCx,
+    quad_gl::{GlPipeline, QuadGl},
+    texture::Texture2D,
+    tobytes::ToBytes,
+};
 use miniquad::{PipelineParams, UniformDesc};
 use std::sync::Arc;
 
@@ -9,7 +14,7 @@ struct GlPipelineGuarded(GlPipeline);
 
 impl Drop for GlPipelineGuarded {
     fn drop(&mut self) {
-        get_context().gl.delete_pipeline(self.0);
+        crate::get_context().gl.delete_pipeline(self.0);
     }
 }
 
@@ -29,14 +34,12 @@ impl Material {
     /// Set GPU uniform value for this material.
     /// "name" should be from "uniforms" list used for material creation.
     /// Otherwise uniform value would be silently ignored.
-    pub fn set_uniform<T>(&self, name: &str, uniform: T) {
-        get_context().gl.set_uniform(self.pipeline.0, name, uniform);
+    pub fn set_uniform<T>(&self, gl: &mut QuadGl, name: &str, uniform: T) {
+        gl.set_uniform(self.pipeline.0, name, uniform);
     }
 
-    pub fn set_uniform_array<T: ToBytes>(&self, name: &str, uniform: &[T]) {
-        get_context()
-            .gl
-            .set_uniform_array(self.pipeline.0, name, uniform);
+    pub fn set_uniform_array<T: ToBytes>(&self, gl: &mut QuadGl, name: &str, uniform: &[T]) {
+        gl.set_uniform_array(self.pipeline.0, name, uniform);
     }
 
     pub fn set_texture(&self, fc: &mut crate::FrogCx, name: &str, texture: Texture2D) {
@@ -121,13 +124,12 @@ pub struct MaterialParams {
 /// ```
 ///
 pub fn load_material(
+    fc: &mut FrogCx,
     shader: crate::ShaderSource,
     params: MaterialParams,
 ) -> Result<Material, Error> {
-    let context = &mut get_context();
-
-    let pipeline = context.gl.make_pipeline(
-        &mut *context.quad_context,
+    let pipeline = fc.gl.make_pipeline(
+        &mut *fc.quad_context,
         shader,
         params.pipeline_params,
         params.uniforms,
@@ -140,13 +142,13 @@ pub fn load_material(
 }
 
 /// All following frogquad rendering calls will use the given material.
-pub fn gl_use_material(material: &Material) {
-    get_context().gl.pipeline(Some(material.pipeline.0));
+pub fn gl_use_material(gl: &mut QuadGl, material: &Material) {
+    gl.pipeline(Some(material.pipeline.0));
 }
 
 /// Use default frogquad material.
-pub fn gl_use_default_material() {
-    get_context().gl.pipeline(None);
+pub fn gl_use_default_material(gl: &mut QuadGl) {
+    gl.pipeline(None);
 }
 
 #[doc(hidden)]

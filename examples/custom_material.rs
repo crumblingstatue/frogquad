@@ -159,9 +159,9 @@ async fn main() {
         ..Default::default()
     };
 
-    let ctx = get_internal_gl(fc).quad_context;
     let mat = load_material(
-        match ctx.info().backend {
+        fc,
+        match fc.quad_context.info().backend {
             Backend::OpenGl => ShaderSource::Glsl {
                 vertex: VERTEX,
                 fragment: FRAGMENT,
@@ -177,7 +177,8 @@ async fn main() {
     .unwrap();
 
     let mat_with_array = load_material(
-        match ctx.info().backend {
+        fc,
+        match fc.quad_context.info().backend {
             Backend::OpenGl => ShaderSource::Glsl {
                 vertex: VERTEX,
                 fragment: FRAGMENT_WITH_ARRAY,
@@ -200,25 +201,25 @@ async fn main() {
     loop {
         clear_background(fc, GRAY);
 
-        gl_use_material(&mat);
+        gl_use_material(&mut fc.gl, &mat);
 
-        mat.set_uniform("test_color", vec4(1., 0., 0., 1.));
+        mat.set_uniform(&mut fc.gl, "test_color", vec4(1., 0., 0., 1.));
 
         draw_rectangle(fc, 50.0, 50.0, 100., 100., WHITE);
 
-        mat.set_uniform("test_color", vec4(0., 1., 0., 1.));
+        mat.set_uniform(&mut fc.gl, "test_color", vec4(0., 1., 0., 1.));
         draw_rectangle(fc, 160.0, 50.0, 100., 100., WHITE);
 
-        mat.set_uniform("test_color", vec4(0., 0., 1., 1.));
+        mat.set_uniform(&mut fc.gl, "test_color", vec4(0., 0., 1., 1.));
         draw_rectangle(fc, 270.0, 50.0, 100., 100., WHITE);
 
-        gl_use_material(&mat_with_array);
+        gl_use_material(&mut fc.gl, &mat_with_array);
         let mut colors: [Vec4; 10] = [vec4(0.0, 1.0, 0.0, 0.0); 10];
         colors[5] = vec4(0.0, 1.0, 1.0, 1.0);
-        mat_with_array.set_uniform_array("test_color", &colors[..]);
+        mat_with_array.set_uniform_array(&mut fc.gl, "test_color", &colors[..]);
         draw_rectangle(fc, 50.0, 160.0, 100., 100., WHITE);
 
-        gl_use_default_material();
+        gl_use_default_material(&mut fc.gl);
 
         draw_rectangle(fc, 380.0, 50.0, 100., 100., YELLOW);
 

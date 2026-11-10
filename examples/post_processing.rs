@@ -7,6 +7,7 @@ async fn main() {
     render_target.texture.set_filter(fc, FilterMode::Nearest);
 
     let material = load_material(
+        fc,
         ShaderSource::Glsl {
             vertex: CRT_VERTEX_SHADER,
             fragment: CRT_FRAGMENT_SHADER,
@@ -39,7 +40,7 @@ async fn main() {
         set_default_camera(fc);
 
         clear_background(fc, WHITE);
-        gl_use_material(&material);
+        gl_use_material(&mut fc.gl, &material);
         draw_texture_ex(
             fc,
             &render_target.texture,
@@ -51,7 +52,7 @@ async fn main() {
                 ..Default::default()
             },
         );
-        gl_use_default_material();
+        gl_use_default_material(&mut fc.gl);
 
         next_frame().await;
     }
