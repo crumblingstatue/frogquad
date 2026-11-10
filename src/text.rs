@@ -189,8 +189,9 @@ impl Font {
     /// # use frogquad::prelude::*;
     /// # #[frogquad::main("test")]
     /// # async fn main() {
-    /// let mut font = get_default_font();
-    /// font.set_filter(FilterMode::Linear);
+    /// let fc = frogquad::get_context();
+    /// let mut font = get_default_font(fc);
+    /// font.set_filter(FilterMode::Linear, &mut *fc.quad_context);
     /// # }
     /// ```
     pub fn set_filter(
