@@ -870,54 +870,51 @@ impl From<miniquad::conf::Conf> for conf::Conf {
     }
 }
 
-/// Not meant to be used directly, only from the macro.
-#[doc(hidden)]
-pub struct Window {}
-
-impl Window {
-    pub fn new(label: &str, future: impl Future<Output = ()> + 'static) {
-        Window::from_config(
-            conf::Conf {
-                miniquad_conf: miniquad::conf::Conf {
-                    window_title: label.to_string(),
-                    ..Default::default()
-                },
+pub fn start(label: &str, future: impl Future<Output = ()> + 'static) {
+    start_with_config(
+        conf::Conf {
+            miniquad_conf: miniquad::conf::Conf {
+                window_title: label.to_string(),
                 ..Default::default()
             },
-            future,
-        );
-    }
+            ..Default::default()
+        },
+        future,
+    );
+}
 
-    pub fn from_config(config: impl Into<conf::Conf>, future: impl Future<Output = ()> + 'static) {
-        let conf::Conf {
-            miniquad_conf,
-            update_on,
+pub fn start_with_config(
+    config: impl Into<conf::Conf>,
+    future: impl Future<Output = ()> + 'static,
+) {
+    let conf::Conf {
+        miniquad_conf,
+        update_on,
+        default_filter_mode,
+        draw_call_vertex_capacity,
+        draw_call_index_capacity,
+    } = config.into();
+    miniquad::start(miniquad_conf, move || {
+        thread_assert::set_thread_id();
+        let context = FrogCx::new(
+            update_on.unwrap_or_default(),
             default_filter_mode,
             draw_call_vertex_capacity,
             draw_call_index_capacity,
-        } = config.into();
-        miniquad::start(miniquad_conf, move || {
-            thread_assert::set_thread_id();
-            let context = FrogCx::new(
-                update_on.unwrap_or_default(),
-                default_filter_mode,
-                draw_call_vertex_capacity,
-                draw_call_index_capacity,
-            );
-            unsafe { CONTEXT = Some(context) };
+        );
+        unsafe { CONTEXT = Some(context) };
 
-            Box::new(Stage {
-                main_future: Box::pin(async {
-                    future.await;
-                    unsafe {
-                        if let Some(ctx) = CONTEXT.as_mut() {
-                            ctx.gl.reset();
-                        }
+        Box::new(Stage {
+            main_future: Box::pin(async {
+                future.await;
+                unsafe {
+                    if let Some(ctx) = CONTEXT.as_mut() {
+                        ctx.gl.reset();
                     }
-                }),
-            })
-        });
-    }
+                }
+            }),
+        })
+    });
 }
 
 /// Information about a dropped file.

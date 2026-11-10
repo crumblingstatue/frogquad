@@ -122,8 +122,8 @@ pub fn main(attr: TokenStream, item: TokenStream) -> TokenStream {
     modified.extend(source);
 
     let (method, ident) = match attr.into_iter().next() {
-        Some(TokenTree::Ident(ident)) => ("from_config", format!("{}()", ident)),
-        Some(TokenTree::Literal(literal)) => ("new", literal.to_string()),
+        Some(TokenTree::Ident(ident)) => ("start_with_config", format!("{}()", ident)),
+        Some(TokenTree::Literal(literal)) => ("start", literal.to_string()),
         Some(wrong_ident) => panic!(
             "Wrong argument: {:?}. Place function returned `Conf`",
             wrong_ident
@@ -135,7 +135,7 @@ pub fn main(attr: TokenStream, item: TokenStream) -> TokenStream {
     let mut prelude: TokenStream = format!(
         "
     {pub_main} fn main() {{
-        {crate_name}::Window::{method}({ident}, {main});
+        {crate_name}::{method}({ident}, {main});
     }}
     ",
         pub_main = if is_pub { "pub" } else { "" },
@@ -222,7 +222,7 @@ pub fn test(_attr: TokenStream, item: TokenStream) -> TokenStream {
           }});
           frogquad::test::MUTEX.as_mut().unwrap().lock()
         }};
-        frogquad::Window::new(\"test\", {test_name}_async());
+        frogquad::start(\"test\", {test_name}_async());
     }}
     ",
         test_name = test_name,
