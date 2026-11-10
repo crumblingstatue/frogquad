@@ -443,7 +443,7 @@ impl FrogCx {
         glam::Mat4::orthographic_rh_gl(0., width / dpi, height / dpi, 0., -1., 1.)
     }
 
-    pub(crate) fn projection_matrix(&self) -> glam::Mat4 {
+    pub fn projection_matrix(&self) -> glam::Mat4 {
         if let Some(matrix) = self.camera_matrix {
             matrix
         } else {

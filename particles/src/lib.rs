@@ -918,10 +918,14 @@ impl Emitter {
         }
     }
 
-    fn perform_render_pass(&mut self, quad_gl: &QuadGl, ctx: &mut dyn miniquad::RenderingBackend) {
+    fn perform_render_pass(
+        &mut self,
+        proj_matrix: glam::Mat4,
+        ctx: &mut dyn miniquad::RenderingBackend,
+    ) {
         ctx.apply_bindings(&self.bindings);
         ctx.apply_uniforms(UniformsSource::table(&shader::Uniforms {
-            mvp: quad_gl.get_projection_matrix(),
+            mvp: proj_matrix,
             emitter_position: vec3(self.position.x, self.position.y, 0.0),
             local_coords: if self.config.local_coords { 1.0 } else { 0.0 },
         }));
@@ -998,7 +1002,7 @@ impl Emitter {
         self.update(fc, frame_time);
 
         self.setup_render_pass(&fc.gl, &mut *fc.quad_context);
-        self.perform_render_pass(&fc.gl, &mut *fc.quad_context);
+        self.perform_render_pass(fc.projection_matrix(), &mut *fc.quad_context);
         self.end_render_pass(fc);
     }
 }
@@ -1062,7 +1066,7 @@ impl EmittersCache {
                 let frame_time = get_frame_time(fc);
                 emitter.update(fc, frame_time);
 
-                emitter.perform_render_pass(&fc.gl, &mut *fc.quad_context);
+                emitter.perform_render_pass(fc.projection_matrix(), &mut *fc.quad_context);
 
                 if emitter.config.emitting == false {
                     self.emitters_cache.push(i.take().unwrap().0);

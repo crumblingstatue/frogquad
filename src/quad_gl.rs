@@ -824,14 +824,6 @@ impl QuadGl {
         self.batch_vertex_buffer.clear();
     }
 
-    pub fn get_projection_matrix(&self) -> glam::Mat4 {
-        // get_projection_matrix is a way plugins used to get frogquad's current projection
-        // back in the days when projection was a part of static batcher
-        // now it is not, so here we go with this hack
-
-        crate::get_context().projection_matrix()
-    }
-
     pub const fn get_active_render_pass(&self) -> Option<RenderPass> {
         self.state.render_pass
     }
