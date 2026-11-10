@@ -11,6 +11,7 @@ use crate::{
 
 use crate::color::WHITE;
 use glam::vec2;
+use miniquad::RenderingBackend;
 
 use std::sync::{Arc, Mutex};
 pub(crate) mod atlas;
@@ -192,8 +193,12 @@ impl Font {
     /// font.set_filter(FilterMode::Linear);
     /// # }
     /// ```
-    pub fn set_filter(&mut self, filter_mode: miniquad::FilterMode) {
-        self.atlas.lock().unwrap().set_filter(filter_mode);
+    pub fn set_filter(
+        &mut self,
+        filter_mode: miniquad::FilterMode,
+        rend: &mut dyn RenderingBackend,
+    ) {
+        self.atlas.lock().unwrap().set_filter(filter_mode, rend);
     }
 }
 
@@ -252,7 +257,7 @@ pub fn load_ttf_font_from_bytes(fc: &mut crate::FrogCx, bytes: &[u8]) -> Result<
 
     font.populate_font_cache(&Font::ascii_character_list(), 15);
 
-    font.set_filter(fc.default_filter_mode);
+    font.set_filter(fc.default_filter_mode, &mut *fc.quad_context);
 
     Ok(font)
 }
@@ -355,11 +360,12 @@ pub fn draw_text_ex(
         );
 
         total_width += char_data.advance * font_scale_x + kerning_offset;
+        let texture_id = atlas.texture(&mut *fc.quad_context);
 
         crate::texture::draw_texture_ex(
             fc,
             &crate::texture::Texture2D {
-                texture: TextureHandle::Unmanaged(atlas.texture()),
+                texture: TextureHandle::Unmanaged(texture_id),
             },
             dest.x,
             dest.y,

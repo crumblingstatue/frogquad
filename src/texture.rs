@@ -539,21 +539,21 @@ pub fn draw_texture_ex(
         h: height,
     });
 
-    let texture_opt =
-        fc.texture_batcher
-            .get(&fc.gl, &fc.textures, texture)
-            .map(|(batched_texture, uv)| {
-                let [batched_width, batched_height] = batched_texture.size(fc).to_array();
-                sx = ((sx / width) * uv.w + uv.x) * batched_width;
-                sy = ((sy / height) * uv.h + uv.y) * batched_height;
-                sw = (sw / width) * uv.w * batched_width;
-                sh = (sh / height) * uv.h * batched_height;
+    let texture_opt = fc
+        .texture_batcher
+        .get(&fc.gl, &fc.textures, &mut *fc.quad_context, texture)
+        .map(|(batched_texture, uv)| {
+            let [batched_width, batched_height] = batched_texture.size(fc).to_array();
+            sx = ((sx / width) * uv.w + uv.x) * batched_width;
+            sy = ((sy / height) * uv.h + uv.y) * batched_height;
+            sw = (sw / width) * uv.w * batched_width;
+            sh = (sh / height) * uv.h * batched_height;
 
-                width = batched_width;
-                height = batched_height;
+            width = batched_width;
+            height = batched_height;
 
-                batched_texture
-            });
+            batched_texture
+        });
     let texture = texture_opt.as_ref().unwrap_or(texture);
 
     let (mut w, mut h) = match params.dest_size {
@@ -942,11 +942,12 @@ impl Batcher {
         &mut self,
         gl: &QuadGl,
         tex_ctx: &TexturesContext,
+        rend: &mut dyn RenderingBackend,
         texture: &Texture2D,
     ) -> Option<(Texture2D, Rect)> {
         let id = SpriteKey::Texture(FrogCx::raw_miniquad_id(gl, tex_ctx, &texture.texture));
-        let uv_rect = self.atlas.get_uv_rect(id)?;
-        Some((Texture2D::unmanaged(self.atlas.texture()), uv_rect))
+        let uv_rect = self.atlas.get_uv_rect(id, rend)?;
+        Some((Texture2D::unmanaged(self.atlas.texture(rend)), uv_rect))
     }
 }
 
@@ -979,5 +980,7 @@ pub unsafe fn reset_textures_atlas(fc: &mut FrogCx) {
 
 pub fn set_default_filter_mode(fc: &mut FrogCx, filter: FilterMode) {
     fc.default_filter_mode = filter;
-    fc.texture_batcher.atlas.set_filter(filter);
+    fc.texture_batcher
+        .atlas
+        .set_filter(filter, &mut *fc.quad_context);
 }
