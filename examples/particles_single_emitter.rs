@@ -2,8 +2,10 @@ use frogquad::prelude::*;
 
 use frogquad_particles::{BlendMode, Curve, Emitter, EmitterConfig};
 
-#[frogquad::main("Fountain")]
-async fn main() {
+fn main() {
+    frogquad::start("Fountain", main_());
+}
+async fn main_() {
     let fc = frogquad::get_context();
     let mut emitter = Emitter::new(EmitterConfig {
         lifetime: 0.5,

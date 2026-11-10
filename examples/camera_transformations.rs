@@ -17,8 +17,10 @@ fn draw_cross(fc: &mut FrogCx, x: f32, y: f32, color: Color) {
     draw_line(fc, x, y - size, x, y + size, thickness, color);
 }
 
-#[frogquad::main("Camera")]
-async fn main() {
+fn main() {
+    frogquad::start("Camera", main_());
+}
+async fn main_() {
     let mut target = (0., 0.);
     let mut zoom = 1.0;
     let mut rotation = 0.0;

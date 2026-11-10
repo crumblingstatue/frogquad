@@ -6,8 +6,10 @@ enum CellState {
     Dead,
 }
 
-#[frogquad::main("Life")]
-async fn main() {
+fn main() {
+    frogquad::start("Life", main_());
+}
+async fn main_() {
     let fc = frogquad::get_context();
     let w = screen_width(fc) as usize;
     let h = screen_height(fc) as usize;

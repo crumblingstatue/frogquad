@@ -14,8 +14,10 @@ struct Platform {
     speed: f32,
 }
 
-#[frogquad::main("Platformer")]
-async fn main() {
+fn main() {
+    frogquad::start("Platformer", main_());
+}
+async fn main_() {
     let fc = frogquad::get_context();
     let tileset = load_texture(fc, "examples/tileset.png").await.unwrap();
     tileset.set_filter(fc, FilterMode::Nearest);

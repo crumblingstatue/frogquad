@@ -28,7 +28,6 @@ miniquad = { version = "=0.4.11", features = ["log-impl"] }
 quad-rand = "0.2.3"
 glam = { version = "0.27", features = ["scalar-math"] }
 image = { version = "0.24", default-features = false, features = ["png", "tga"] }
-frogquad_macro = { version = "0.1.8", path = "frogquad_macro" }
 fontdue = "0.9"
 backtrace = { version = "0.3.60", optional = true }
 log = { version = "0.4", optional = true }
@@ -48,4 +47,4 @@ frogquad = { path = './' }
 #quad-gl = {path = './quad-gl'}
 
 [workspace]
-members = ["frogquad_macro", "particles", "physics-platformer", "tiled"]
+members = ["particles", "physics-platformer", "tiled"]

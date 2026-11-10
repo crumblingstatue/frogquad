@@ -12,8 +12,10 @@ fn window_conf() -> Conf {
     }
 }
 
-#[frogquad::main(window_conf)]
-async fn main() {
+fn main() {
+    frogquad::start_with_config(window_conf(), main_());
+}
+async fn main_() {
     let fc = get_context();
     loop {
         clear_background(fc, WHITE);

@@ -6,8 +6,10 @@ struct Rustaceane {
     color: Color,
 }
 
-#[frogquad::main("Rustaceanmark")]
-async fn main() {
+fn main() {
+    frogquad::start("Rustaceanmark", main_());
+}
+async fn main_() {
     let fc = frogquad::get_context();
     let mut rustaceanes: Vec<Rustaceane> = Vec::new();
     let rustacean_tex = load_texture(fc, "examples/rustacean_happy.png")

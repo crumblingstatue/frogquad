@@ -5,8 +5,10 @@ static LOREM: &str = "Lorem ipsum odor amet, consectetuer adipiscing elit. Ultri
 Intentional newlines
 are preserved.";
 
-#[frogquad::main("Text Wrap")]
-async fn main() {
+fn main() {
+    frogquad::start("Text Wrap", main_());
+}
+async fn main_() {
     let fc = frogquad::get_context();
     let font_size = 24;
     loop {

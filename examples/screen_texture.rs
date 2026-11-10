@@ -1,7 +1,9 @@
 use frogquad::prelude::*;
 
-#[frogquad::main("Texture")]
-async fn main() {
+fn main() {
+    frogquad::start("Texture", main_());
+}
+async fn main_() {
     let fc = frogquad::get_context();
     let texture: Texture2D = load_texture(fc, "examples/chess.png").await.unwrap();
 

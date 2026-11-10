@@ -1,7 +1,9 @@
 use frogquad::prelude::*;
 
-#[frogquad::main("Camera")]
-async fn main() {
+fn main() {
+    frogquad::start("Camera", main_());
+}
+async fn main_() {
     let fc = frogquad::get_context();
     loop {
         clear_background(fc, LIGHTGRAY);

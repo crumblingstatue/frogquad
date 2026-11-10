@@ -39,8 +39,8 @@ Put some frogquad code in `src/main.rs`:
 ```rust
 use frogquad::prelude::*;
 
-#[frogquad::main("BasicShapes")]
-async fn main() {
+fn main() { frogquad::start("BasicShapes", main_()); }
+async fn main_() {
     loop {
         clear_background(RED);
 

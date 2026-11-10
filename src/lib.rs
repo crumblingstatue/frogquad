@@ -21,8 +21,8 @@
 //! ```no_run
 //! use frogquad::prelude::*;
 //!
-//! #[frogquad::main("BasicShapes")]
-//! async fn main() {
+//! fn main() { frogquad::start("BasicShapes", main_()); }
+//! async fn main_() {
 //!     let fc = frogquad::get_context();
 //!     loop {
 //!         clear_background(fc, RED);
@@ -68,65 +68,6 @@ pub mod prelude;
 mod error;
 
 pub use error::Error;
-
-/// frogquad entry point.
-///
-/// ```skip
-/// #[main("Window name")]
-/// async fn main() {
-/// }
-/// ```
-///
-/// ```skip
-/// fn window_conf() -> Conf {
-///     Conf {
-///         window_title: "Window name".to_owned(),
-///         fullscreen: true,
-///         ..Default::default()
-///     }
-/// }
-/// #[frogquad::main(window_conf)]
-/// async fn main() {
-/// }
-/// ```
-///
-/// ## Error handling
-///
-/// `async fn main()` can have the same signature as a normal `main` in Rust.
-/// The most typical use cases are:
-/// * `async fn main() {}`
-/// * `async fn main() -> Result<(), Error> {}` (note that `Error` should implement `Debug`)
-///
-/// When a lot of third party crates are involved and very different errors may happens, `anyhow` crate may help:
-/// * `async fn main() -> anyhow::Result<()> {}`
-///
-/// For better control over game errors custom error type may be introduced:
-/// ```skip
-/// #[derive(Debug)]
-/// enum GameError {
-///     FileError(frogquad::FileError),
-///     SomeThirdPartyCrateError(somecrate::Error)
-/// }
-/// impl From<frogquad::file::FileError> for GameError {
-///     fn from(error: frogquad::file::FileError) -> GameError {
-///         GameError::FileError(error)
-///     }
-/// }
-/// impl From<somecrate::Error> for GameError {
-///     fn from(error: somecrate::Error) -> GameError {
-///         GameError::SomeThirdPartyCrateError(error)
-///     }
-/// }
-/// ```
-pub use frogquad_macro::main;
-
-/// #[frogquad::test] fn test() {}
-///
-/// Very similar to frogquad::main
-/// Right now it will still spawn a window, just like ::main, therefore
-/// is not really useful for anything than developping frogquad itself
-#[doc(hidden)]
-pub use frogquad_macro::test;
 
 /// Cross platform random generator.
 pub mod rand {

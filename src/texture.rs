@@ -648,8 +648,8 @@ impl Texture2D {
     /// # Example
     /// ```
     /// # use frogquad::prelude::*;
-    /// # #[frogquad::main("test")]
-    /// # async fn main() {
+    /// # fn main() { frogquad::start("test", main_()); }
+    /// # async fn main_() {
     /// let fc = frogquad::get_context();
     /// let texture = Texture2D::empty(fc);
     /// # }
@@ -666,8 +666,8 @@ impl Texture2D {
     /// # Example
     /// ```
     /// # use frogquad::prelude::*;
-    /// # #[frogquad::main("test")]
-    /// # async fn main() {
+    /// # fn main() { frogquad::start("test", main_()); }
+    /// # async fn main_() {
     /// let fc = frogquad::get_context();
     /// let texture = Texture2D::from_file_with_format(
     ///     fc,
@@ -717,8 +717,8 @@ impl Texture2D {
     ///
     /// ```
     /// # use frogquad::prelude::*;
-    /// # #[frogquad::main("test")]
-    /// # async fn main() {
+    /// # fn main() { frogquad::start("test", main_()); }
+    /// # async fn main_() {
     /// let fc = frogquad::get_context();
     /// // Create a 2x2 texture from a byte slice with 4 rgba pixels
     /// let bytes: Vec<u8> = vec![255, 0, 0, 192, 0, 255, 0, 192, 0, 0, 255, 192, 255, 255, 255, 192];
@@ -821,8 +821,8 @@ impl Texture2D {
     /// # Example
     /// ```
     /// # use frogquad::prelude::*;
-    /// # #[frogquad::main("test")]
-    /// # async fn main() {
+    /// # fn main() { frogquad::start("test", main_()); }
+    /// # async fn main_() {
     /// let fc = frogquad::get_context();
     /// let texture = Texture2D::empty(fc);
     /// texture.set_filter(fc, FilterMode::Linear);

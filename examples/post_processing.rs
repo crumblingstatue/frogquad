@@ -1,7 +1,9 @@
 use frogquad::prelude::*;
 
-#[frogquad::main("Post processing")]
-async fn main() {
+fn main() {
+    frogquad::start("Post processing", main_());
+}
+async fn main_() {
     let fc = frogquad::get_context();
     let render_target = render_target(fc, 320, 150);
     render_target.texture.set_filter(fc, FilterMode::Nearest);

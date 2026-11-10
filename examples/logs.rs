@@ -4,8 +4,10 @@
 
 use frogquad::{get_context, prelude::*};
 
-#[frogquad::main("Logs")]
-async fn main() {
+fn main() {
+    frogquad::start("Logs", main_());
+}
+async fn main_() {
     let fc = get_context();
     debug!("This is a debug message");
     info!("and info message");

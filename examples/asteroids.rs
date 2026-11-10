@@ -42,8 +42,10 @@ fn wrap_around(v: &Vec2, fc: &FrogCx) -> Vec2 {
     vr
 }
 
-#[frogquad::main("Asteroids")]
-async fn main() {
+fn main() {
+    frogquad::start("Asteroids", main_());
+}
+async fn main_() {
     let fc = frogquad::get_context();
     let mut ship = Ship {
         pos: Vec2::new(screen_width(fc) / 2., screen_height(fc) / 2.),

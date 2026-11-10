@@ -1,7 +1,9 @@
 use frogquad::prelude::*;
 
-#[frogquad::main("Raw miniquad")]
-async fn main() {
+fn main() {
+    frogquad::start("Raw miniquad", main_());
+}
+async fn main_() {
     let fc = frogquad::get_context();
     let stage = {
         let InternalGlContext {

@@ -1,7 +1,9 @@
 use frogquad::prelude::*;
 
-#[frogquad::main("Arkanoid")]
-async fn main() {
+fn main() {
+    frogquad::start("Arkanoid", main_());
+}
+async fn main_() {
     let fc = frogquad::get_context();
     const BLOCKS_W: usize = 10;
     const BLOCKS_H: usize = 10;

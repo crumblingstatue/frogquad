@@ -1,7 +1,9 @@
 use frogquad::prelude::*;
 
-#[frogquad::main("BasicShapes")]
-async fn main() {
+fn main() {
+    frogquad::start("BasicShapes", main_());
+}
+async fn main_() {
     let fc = frogquad::get_context();
     loop {
         clear_background(fc, LIGHTGRAY);

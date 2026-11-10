@@ -12,8 +12,11 @@ struct Snake {
     dir: Point,
 }
 
-#[frogquad::main("Snake")]
-async fn main() {
+fn main() {
+    frogquad::start("Snake", main_());
+}
+
+async fn main_() {
     let fc = frogquad::get_context();
     let mut snake = Snake {
         head: (0, 0),

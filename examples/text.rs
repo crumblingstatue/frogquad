@@ -1,7 +1,9 @@
 use frogquad::prelude::*;
 
-#[frogquad::main("Text")]
-async fn main() {
+fn main() {
+    frogquad::start("Text", main_());
+}
+async fn main_() {
     let fc = frogquad::get_context();
     let font = load_ttf_font(
         frogquad::get_context(),

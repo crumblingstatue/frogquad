@@ -32,8 +32,10 @@ fn tree(fc: &mut FrogCx, time: f64, deep: u32, angle: f32, tall: f32) {
     get_internal_gl(fc).quad_gl.pop_model_matrix();
 }
 
-#[frogquad::main("Tree")]
-async fn main() {
+fn main() {
+    frogquad::start("Tree", main_());
+}
+async fn main_() {
     let fc = frogquad::get_context();
     let camera = Camera2D {
         zoom: vec2(1., 1.),

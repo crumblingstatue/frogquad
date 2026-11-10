@@ -43,8 +43,10 @@ fn fire() -> particles::EmitterConfig {
     }
 }
 
-#[frogquad::main("Fountain")]
-async fn main() {
+fn main() {
+    frogquad::start("Fountain", main_());
+}
+async fn main_() {
     let fc = frogquad::get_context();
     let texture = load_texture(fc, "examples/smoke_fire.png").await.unwrap();
 

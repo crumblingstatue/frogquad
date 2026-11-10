@@ -14,8 +14,10 @@ fn conf() -> Conf {
     }
 }
 
-#[frogquad::main(conf)]
-async fn main() {
+fn main() {
+    frogquad::start_with_config(conf(), main_());
+}
+async fn main_() {
     let fc = frogquad::get_context();
     let mut x = 0.0;
     let mut switch = false;
