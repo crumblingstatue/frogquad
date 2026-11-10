@@ -6,7 +6,7 @@ Intentional newlines
 are preserved.";
 
 fn main() {
-    frogquad::start("Text Wrap", main_());
+    frogquad::start(Conf::from_title("Text Wrap"), main_());
 }
 async fn main_() {
     let fc = frogquad::get_context();

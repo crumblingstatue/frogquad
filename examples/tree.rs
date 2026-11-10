@@ -33,7 +33,7 @@ fn tree(fc: &mut FrogCx, time: f64, deep: u32, angle: f32, tall: f32) {
 }
 
 fn main() {
-    frogquad::start("Tree", main_());
+    frogquad::start(Conf::from_title("Tree"), main_());
 }
 async fn main_() {
     let fc = frogquad::get_context();

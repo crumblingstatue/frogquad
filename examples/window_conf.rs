@@ -1,7 +1,7 @@
 use frogquad::{get_context, prelude::*};
 
-fn window_conf() -> Conf {
-    Conf {
+fn window_conf() -> miniquad::conf::Conf {
+    miniquad::conf::Conf {
         window_title: "Window Conf".to_owned(),
         fullscreen: true,
         platform: miniquad::conf::Platform {
@@ -13,7 +13,7 @@ fn window_conf() -> Conf {
 }
 
 fn main() {
-    frogquad::start_with_config(window_conf(), main_());
+    frogquad::start(window_conf(), main_());
 }
 async fn main_() {
     let fc = get_context();

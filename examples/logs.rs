@@ -5,7 +5,7 @@
 use frogquad::{get_context, prelude::*};
 
 fn main() {
-    frogquad::start("Logs", main_());
+    frogquad::start(Conf::from_title("Logs"), main_());
 }
 async fn main_() {
     let fc = get_context();

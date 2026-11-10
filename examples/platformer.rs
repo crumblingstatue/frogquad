@@ -15,7 +15,7 @@ struct Platform {
 }
 
 fn main() {
-    frogquad::start("Platformer", main_());
+    frogquad::start(Conf::from_title("Platformer"), main_());
 }
 async fn main_() {
     let fc = frogquad::get_context();

@@ -6,7 +6,7 @@ use crate::{
     texture::Texture2D,
     tobytes::ToBytes,
 };
-use miniquad::{PipelineParams, UniformDesc};
+use miniquad::{PipelineParams, ShaderSource, UniformDesc};
 use std::sync::Arc;
 
 #[derive(PartialEq)]
@@ -119,7 +119,7 @@ pub struct MaterialParams {
 ///
 pub fn load_material(
     fc: &mut FrogCx,
-    shader: crate::ShaderSource,
+    shader: ShaderSource,
     params: MaterialParams,
 ) -> Result<Material, Error> {
     let pipeline = fc.gl.make_pipeline(

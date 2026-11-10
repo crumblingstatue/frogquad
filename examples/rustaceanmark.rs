@@ -7,7 +7,7 @@ struct Rustaceane {
 }
 
 fn main() {
-    frogquad::start("Rustaceanmark", main_());
+    frogquad::start(Conf::from_title("Rustaceanmark"), main_());
 }
 async fn main_() {
     let fc = frogquad::get_context();

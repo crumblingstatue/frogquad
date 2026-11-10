@@ -7,7 +7,7 @@ enum CellState {
 }
 
 fn main() {
-    frogquad::start("Life", main_());
+    frogquad::start(Conf::from_title("Life"), main_());
 }
 async fn main_() {
     let fc = frogquad::get_context();

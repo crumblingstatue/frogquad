@@ -1,7 +1,7 @@
 use frogquad::prelude::*;
 
 fn main() {
-    frogquad::start("InputKeys", main_());
+    frogquad::start(Conf::from_title("InputKeys"), main_());
 }
 async fn main_() {
     let fc = frogquad::get_context();

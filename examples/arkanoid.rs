@@ -1,7 +1,7 @@
 use frogquad::prelude::*;
 
 fn main() {
-    frogquad::start("Arkanoid", main_());
+    frogquad::start(Conf::from_title("Arkanoid"), main_());
 }
 async fn main_() {
     let fc = frogquad::get_context();

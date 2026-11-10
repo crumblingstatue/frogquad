@@ -4,8 +4,8 @@ use frogquad::prelude::*;
 const MOVE_SPEED: f32 = 0.1;
 const LOOK_SPEED: f32 = 0.1;
 
-fn conf() -> Conf {
-    Conf {
+fn conf() -> miniquad::conf::Conf {
+    miniquad::conf::Conf {
         window_title: String::from("frogquad"),
         window_width: 1260,
         window_height: 768,
@@ -15,7 +15,7 @@ fn conf() -> Conf {
 }
 
 fn main() {
-    frogquad::start_with_config(conf(), main_());
+    frogquad::start(conf(), main_());
 }
 async fn main_() {
     let fc = frogquad::get_context();

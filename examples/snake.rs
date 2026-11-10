@@ -13,7 +13,7 @@ struct Snake {
 }
 
 fn main() {
-    frogquad::start("Snake", main_());
+    frogquad::start(Conf::from_title("Snake"), main_());
 }
 
 async fn main_() {

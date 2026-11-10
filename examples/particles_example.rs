@@ -44,7 +44,7 @@ fn fire() -> particles::EmitterConfig {
 }
 
 fn main() {
-    frogquad::start("Fountain", main_());
+    frogquad::start(Conf::from_title("Fountain"), main_());
 }
 async fn main_() {
     let fc = frogquad::get_context();

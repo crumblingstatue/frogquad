@@ -1,7 +1,7 @@
 use frogquad::prelude::*;
 
 fn main() {
-    frogquad::start("Camera", main_());
+    frogquad::start(Conf::from_title("Camera"), main_());
 }
 async fn main_() {
     let fc = frogquad::get_context();

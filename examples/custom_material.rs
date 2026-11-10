@@ -130,14 +130,14 @@ fragment float4 fragmentShader(RasterizerData in [[stage_in]],
     return u.test_color[5] * Texture.sample(TextureSmplr, in.uv);
 }"#;
 
-fn window_conf() -> Conf {
+fn window_conf() -> miniquad::conf::Conf {
     let metal = std::env::args().nth(1).as_deref() == Some("metal");
     let apple_gfx_api = if metal {
         conf::AppleGfxApi::Metal
     } else {
         conf::AppleGfxApi::OpenGl
     };
-    Conf {
+    miniquad::conf::Conf {
         window_title: "Shaders".to_owned(),
         platform: conf::Platform {
             apple_gfx_api,
@@ -148,7 +148,7 @@ fn window_conf() -> Conf {
 }
 
 fn main() {
-    frogquad::start_with_config(window_conf(), main_());
+    frogquad::start(window_conf(), main_());
 }
 async fn main_() {
     let fc = frogquad::get_context();

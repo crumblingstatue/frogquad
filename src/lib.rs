@@ -21,7 +21,7 @@
 //! ```no_run
 //! use frogquad::prelude::*;
 //!
-//! fn main() { frogquad::start("BasicShapes", main_()); }
+//! fn main() { frogquad::start(Conf::from_title("BasicShapes"), main_()); }
 //! async fn main_() {
 //!     let fc = frogquad::get_context();
 //!     loop {
@@ -38,8 +38,6 @@
 //!```
 
 #![warn(static_mut_refs)]
-
-use miniquad::*;
 
 use std::collections::{HashMap, HashSet, VecDeque};
 use std::future::Future;
@@ -83,6 +81,7 @@ pub mod logging {
 // Use logging facade
 pub use ::log as logging;
 pub use miniquad;
+use miniquad::{EventHandler, KeyCode, KeyMods, MouseButton, TouchPhase, date};
 
 use crate::quad_gl::MagicSnapshotter;
 use crate::text::Font;
@@ -242,7 +241,7 @@ impl FrogCx {
 
     fn new(
         update_on: conf::UpdateTrigger,
-        default_filter_mode: crate::FilterMode,
+        default_filter_mode: miniquad::FilterMode,
         draw_call_vertex_capacity: usize,
         draw_call_index_capacity: usize,
     ) -> FrogCx {
@@ -771,7 +770,7 @@ pub mod conf {
         /// zero CPU usage.
         /// update_on will tell frogquad when to proceed with the event loop.
         pub update_on: Option<UpdateTrigger>,
-        pub default_filter_mode: crate::FilterMode,
+        pub default_filter_mode: miniquad::FilterMode,
         /// frogquad performs automatic and static batching for each
         /// draw_* call. For each draw call, it pre-allocate a huge cpu/gpu
         /// buffer to add vertices to. When it exceeds the buffer, it allocates the
@@ -791,9 +790,21 @@ pub mod conf {
             Self {
                 miniquad_conf: miniquad::conf::Conf::default(),
                 update_on: Some(UpdateTrigger::default()),
-                default_filter_mode: crate::FilterMode::Linear,
+                default_filter_mode: miniquad::FilterMode::Linear,
                 draw_call_vertex_capacity: 10000,
                 draw_call_index_capacity: 5000,
+            }
+        }
+    }
+
+    impl Conf {
+        pub fn from_title(title: &str) -> Self {
+            Self {
+                miniquad_conf: miniquad::conf::Conf {
+                    window_title: title.to_string(),
+                    ..Default::default()
+                },
+                ..Default::default()
             }
         }
     }
@@ -804,30 +815,14 @@ impl From<miniquad::conf::Conf> for conf::Conf {
         conf::Conf {
             miniquad_conf: conf,
             update_on: None,
-            default_filter_mode: crate::FilterMode::Linear,
+            default_filter_mode: miniquad::FilterMode::Linear,
             draw_call_vertex_capacity: 10000,
             draw_call_index_capacity: 5000,
         }
     }
 }
 
-pub fn start(label: &str, future: impl Future<Output = ()> + 'static) {
-    start_with_config(
-        conf::Conf {
-            miniquad_conf: miniquad::conf::Conf {
-                window_title: label.to_string(),
-                ..Default::default()
-            },
-            ..Default::default()
-        },
-        future,
-    );
-}
-
-pub fn start_with_config(
-    config: impl Into<conf::Conf>,
-    future: impl Future<Output = ()> + 'static,
-) {
+pub fn start(config: impl Into<conf::Conf>, future: impl Future<Output = ()> + 'static) {
     let conf::Conf {
         miniquad_conf,
         update_on,

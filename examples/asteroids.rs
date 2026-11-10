@@ -43,7 +43,7 @@ fn wrap_around(v: &Vec2, fc: &FrogCx) -> Vec2 {
 }
 
 fn main() {
-    frogquad::start("Asteroids", main_());
+    frogquad::start(Conf::from_title("Asteroids"), main_());
 }
 async fn main_() {
     let fc = frogquad::get_context();

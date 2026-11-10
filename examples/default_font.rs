@@ -1,7 +1,7 @@
 use frogquad::prelude::*;
 
 fn main() {
-    frogquad::start("DefaultFont", main_());
+    frogquad::start(Conf::from_title("DefaultFont"), main_());
 }
 async fn main_() {
     let fc = frogquad::get_context();
