@@ -12,12 +12,6 @@ use std::sync::Arc;
 #[derive(PartialEq)]
 struct GlPipelineGuarded(GlPipeline);
 
-impl Drop for GlPipelineGuarded {
-    fn drop(&mut self) {
-        crate::get_context().gl.delete_pipeline(self.0);
-    }
-}
-
 /// Material instance loaded on GPU.
 #[derive(Clone, PartialEq)]
 pub struct Material {

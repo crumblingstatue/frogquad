@@ -380,17 +380,6 @@ impl RenderPass {
     }
 }
 
-impl Drop for RenderPass {
-    fn drop(&mut self) {
-        // Safety: if strong_count < 2, this is the last strong ref.
-        // No new strong references can be created after this point.
-        if Arc::strong_count(&self.render_pass) < 2 {
-            let ctx = crate::get_context();
-            ctx.textures.schedule_render_pass_removed(*self.render_pass);
-        }
-    }
-}
-
 #[derive(Clone, Debug)]
 pub struct RenderTarget {
     pub texture: Texture2D,
@@ -635,13 +624,6 @@ pub fn get_screen_data(fc: &mut FrogCx) -> Image {
 #[derive(Clone, Debug, PartialEq)]
 pub struct Texture2D {
     pub texture: TextureHandle,
-}
-
-impl Drop for TextureSlotGuarded {
-    fn drop(&mut self) {
-        let ctx = crate::get_context();
-        ctx.textures.schedule_removed(self.0);
-    }
 }
 
 impl Texture2D {

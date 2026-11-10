@@ -1,4 +1,4 @@
-use crate::{Color, get_context, math::Rect, texture::Image};
+use crate::{Color, math::Rect, texture::Image};
 
 use std::collections::HashMap;
 
@@ -25,13 +25,6 @@ pub struct Atlas {
     filter: miniquad::FilterMode,
 
     unique_id: u64,
-}
-
-impl Drop for Atlas {
-    fn drop(&mut self) {
-        let ctx = &mut get_context().quad_context;
-        ctx.delete_texture(self.texture);
-    }
 }
 
 impl Atlas {
