@@ -36,6 +36,7 @@ log = { version = "0.4", optional = true }
 frogquad-particles = { path = "./particles" }
 frogquad-tiled = { path = "./tiled" }
 frogquad-platformer = { path = "./physics-platformer" }
+pollster = "1"
 
 # workaround to fix the examples
 # this allows to use frogquad-particles in examples without two versions of frogquad
