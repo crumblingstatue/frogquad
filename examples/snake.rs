@@ -1,4 +1,4 @@
-use frogquad::prelude::*;
+use frogquad::{FrogCx, prelude::*};
 
 use std::collections::LinkedList;
 
@@ -6,78 +6,94 @@ const SQUARES: i16 = 16;
 
 type Point = (i16, i16);
 
-struct Snake {
-    head: Point,
-    body: LinkedList<Point>,
-    dir: Point,
+struct SnakeApp {
+    snake: Snake,
+    fruit: Point,
+    score: i32,
+    speed: f64,
+    last_update: f64,
+    navigation_lock: bool,
+    game_over: bool,
 }
 
-fn main() {
-    frogquad::start(Conf::from_title("Snake"), main_());
+impl SnakeApp {
+    fn new(fc: &mut FrogCx) -> Self {
+        Self {
+            snake: Snake {
+                head: (0, 0),
+                dir: (1, 0),
+                body: LinkedList::new(),
+            },
+            fruit: (rand::gen_range(0, SQUARES), rand::gen_range(0, SQUARES)),
+            score: 0,
+            speed: 0.3,
+            last_update: get_time(fc),
+            navigation_lock: false,
+            game_over: false,
+        }
+    }
 }
 
-async fn main_() {
-    let fc = frogquad::get_context();
-    let mut snake = Snake {
-        head: (0, 0),
-        dir: (1, 0),
-        body: LinkedList::new(),
-    };
-    let mut fruit: Point = (rand::gen_range(0, SQUARES), rand::gen_range(0, SQUARES));
-    let mut score = 0;
-    let mut speed = 0.3;
-    let mut last_update = get_time(fc);
-    let mut navigation_lock = false;
-    let mut game_over = false;
-
-    let up = (0, -1);
-    let down = (0, 1);
-    let right = (1, 0);
-    let left = (-1, 0);
-
-    loop {
-        if !game_over {
-            if is_key_down(fc, KeyCode::Right) && snake.dir != left && !navigation_lock {
-                snake.dir = right;
-                navigation_lock = true;
-            } else if is_key_down(fc, KeyCode::Left) && snake.dir != right && !navigation_lock {
-                snake.dir = left;
-                navigation_lock = true;
-            } else if is_key_down(fc, KeyCode::Up) && snake.dir != down && !navigation_lock {
-                snake.dir = up;
-                navigation_lock = true;
-            } else if is_key_down(fc, KeyCode::Down) && snake.dir != up && !navigation_lock {
-                snake.dir = down;
-                navigation_lock = true;
+impl frogquad::App for SnakeApp {
+    fn update(&mut self, fc: &mut FrogCx) {
+        let up = (0, -1);
+        let down = (0, 1);
+        let right = (1, 0);
+        let left = (-1, 0);
+        if !self.game_over {
+            if is_key_down(fc, KeyCode::Right) && self.snake.dir != left && !self.navigation_lock {
+                self.snake.dir = right;
+                self.navigation_lock = true;
+            } else if is_key_down(fc, KeyCode::Left)
+                && self.snake.dir != right
+                && !self.navigation_lock
+            {
+                self.snake.dir = left;
+                self.navigation_lock = true;
+            } else if is_key_down(fc, KeyCode::Up)
+                && self.snake.dir != down
+                && !self.navigation_lock
+            {
+                self.snake.dir = up;
+                self.navigation_lock = true;
+            } else if is_key_down(fc, KeyCode::Down)
+                && self.snake.dir != up
+                && !self.navigation_lock
+            {
+                self.snake.dir = down;
+                self.navigation_lock = true;
             }
 
-            if get_time(fc) - last_update > speed {
-                last_update = get_time(fc);
-                snake.body.push_front(snake.head);
-                snake.head = (snake.head.0 + snake.dir.0, snake.head.1 + snake.dir.1);
-                if snake.head == fruit {
-                    fruit = (rand::gen_range(0, SQUARES), rand::gen_range(0, SQUARES));
-                    score += 100;
-                    speed *= 0.9;
+            if get_time(fc) - self.last_update > self.speed {
+                self.last_update = get_time(fc);
+                self.snake.body.push_front(self.snake.head);
+                self.snake.head = (
+                    self.snake.head.0 + self.snake.dir.0,
+                    self.snake.head.1 + self.snake.dir.1,
+                );
+                if self.snake.head == self.fruit {
+                    self.fruit = (rand::gen_range(0, SQUARES), rand::gen_range(0, SQUARES));
+                    self.score += 100;
+                    self.speed *= 0.9;
                 } else {
-                    snake.body.pop_back();
+                    self.snake.body.pop_back();
                 }
-                if snake.head.0 < 0
-                    || snake.head.1 < 0
-                    || snake.head.0 >= SQUARES
-                    || snake.head.1 >= SQUARES
+                if self.snake.head.0 < 0
+                    || self.snake.head.1 < 0
+                    || self.snake.head.0 >= SQUARES
+                    || self.snake.head.1 >= SQUARES
                 {
-                    game_over = true;
+                    self.game_over = true;
                 }
-                for (x, y) in &snake.body {
-                    if *x == snake.head.0 && *y == snake.head.1 {
-                        game_over = true;
+                for (x, y) in &self.snake.body {
+                    if *x == self.snake.head.0 && *y == self.snake.head.1 {
+                        self.game_over = true;
                     }
                 }
-                navigation_lock = false;
+                self.navigation_lock = false;
             }
         }
-        if !game_over {
+        if !self.game_over {
             clear_background(fc, LIGHTGRAY);
 
             let game_size = screen_width(fc).min(screen_height(fc));
@@ -120,14 +136,14 @@ async fn main_() {
 
             draw_rectangle(
                 fc,
-                offset_x + snake.head.0 as f32 * sq_size,
-                offset_y + snake.head.1 as f32 * sq_size,
+                offset_x + self.snake.head.0 as f32 * sq_size,
+                offset_y + self.snake.head.1 as f32 * sq_size,
                 sq_size,
                 sq_size,
                 DARKGREEN,
             );
 
-            for (x, y) in &snake.body {
+            for (x, y) in &self.snake.body {
                 draw_rectangle(
                     fc,
                     offset_x + *x as f32 * sq_size,
@@ -140,8 +156,8 @@ async fn main_() {
 
             draw_rectangle(
                 fc,
-                offset_x + fruit.0 as f32 * sq_size,
-                offset_y + fruit.1 as f32 * sq_size,
+                offset_x + self.fruit.0 as f32 * sq_size,
+                offset_y + self.fruit.1 as f32 * sq_size,
                 sq_size,
                 sq_size,
                 GOLD,
@@ -149,7 +165,7 @@ async fn main_() {
 
             draw_text(
                 fc,
-                format!("SCORE: {score}").as_str(),
+                format!("SCORE: {}", self.score).as_str(),
                 10.,
                 20.,
                 20.,
@@ -171,18 +187,28 @@ async fn main_() {
             );
 
             if is_key_down(fc, KeyCode::Enter) {
-                snake = Snake {
+                self.snake = Snake {
                     head: (0, 0),
                     dir: (1, 0),
                     body: LinkedList::new(),
                 };
-                fruit = (rand::gen_range(0, SQUARES), rand::gen_range(0, SQUARES));
-                score = 0;
-                speed = 0.3;
-                last_update = get_time(fc);
-                game_over = false;
+                self.fruit = (rand::gen_range(0, SQUARES), rand::gen_range(0, SQUARES));
+                self.score = 0;
+                self.speed = 0.3;
+                self.last_update = get_time(fc);
+                self.game_over = false;
             }
         }
-        next_frame().await;
     }
+}
+
+struct Snake {
+    head: Point,
+    body: LinkedList<Point>,
+    dir: Point,
+}
+
+fn main() {
+    let config = Conf::from_title("Snake");
+    frogquad::start(config, |fc| Box::new(SnakeApp::new(fc)));
 }

@@ -37,12 +37,7 @@
 //! }
 //!```
 
-#![warn(static_mut_refs)]
-
 use std::collections::{HashMap, HashSet, VecDeque};
-use std::future::Future;
-use std::panic::AssertUnwindSafe;
-use std::pin::Pin;
 
 mod exec;
 mod quad_gl;
@@ -94,25 +89,6 @@ use crate::{
 
 use glam::{Mat4, Vec2, vec2};
 
-pub(crate) mod thread_assert {
-    use std::sync::Mutex;
-
-    static THREAD_ID: Mutex<Option<std::thread::ThreadId>> = Mutex::new(None);
-
-    pub fn set_thread_id() {
-        *THREAD_ID.lock().unwrap() = Some(std::thread::current().id());
-    }
-
-    pub fn same_thread() {
-        thread_local! {
-            static CURRENT_THREAD_ID: std::thread::ThreadId = std::thread::current().id();
-        }
-        let glob_thread_id = THREAD_ID.lock().unwrap();
-        assert!(glob_thread_id.is_some());
-        assert!(glob_thread_id.unwrap() == CURRENT_THREAD_ID.with(|id| *id));
-    }
-}
-
 /// Frog context C:
 pub struct FrogCx {
     screen_width: f32,
@@ -153,8 +129,6 @@ pub struct FrogCx {
 
     camera_stack: Vec<camera::CameraState>,
     texture_batcher: texture::Batcher,
-    unwind: bool,
-    recovery_future: Option<Pin<Box<dyn Future<Output = ()>>>>,
 
     pub quad_context: Box<dyn miniquad::RenderingBackend>,
 
@@ -239,7 +213,7 @@ impl MiniquadInputEvent {
 impl FrogCx {
     const DEFAULT_BG_COLOR: Color = BLACK;
 
-    fn new(
+    pub fn new(
         update_on: conf::UpdateTrigger,
         default_filter_mode: miniquad::FilterMode,
         draw_call_vertex_capacity: usize,
@@ -291,9 +265,6 @@ impl FrogCx {
             start_time: miniquad::date::now(),
             last_frame_time: miniquad::date::now(),
             frame_time: 1. / 60.,
-
-            unwind: false,
-            recovery_future: None,
 
             quad_context: ctx,
 
@@ -407,33 +378,15 @@ impl FrogCx {
     }
 }
 
-#[unsafe(no_mangle)]
-static mut CONTEXT: Option<FrogCx> = None;
-
-// This is required for #[frogquad::test]
-//
-// unfortunately #[cfg(test)] do not work with integration tests
-// so this module should be publicly available
-#[doc(hidden)]
-pub mod test {
-    pub static mut MUTEX: Option<std::sync::Mutex<()>> = None;
-    pub static ONCE: std::sync::Once = std::sync::Once::new();
-}
-
-pub fn get_context() -> &'static mut FrogCx {
-    thread_assert::same_thread();
-
-    unsafe { CONTEXT.as_mut().unwrap_or_else(|| panic!()) }
-}
-
 struct Stage {
-    main_future: Pin<Box<dyn Future<Output = ()>>>,
+    app: Box<dyn App>,
+    fc: FrogCx,
 }
 
 impl EventHandler for Stage {
     fn resize_event(&mut self, width: f32, height: f32) {
-        get_context().screen_width = width;
-        get_context().screen_height = height;
+        self.fc.screen_width = width;
+        self.fc.screen_height = height;
 
         if miniquad::window::blocking_event_loop() {
             miniquad::window::schedule_update();
@@ -441,16 +394,14 @@ impl EventHandler for Stage {
     }
 
     fn raw_mouse_motion(&mut self, x: f32, y: f32) {
-        let context = get_context();
-
-        if context.cursor_grabbed {
-            context.mouse_position += Vec2::new(x, y);
+        if self.fc.cursor_grabbed {
+            self.fc.mouse_position += Vec2::new(x, y);
 
             let event = MiniquadInputEvent::MouseMotion {
-                x: context.mouse_position.x,
-                y: context.mouse_position.y,
+                x: self.fc.mouse_position.x,
+                y: self.fc.mouse_position.y,
             };
-            context
+            self.fc
                 .input_events
                 .iter_mut()
                 .for_each(|arr| arr.push(event.clone()));
@@ -458,107 +409,95 @@ impl EventHandler for Stage {
     }
 
     fn mouse_motion_event(&mut self, x: f32, y: f32) {
-        let context = get_context();
+        if !self.fc.cursor_grabbed {
+            self.fc.mouse_position = Vec2::new(x, y);
 
-        if !context.cursor_grabbed {
-            context.mouse_position = Vec2::new(x, y);
-
-            context
+            self.fc
                 .input_events
                 .iter_mut()
                 .for_each(|arr| arr.push(MiniquadInputEvent::MouseMotion { x, y }));
         }
 
-        if context.update_on.mouse_motion {
+        if self.fc.update_on.mouse_motion {
             miniquad::window::schedule_update();
         }
     }
 
     fn mouse_wheel_event(&mut self, x: f32, y: f32) {
-        let context = get_context();
+        self.fc.mouse_wheel.x = x;
+        self.fc.mouse_wheel.y = y;
 
-        context.mouse_wheel.x = x;
-        context.mouse_wheel.y = y;
-
-        context
+        self.fc
             .input_events
             .iter_mut()
             .for_each(|arr| arr.push(MiniquadInputEvent::MouseWheel { x, y }));
 
-        if context.update_on.mouse_wheel {
+        if self.fc.update_on.mouse_wheel {
             miniquad::window::schedule_update();
         }
     }
 
     fn mouse_button_down_event(&mut self, btn: MouseButton, x: f32, y: f32) {
-        let context = get_context();
+        self.fc.mouse_down.insert(btn);
+        self.fc.mouse_pressed.insert(btn);
 
-        context.mouse_down.insert(btn);
-        context.mouse_pressed.insert(btn);
-
-        context
+        self.fc
             .input_events
             .iter_mut()
             .for_each(|arr| arr.push(MiniquadInputEvent::MouseButtonDown { x, y, btn }));
 
-        if !context.cursor_grabbed {
-            context.mouse_position = Vec2::new(x, y);
+        if !self.fc.cursor_grabbed {
+            self.fc.mouse_position = Vec2::new(x, y);
         }
 
-        if context.update_on.mouse_down {
+        if self.fc.update_on.mouse_down {
             miniquad::window::schedule_update();
         }
     }
 
     fn mouse_button_up_event(&mut self, btn: MouseButton, x: f32, y: f32) {
-        let context = get_context();
         //     println!("btn = {}", btn as u32);
-        context.mouse_down.remove(&btn);
-        context.mouse_released.insert(btn);
+        self.fc.mouse_down.remove(&btn);
+        self.fc.mouse_released.insert(btn);
 
-        context
+        self.fc
             .input_events
             .iter_mut()
             .for_each(|arr| arr.push(MiniquadInputEvent::MouseButtonUp { x, y, btn }));
 
-        if !context.cursor_grabbed {
-            context.mouse_position = Vec2::new(x, y);
+        if !self.fc.cursor_grabbed {
+            self.fc.mouse_position = Vec2::new(x, y);
         }
-        if context.update_on.mouse_up {
+        if self.fc.update_on.mouse_up {
             miniquad::window::schedule_update();
         }
     }
 
     fn mouse_leave_event(&mut self) {
-        let context = get_context();
-        context.mouse_released.extend(context.mouse_down.drain());
+        self.fc.mouse_released.extend(self.fc.mouse_down.drain());
     }
 
     fn mouse_enter_event(&mut self, btn: MouseButton, x: f32, y: f32) {
-        let context = get_context();
-
-        if !context.cursor_grabbed {
-            context.mouse_position = Vec2::new(x, y);
+        if !self.fc.cursor_grabbed {
+            self.fc.mouse_position = Vec2::new(x, y);
         }
 
-        context
+        self.fc
             .input_events
             .iter_mut()
             .for_each(|arr| arr.push(MiniquadInputEvent::MouseButtonUp { x, y, btn }));
         if btn != MouseButton::Unknown {
-            context.mouse_down.insert(btn);
-            context.mouse_pressed.insert(btn);
+            self.fc.mouse_down.insert(btn);
+            self.fc.mouse_pressed.insert(btn);
         }
 
-        if context.update_on.mouse_up {
+        if self.fc.update_on.mouse_up {
             miniquad::window::schedule_update();
         }
     }
 
     fn touch_event(&mut self, phase: TouchPhase, id: u64, x: f32, y: f32) {
-        let context = get_context();
-
-        context.touches.insert(
+        self.fc.touches.insert(
             id,
             input::Touch {
                 id,
@@ -567,7 +506,7 @@ impl EventHandler for Stage {
             },
         );
 
-        if context.simulate_mouse_with_touch {
+        if self.fc.simulate_mouse_with_touch {
             if phase == TouchPhase::Started {
                 self.mouse_button_down_event(MouseButton::Left, x, y);
             }
@@ -579,26 +518,24 @@ impl EventHandler for Stage {
             if phase == TouchPhase::Moved {
                 self.mouse_motion_event(x, y);
             }
-        } else if context.update_on.touch {
+        } else if self.fc.update_on.touch {
             miniquad::window::schedule_update();
         };
 
-        context
+        self.fc
             .input_events
             .iter_mut()
             .for_each(|arr| arr.push(MiniquadInputEvent::Touch { phase, id, x, y }));
 
-        if context.update_on.mouse_down {
+        if self.fc.update_on.mouse_down {
             miniquad::window::schedule_update();
         }
     }
 
     fn char_event(&mut self, character: char, modifiers: KeyMods, repeat: bool) {
-        let context = get_context();
+        self.fc.chars_pressed_queue.push_back(character);
 
-        context.chars_pressed_queue.push_back(character);
-
-        context.input_events.iter_mut().for_each(|arr| {
+        self.fc.input_events.iter_mut().for_each(|arr| {
             arr.push(MiniquadInputEvent::Char {
                 character,
                 modifiers,
@@ -608,35 +545,34 @@ impl EventHandler for Stage {
     }
 
     fn key_down_event(&mut self, keycode: KeyCode, modifiers: KeyMods, repeat: bool) {
-        let context = get_context();
-        context.keys_down.insert(keycode);
+        self.fc.keys_down.insert(keycode);
         if repeat == false {
-            context.keys_pressed.insert(keycode);
+            self.fc.keys_pressed.insert(keycode);
         }
 
-        context.input_events.iter_mut().for_each(|arr| {
+        self.fc.input_events.iter_mut().for_each(|arr| {
             arr.push(MiniquadInputEvent::KeyDown {
                 keycode,
                 modifiers,
                 repeat,
             });
         });
-        if context
+        if self
+            .fc
             .update_on
             .specific_key
             .as_ref()
-            .map_or(context.update_on.key_down, |keys| keys.contains(&keycode))
+            .map_or(self.fc.update_on.key_down, |keys| keys.contains(&keycode))
         {
             miniquad::window::schedule_update();
         }
     }
 
     fn key_up_event(&mut self, keycode: KeyCode, modifiers: KeyMods) {
-        let context = get_context();
-        context.keys_down.remove(&keycode);
-        context.keys_released.insert(keycode);
+        self.fc.keys_down.remove(&keycode);
+        self.fc.keys_released.insert(keycode);
 
-        context
+        self.fc
             .input_events
             .iter_mut()
             .for_each(|arr| arr.push(MiniquadInputEvent::KeyUp { keycode, modifiers }));
@@ -648,7 +584,7 @@ impl EventHandler for Stage {
 
     fn update(&mut self) {
         // Unless called every frame, cursor will not remain grabbed
-        miniquad::window::set_cursor_grab(get_context().cursor_grabbed);
+        miniquad::window::set_cursor_grab(self.fc.cursor_grabbed);
 
         #[cfg(not(target_arch = "wasm32"))]
         {
@@ -658,9 +594,8 @@ impl EventHandler for Stage {
     }
 
     fn files_dropped_event(&mut self) {
-        let context = get_context();
         for i in 0..miniquad::window::dropped_file_count() {
-            context.dropped_files.push(DroppedFile {
+            self.fc.dropped_files.push(DroppedFile {
                 path: miniquad::window::dropped_file_path(i),
                 bytes: miniquad::window::dropped_file_bytes(i),
             });
@@ -669,89 +604,59 @@ impl EventHandler for Stage {
 
     fn draw(&mut self) {
         {
-            use std::panic;
+            {
+                self.fc.begin_frame();
+            }
+
+            self.app.update(&mut self.fc);
 
             {
-                get_context().begin_frame();
+                self.fc.end_frame();
             }
-
-            fn maybe_unwind(unwind: bool, f: impl FnOnce() + Sized + panic::UnwindSafe) -> bool {
-                if unwind {
-                    panic::catch_unwind(f).is_ok()
-                } else {
-                    f();
-                    true
-                }
-            }
-
-            let result = maybe_unwind(
-                get_context().unwind,
-                AssertUnwindSafe(|| {
-                    if exec::resume(&mut self.main_future).is_some() {
-                        self.main_future = Box::pin(async move {});
-                        miniquad::window::quit();
-                        return;
-                    }
-                }),
-            );
-
-            if result == false {
-                if let Some(recovery_future) = get_context().recovery_future.take() {
-                    self.main_future = recovery_future;
-                }
-            }
-
-            {
-                get_context().end_frame();
-            }
-            get_context().frame_time = date::now() - get_context().last_frame_time;
-            get_context().last_frame_time = date::now();
+            self.fc.frame_time = date::now() - self.fc.last_frame_time;
+            self.fc.last_frame_time = date::now();
+            self.fc.gl.reset();
         }
     }
 
     fn window_restored_event(&mut self) {
-        let context = get_context();
-
         #[cfg(target_os = "android")]
         if miniquad::window::blocking_event_loop() {
             miniquad::window::schedule_update();
         }
 
-        context
+        self.fc
             .input_events
             .iter_mut()
             .for_each(|arr| arr.push(MiniquadInputEvent::WindowRestored));
     }
 
     fn window_minimized_event(&mut self) {
-        let context = get_context();
-
         // Clear held down keys and button and announce them as released
-        context.mouse_released.extend(context.mouse_down.drain());
-        context.keys_released.extend(context.keys_down.drain());
+        self.fc.mouse_released.extend(self.fc.mouse_down.drain());
+        self.fc.keys_released.extend(self.fc.keys_down.drain());
 
         // Announce all touches as released
-        for (_, touch) in context.touches.iter_mut() {
+        for (_, touch) in self.fc.touches.iter_mut() {
             touch.phase = input::TouchPhase::Ended;
         }
 
-        context
+        self.fc
             .input_events
             .iter_mut()
             .for_each(|arr| arr.push(MiniquadInputEvent::WindowMinimized));
     }
 
     fn quit_requested_event(&mut self) {
-        let context = get_context();
-        if context.prevent_quit_event {
+        if self.fc.prevent_quit_event {
             miniquad::window::cancel_quit();
-            context.quit_requested = true;
+            self.fc.quit_requested = true;
         }
     }
 }
 
 pub mod conf {
-    #[derive(Default, Debug)]
+    #[derive(Default, Debug, Clone)]
     pub struct UpdateTrigger {
         pub key_down: bool,
         pub mouse_down: bool,
@@ -822,34 +727,21 @@ impl From<miniquad::conf::Conf> for conf::Conf {
     }
 }
 
-pub fn start(config: impl Into<conf::Conf>, future: impl Future<Output = ()> + 'static) {
-    let conf::Conf {
-        miniquad_conf,
-        update_on,
-        default_filter_mode,
-        draw_call_vertex_capacity,
-        draw_call_index_capacity,
-    } = config.into();
-    miniquad::start(miniquad_conf, move || {
-        thread_assert::set_thread_id();
-        let context = FrogCx::new(
-            update_on.unwrap_or_default(),
-            default_filter_mode,
-            draw_call_vertex_capacity,
-            draw_call_index_capacity,
-        );
-        unsafe { CONTEXT = Some(context) };
+pub trait App {
+    fn update(&mut self, fc: &mut FrogCx);
+}
 
-        Box::new(Stage {
-            main_future: Box::pin(async {
-                future.await;
-                unsafe {
-                    if let Some(ctx) = CONTEXT.as_mut() {
-                        ctx.gl.reset();
-                    }
-                }
-            }),
-        })
+pub fn start(config: conf::Conf, app_init: impl FnOnce(&mut FrogCx) -> Box<dyn App> + 'static) {
+    miniquad::start(config.miniquad_conf, move || {
+        let mut fc = FrogCx::new(
+            config.update_on.as_ref().cloned().unwrap_or_default(),
+            config.default_filter_mode,
+            config.draw_call_vertex_capacity,
+            config.draw_call_index_capacity,
+        );
+        let app = app_init(&mut fc);
+
+        Box::new(Stage { app, fc })
     });
 }
 

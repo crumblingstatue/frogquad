@@ -538,9 +538,7 @@ pub struct Emitter {
 impl Emitter {
     const MAX_PARTICLES: usize = 10000;
 
-    pub fn new(config: EmitterConfig) -> Emitter {
-        let fc = frogquad::get_context();
-
+    pub fn new(config: EmitterConfig, fc: &mut FrogCx) -> Emitter {
         // empty, dynamic instance-data vertex buffer
         let positions_vertex_buffer = fc.quad_context.new_buffer(
             BufferType::VertexBuffer,
@@ -992,9 +990,7 @@ impl Emitter {
         }
     }
 
-    pub fn draw(&mut self, pos: Vec2) {
-        let fc = frogquad::get_context();
-
+    pub fn draw(&mut self, fc: &mut FrogCx, pos: Vec2) {
         fc.perform_render_passes();
 
         self.position = pos;
@@ -1020,28 +1016,31 @@ pub struct EmittersCache {
 impl EmittersCache {
     const CACHE_DEFAULT_SIZE: usize = 10;
 
-    pub fn new(config: EmitterConfig) -> EmittersCache {
+    pub fn new(config: EmitterConfig, fc: &mut FrogCx) -> EmittersCache {
         let mut emitters_cache = vec![];
         // prepopulate cache
         for _ in 0..Self::CACHE_DEFAULT_SIZE {
-            emitters_cache.push(Emitter::new(EmitterConfig {
-                emitting: false,
-                ..config.clone()
-            }));
+            emitters_cache.push(Emitter::new(
+                EmitterConfig {
+                    emitting: false,
+                    ..config.clone()
+                },
+                fc,
+            ));
         }
         EmittersCache {
-            emitter: Emitter::new(config.clone()),
+            emitter: Emitter::new(config.clone(), fc),
             emitters_cache,
             active_emitters: vec![],
             config,
         }
     }
 
-    pub fn spawn(&mut self, pos: Vec2) {
+    pub fn spawn(&mut self, fc: &mut FrogCx, pos: Vec2) {
         let mut emitter = if let Some(emitter) = self.emitters_cache.pop() {
             emitter
         } else {
-            Emitter::new(self.config.clone())
+            Emitter::new(self.config.clone(), fc)
         };
 
         emitter.mesh_dirty = true;
@@ -1051,9 +1050,7 @@ impl EmittersCache {
         self.active_emitters.push(Some((emitter, pos)));
     }
 
-    pub fn draw(&mut self) {
-        let fc = frogquad::get_context();
-
+    pub fn draw(&mut self, fc: &mut FrogCx) {
         fc.perform_render_passes();
 
         if self.active_emitters.len() > 0 {
