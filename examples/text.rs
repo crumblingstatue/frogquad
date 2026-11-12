@@ -1,20 +1,25 @@
-use frogquad::prelude::*;
+use {
+    frogquad::{FrogCx, prelude::*},
+    pollster::FutureExt,
+};
 
-fn main() {
-    frogquad::start(Conf::from_title("Text"), main_());
+struct TextApp {
+    angle: f32,
+    font: Font,
 }
-async fn main_() {
-    let fc = frogquad::get_context();
-    let font = load_ttf_font(
-        frogquad::get_context(),
-        "./examples/DancingScriptRegular.ttf",
-    )
-    .await
-    .unwrap();
 
-    let mut angle = 0.0;
+impl TextApp {
+    fn new(fc: &mut FrogCx) -> Self {
+        let font = load_ttf_font(fc, "./examples/DancingScriptRegular.ttf")
+            .block_on()
+            .unwrap();
 
-    loop {
+        Self { font, angle: 0.0 }
+    }
+}
+
+impl frogquad::App for TextApp {
+    fn update(&mut self, fc: &mut FrogCx) {
         clear_background(fc, BLACK);
 
         draw_text_ex(fc, "Custom font size:", 20.0, 20.0, TextParams::default());
@@ -59,7 +64,7 @@ async fn main_() {
             70.0,
             TextParams {
                 font_size: 50,
-                font: Some(&font),
+                font: Some(&self.font),
                 ..Default::default()
             },
         );
@@ -71,7 +76,7 @@ async fn main_() {
             160.0,
             TextParams {
                 font_size: 100,
-                font: Some(&font),
+                font: Some(&self.font),
                 ..Default::default()
             },
         );
@@ -83,13 +88,13 @@ async fn main_() {
             screen_height(fc) / 3.0 * 2.0,
             TextParams {
                 font_size: 70,
-                font: Some(&font),
-                rotation: angle,
+                font: Some(&self.font),
+                rotation: self.angle,
                 ..Default::default()
             },
         );
 
-        let center = get_text_center("abcd", fc.default_font(), 70, 1.0, angle * 2.0);
+        let center = get_text_center("abcd", fc.default_font(), 70, 1.0, self.angle * 2.0);
         draw_text_ex(
             fc,
             "abcd",
@@ -97,13 +102,15 @@ async fn main_() {
             screen_height(fc) / 3.0 * 2.0 - center.y,
             TextParams {
                 font_size: 70,
-                rotation: angle * 2.0,
+                rotation: self.angle * 2.0,
                 ..Default::default()
             },
         );
 
-        angle -= 0.030;
-
-        next_frame().await
+        self.angle -= 0.030;
     }
+}
+
+fn main() {
+    frogquad::start(Conf::from_title("Text"), |fc| Box::new(TextApp::new(fc)));
 }
