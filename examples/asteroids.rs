@@ -46,7 +46,6 @@ fn main() {
     frogquad::start(Conf::from_title("Asteroids"), main_());
 }
 async fn main_() {
-    let fc = frogquad::get_context();
     let mut ship = Ship {
         pos: Vec2::new(screen_width(fc) / 2., screen_height(fc) / 2.),
         rot: 0.,

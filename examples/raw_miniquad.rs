@@ -4,7 +4,6 @@ fn main() {
     frogquad::start(Conf::from_title("Raw miniquad"), main_());
 }
 async fn main_() {
-    let fc = frogquad::get_context();
     let stage = {
         let InternalGlContext {
             quad_context: ctx, ..

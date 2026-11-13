@@ -47,7 +47,6 @@ fn main() {
     frogquad::start(Conf::from_title("Fountain"), main_());
 }
 async fn main_() {
-    let fc = frogquad::get_context();
     let texture = load_texture(fc, "examples/smoke_fire.png").await.unwrap();
 
     let mut one_shot_emitter = particles::Emitter::new(EmitterConfig {

@@ -151,7 +151,6 @@ fn main() {
     frogquad::start(window_conf(), main_());
 }
 async fn main_() {
-    let fc = frogquad::get_context();
     let pipeline_params = PipelineParams {
         color_blend: Some(BlendState::new(
             Equation::Add,

@@ -9,7 +9,6 @@ fn main() {
     frogquad::start(Conf::from_title("Text Wrap"), main_());
 }
 async fn main_() {
-    let fc = frogquad::get_context();
     let font_size = 24;
     loop {
         clear_background(fc, BLACK);

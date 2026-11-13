@@ -4,7 +4,6 @@ fn main() {
     frogquad::start(Conf::from_title("Arkanoid"), main_());
 }
 async fn main_() {
-    let fc = frogquad::get_context();
     const BLOCKS_W: usize = 10;
     const BLOCKS_H: usize = 10;
     const SCR_W: f32 = 20.0;

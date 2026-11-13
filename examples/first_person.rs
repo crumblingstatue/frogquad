@@ -18,7 +18,6 @@ fn main() {
     frogquad::start(conf(), main_());
 }
 async fn main_() {
-    let fc = frogquad::get_context();
     let mut x = 0.0;
     let mut switch = false;
     let bounds = 8.0;

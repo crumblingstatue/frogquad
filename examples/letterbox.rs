@@ -7,7 +7,6 @@ fn main() {
     frogquad::start(Conf::from_title("Letterbox"), main_());
 }
 async fn main_() {
-    let fc = frogquad::get_context();
     // Setup 'render_target', used to hold the rendering result so we can resize it
     let render_target = render_target(fc, VIRTUAL_WIDTH as u32, VIRTUAL_HEIGHT as u32);
     render_target.texture.set_filter(fc, FilterMode::Linear);

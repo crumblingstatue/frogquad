@@ -10,7 +10,6 @@ fn main() {
     frogquad::start(Conf::from_title("Life"), main_());
 }
 async fn main_() {
-    let fc = frogquad::get_context();
     let w = screen_width(fc) as usize;
     let h = screen_height(fc) as usize;
 

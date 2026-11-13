@@ -10,7 +10,6 @@ fn main() {
     frogquad::start(Conf::from_title("Rustaceanmark"), main_());
 }
 async fn main_() {
-    let fc = frogquad::get_context();
     let mut rustaceanes: Vec<Rustaceane> = Vec::new();
     let rustacean_tex = load_texture(fc, "examples/rustacean_happy.png")
         .await

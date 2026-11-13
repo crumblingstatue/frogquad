@@ -4,7 +4,6 @@ fn main() {
     frogquad::start(Conf::from_title("InputKeys"), main_());
 }
 async fn main_() {
-    let fc = frogquad::get_context();
     let mut x = screen_width(fc) / 2.0;
     let mut y = screen_height(fc) / 2.0;
 

@@ -4,7 +4,6 @@ fn main() {
     frogquad::start(Conf::from_title("3D"), main_());
 }
 async fn main_() {
-    let fc = frogquad::get_context();
     let rust_logo = load_texture(fc, "examples/rust.png").await.unwrap();
     let ferris = load_texture(fc, "examples/ferris.png").await.unwrap();
 

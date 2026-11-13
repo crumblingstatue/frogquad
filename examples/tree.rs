@@ -36,7 +36,6 @@ fn main() {
     frogquad::start(Conf::from_title("Tree"), main_());
 }
 async fn main_() {
-    let fc = frogquad::get_context();
     let camera = Camera2D {
         zoom: vec2(1., 1.),
         target: vec2(0.0, 0.5),

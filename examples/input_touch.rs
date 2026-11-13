@@ -4,7 +4,6 @@ fn main() {
     frogquad::start(Conf::from_title("InputTouch"), main_());
 }
 async fn main_() {
-    let fc = frogquad::get_context();
     loop {
         clear_background(fc, LIGHTGRAY);
 

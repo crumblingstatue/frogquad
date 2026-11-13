@@ -6,7 +6,6 @@ fn main() {
     frogquad::start(Conf::from_title("Fountain"), main_());
 }
 async fn main_() {
-    let fc = frogquad::get_context();
     let mut emitter = Emitter::new(EmitterConfig {
         lifetime: 0.5,
         amount: 5,
