@@ -1,10 +1,9 @@
 use frogquad::prelude::*;
 
-fn main() {
-    frogquad::start(Conf::from_title("BasicShapes"), main_());
-}
-async fn main_() {
-    loop {
+struct BasicShapesApp {}
+
+impl frogquad::App for BasicShapesApp {
+    fn update(&mut self, fc: &mut frogquad::FrogCx) {
         clear_background(fc, LIGHTGRAY);
 
         draw_line(fc, 40.0, 40.0, 100.0, 200.0, 15.0, BLUE);
@@ -19,4 +18,10 @@ async fn main_() {
 
         draw_text(fc, "HELLO", 20.0, 20.0, 30.0, DARKGRAY);
     }
+}
+
+fn main() {
+    frogquad::start(Conf::from_title("BasicShapes"), |_fc| {
+        Box::new(BasicShapesApp {})
+    });
 }
