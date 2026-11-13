@@ -1,10 +1,9 @@
 use frogquad::prelude::*;
 
-fn main() {
-    frogquad::start(Conf::from_title("Camera"), main_());
-}
-async fn main_() {
-    loop {
+struct CameraApp {}
+
+impl frogquad::App for CameraApp {
+    fn update(&mut self, fc: &mut frogquad::FrogCx) {
         clear_background(fc, LIGHTGRAY);
 
         // Render some primitives in camera space
@@ -25,4 +24,8 @@ async fn main_() {
         set_default_camera(fc);
         draw_text(fc, "HELLO", 30.0, 200.0, 30.0, BLACK);
     }
+}
+
+fn main() {
+    frogquad::start(Conf::from_title("Camera"), |_fc| Box::new(CameraApp {}));
 }
