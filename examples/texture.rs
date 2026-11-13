@@ -9,6 +9,5 @@ async fn main_() {
     loop {
         clear_background(fc, LIGHTGRAY);
         draw_texture(fc, &texture, 0., 0., WHITE);
-        next_frame().await
     }
 }

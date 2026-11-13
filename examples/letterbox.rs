@@ -82,7 +82,5 @@ async fn main_() {
                 ..Default::default()
             },
         );
-
-        next_frame().await;
     }
 }
