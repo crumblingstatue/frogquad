@@ -1,15 +1,9 @@
-use frogquad::prelude::*;
+use {frogquad::prelude::*, pollster::FutureExt};
 
-fn main() {
-    frogquad::start(Conf::from_title("DefaultFont"), main_());
-}
-async fn main_() {
-    let font = load_ttf_font("./examples/DancingScriptRegular.ttf")
-        .await
-        .unwrap();
-    set_default_font(fc, font);
+struct DefaultFontApp {}
 
-    loop {
+impl frogquad::App for DefaultFontApp {
+    fn update(&mut self, fc: &mut frogquad::FrogCx) {
         clear_background(fc, WHITE);
 
         draw_text(
@@ -34,4 +28,14 @@ async fn main_() {
             },
         );
     }
+}
+
+fn main() {
+    frogquad::start(Conf::from_title("DefaultFont"), |fc| {
+        let font = load_ttf_font(fc, "./examples/DancingScriptRegular.ttf")
+            .block_on()
+            .unwrap();
+        set_default_font(fc, font);
+        Box::new(DefaultFontApp {})
+    });
 }
