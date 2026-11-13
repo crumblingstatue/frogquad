@@ -1,4 +1,4 @@
-use frogquad::prelude::*;
+use frogquad::{FrogCx, prelude::*};
 
 use frogquad::window::miniquad::*;
 
@@ -147,81 +147,99 @@ fn window_conf() -> miniquad::conf::Conf {
     }
 }
 
-fn main() {
-    frogquad::start(window_conf(), main_());
+struct CustomMatApp {
+    mat: Material,
+    mat_with_array: Material,
 }
-async fn main_() {
-    let pipeline_params = PipelineParams {
-        color_blend: Some(BlendState::new(
-            Equation::Add,
-            BlendFactor::Value(BlendValue::SourceAlpha),
-            BlendFactor::OneMinusValue(BlendValue::SourceAlpha),
-        )),
-        ..Default::default()
-    };
 
-    let mat = load_material(
-        fc,
-        match fc.quad_context.info().backend {
-            Backend::OpenGl => ShaderSource::Glsl {
-                vertex: VERTEX,
-                fragment: FRAGMENT,
-            },
-            Backend::Metal => ShaderSource::Msl { program: METAL },
-        },
-        MaterialParams {
-            uniforms: vec![UniformDesc::new("test_color", UniformType::Float4)],
-            pipeline_params,
+impl CustomMatApp {
+    fn new(fc: &mut FrogCx) -> Self {
+        let pipeline_params = PipelineParams {
+            color_blend: Some(BlendState::new(
+                Equation::Add,
+                BlendFactor::Value(BlendValue::SourceAlpha),
+                BlendFactor::OneMinusValue(BlendValue::SourceAlpha),
+            )),
             ..Default::default()
-        },
-    )
-    .unwrap();
+        };
 
-    let mat_with_array = load_material(
-        fc,
-        match fc.quad_context.info().backend {
-            Backend::OpenGl => ShaderSource::Glsl {
-                vertex: VERTEX,
-                fragment: FRAGMENT_WITH_ARRAY,
+        let mat = load_material(
+            fc,
+            match fc.quad_context.info().backend {
+                Backend::OpenGl => ShaderSource::Glsl {
+                    vertex: VERTEX,
+                    fragment: FRAGMENT,
+                },
+                Backend::Metal => ShaderSource::Msl { program: METAL },
             },
-            Backend::Metal => ShaderSource::Msl {
-                program: METAL_WITH_ARRAY,
+            MaterialParams {
+                uniforms: vec![UniformDesc::new("test_color", UniformType::Float4)],
+                pipeline_params,
+                ..Default::default()
             },
-        },
-        MaterialParams {
-            uniforms: vec![UniformDesc::array(
-                UniformDesc::new("test_color", UniformType::Float4),
-                10,
-            )],
-            pipeline_params,
-            ..Default::default()
-        },
-    )
-    .unwrap();
+        )
+        .unwrap();
 
-    loop {
+        let mat_with_array = load_material(
+            fc,
+            match fc.quad_context.info().backend {
+                Backend::OpenGl => ShaderSource::Glsl {
+                    vertex: VERTEX,
+                    fragment: FRAGMENT_WITH_ARRAY,
+                },
+                Backend::Metal => ShaderSource::Msl {
+                    program: METAL_WITH_ARRAY,
+                },
+            },
+            MaterialParams {
+                uniforms: vec![UniformDesc::array(
+                    UniformDesc::new("test_color", UniformType::Float4),
+                    10,
+                )],
+                pipeline_params,
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        Self {
+            mat,
+            mat_with_array,
+        }
+    }
+}
+
+impl frogquad::App for CustomMatApp {
+    fn update(&mut self, fc: &mut frogquad::FrogCx) {
         clear_background(fc, GRAY);
 
-        gl_use_material(&mut fc.gl, &mat);
+        gl_use_material(&mut fc.gl, &self.mat);
 
-        mat.set_uniform(&mut fc.gl, "test_color", vec4(1., 0., 0., 1.));
+        self.mat
+            .set_uniform(&mut fc.gl, "test_color", vec4(1., 0., 0., 1.));
 
         draw_rectangle(fc, 50.0, 50.0, 100., 100., WHITE);
 
-        mat.set_uniform(&mut fc.gl, "test_color", vec4(0., 1., 0., 1.));
+        self.mat
+            .set_uniform(&mut fc.gl, "test_color", vec4(0., 1., 0., 1.));
         draw_rectangle(fc, 160.0, 50.0, 100., 100., WHITE);
 
-        mat.set_uniform(&mut fc.gl, "test_color", vec4(0., 0., 1., 1.));
+        self.mat
+            .set_uniform(&mut fc.gl, "test_color", vec4(0., 0., 1., 1.));
         draw_rectangle(fc, 270.0, 50.0, 100., 100., WHITE);
 
-        gl_use_material(&mut fc.gl, &mat_with_array);
+        gl_use_material(&mut fc.gl, &self.mat_with_array);
         let mut colors: [Vec4; 10] = [vec4(0.0, 1.0, 0.0, 0.0); 10];
         colors[5] = vec4(0.0, 1.0, 1.0, 1.0);
-        mat_with_array.set_uniform_array(&mut fc.gl, "test_color", &colors[..]);
+        self.mat_with_array
+            .set_uniform_array(&mut fc.gl, "test_color", &colors[..]);
         draw_rectangle(fc, 50.0, 160.0, 100., 100., WHITE);
 
         gl_use_default_material(&mut fc.gl);
 
         draw_rectangle(fc, 380.0, 50.0, 100., 100., YELLOW);
     }
+}
+
+fn main() {
+    frogquad::start(window_conf().into(), |fc| Box::new(CustomMatApp::new(fc)));
 }
