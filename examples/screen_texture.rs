@@ -4,7 +4,6 @@ fn main() {
     frogquad::start(Conf::from_title("Texture"), main_());
 }
 async fn main_() {
-    let fc = frogquad::get_context();
     let texture: Texture2D = load_texture(fc, "examples/chess.png").await.unwrap();
 
     let lens_material = load_material(

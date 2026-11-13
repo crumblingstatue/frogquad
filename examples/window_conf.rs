@@ -16,7 +16,6 @@ fn main() {
     frogquad::start(window_conf(), main_());
 }
 async fn main_() {
-    let fc = get_context();
     loop {
         clear_background(fc, WHITE);
     }

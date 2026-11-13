@@ -26,7 +26,6 @@ async fn main_() {
     let mut rotation = 0.0;
     let mut smooth_rotation: f32 = 0.0;
     let mut offset = (0., 0.);
-    let fc = frogquad::get_context();
 
     loop {
         if is_key_down(fc, KeyCode::W) {
