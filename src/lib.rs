@@ -376,6 +376,10 @@ impl FrogCx {
     pub fn default_font(&self) -> &Font {
         &self.fonts_storage.default_font
     }
+
+    pub fn request_quit(&mut self) {
+        self.quit_requested = true;
+    }
 }
 
 struct Stage {

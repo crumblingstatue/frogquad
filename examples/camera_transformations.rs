@@ -17,44 +17,55 @@ fn draw_cross(fc: &mut FrogCx, x: f32, y: f32, color: Color) {
     draw_line(fc, x, y - size, x, y + size, thickness, color);
 }
 
-fn main() {
-    frogquad::start(Conf::from_title("Camera"), main_());
+struct CamTfApp {
+    target: (f32, f32),
+    zoom: f32,
+    rotation: f32,
+    smooth_rotation: f32,
+    offset: (f32, f32),
 }
-async fn main_() {
-    let mut target = (0., 0.);
-    let mut zoom = 1.0;
-    let mut rotation = 0.0;
-    let mut smooth_rotation: f32 = 0.0;
-    let mut offset = (0., 0.);
 
-    loop {
+impl CamTfApp {
+    fn new() -> Self {
+        Self {
+            target: (0., 0.),
+            zoom: 1.0,
+            rotation: 0.0,
+            smooth_rotation: 0.0,
+            offset: (0., 0.),
+        }
+    }
+}
+
+impl frogquad::App for CamTfApp {
+    fn update(&mut self, fc: &mut FrogCx) {
         if is_key_down(fc, KeyCode::W) {
-            target.1 -= 0.1;
+            self.target.1 -= 0.1;
         }
         if is_key_down(fc, KeyCode::S) {
-            target.1 += 0.1;
+            self.target.1 += 0.1;
         }
         if is_key_down(fc, KeyCode::A) {
-            target.0 += 0.1;
+            self.target.0 += 0.1;
         }
         if is_key_down(fc, KeyCode::D) {
-            target.0 -= 0.1;
+            self.target.0 -= 0.1;
         }
         if is_key_down(fc, KeyCode::Left) {
-            offset.0 -= 0.1;
+            self.offset.0 -= 0.1;
         }
         if is_key_down(fc, KeyCode::Right) {
-            offset.0 += 0.1;
+            self.offset.0 += 0.1;
         }
         if is_key_down(fc, KeyCode::Up) {
-            offset.1 += 0.1;
+            self.offset.1 += 0.1;
         }
         if is_key_down(fc, KeyCode::Down) {
-            offset.1 -= 0.1;
+            self.offset.1 -= 0.1;
         }
         #[cfg(not(target_arch = "wasm32"))]
         if is_key_down(fc, KeyCode::Q) | is_key_down(fc, KeyCode::Escape) {
-            break;
+            fc.request_quit();
         }
 
         match mouse_wheel(fc) {
@@ -69,10 +80,10 @@ async fn main_() {
                     0.0
                 };
                 if is_key_down(fc, KeyCode::LeftControl) {
-                    zoom *= 1.1f32.powf(y);
+                    self.zoom *= 1.1f32.powf(y);
                 } else {
-                    rotation += 10.0 * y;
-                    rotation = match rotation {
+                    self.rotation += 10.0 * y;
+                    self.rotation = match self.rotation {
                         angle if angle >= 360.0 => angle - 360.0,
                         angle if angle < 0.0 => angle + 360.0,
                         angle => angle,
@@ -82,14 +93,14 @@ async fn main_() {
             _ => (),
         }
 
-        smooth_rotation = angle_lerp(smooth_rotation, rotation, 0.1);
+        self.smooth_rotation = angle_lerp(self.smooth_rotation, self.rotation, 0.1);
 
         clear_background(fc, LIGHTGRAY);
 
         set_camera(
             fc,
             &Camera2D {
-                target: vec2(target.0, target.1),
+                target: vec2(self.target.0, self.target.1),
                 ..Default::default()
             },
         );
@@ -98,8 +109,8 @@ async fn main_() {
         set_camera(
             fc,
             &Camera2D {
-                target: vec2(target.0, target.1),
-                rotation: smooth_rotation,
+                target: vec2(self.target.0, self.target.1),
+                rotation: self.smooth_rotation,
                 ..Default::default()
             },
         );
@@ -108,9 +119,9 @@ async fn main_() {
         set_camera(
             fc,
             &Camera2D {
-                target: vec2(target.0, target.1),
-                rotation: smooth_rotation,
-                zoom: vec2(zoom, zoom * screen_width(fc) / screen_height(fc)),
+                target: vec2(self.target.0, self.target.1),
+                rotation: self.smooth_rotation,
+                zoom: vec2(self.zoom, self.zoom * screen_width(fc) / screen_height(fc)),
                 ..Default::default()
             },
         );
@@ -119,10 +130,10 @@ async fn main_() {
         set_camera(
             fc,
             &Camera2D {
-                target: vec2(target.0, target.1),
-                rotation: smooth_rotation,
-                zoom: vec2(zoom, zoom * screen_width(fc) / screen_height(fc)),
-                offset: vec2(offset.0, offset.1),
+                target: vec2(self.target.0, self.target.1),
+                rotation: self.smooth_rotation,
+                zoom: vec2(self.zoom, self.zoom * screen_width(fc) / screen_height(fc)),
+                offset: vec2(self.offset.0, self.offset.1),
                 ..Default::default()
             },
         );
@@ -136,7 +147,11 @@ async fn main_() {
         set_default_camera(fc);
         draw_text(
             fc,
-            format!("target (WASD keys) = ({:+.2}, {:+.2})", target.0, target.1).as_str(),
+            format!(
+                "target (WASD keys) = ({:+.2}, {:+.2})",
+                self.target.0, self.target.1
+            )
+            .as_str(),
             10.0,
             10.0,
             15.0,
@@ -144,7 +159,7 @@ async fn main_() {
         );
         draw_text(
             fc,
-            format!("rotation (mouse wheel) = {rotation} degrees").as_str(),
+            format!("rotation (mouse wheel) = {} degrees", self.rotation).as_str(),
             10.0,
             25.0,
             15.0,
@@ -152,7 +167,7 @@ async fn main_() {
         );
         draw_text(
             fc,
-            format!("zoom (ctrl + mouse wheel) = {zoom:.2}").as_str(),
+            format!("zoom (ctrl + mouse wheel) = {:.2}", self.zoom).as_str(),
             10.0,
             40.0,
             15.0,
@@ -160,7 +175,11 @@ async fn main_() {
         );
         draw_text(
             fc,
-            format!("offset (arrow keys) = ({:+.2}, {:+.2})", offset.0, offset.1).as_str(),
+            format!(
+                "offset (arrow keys) = ({:+.2}, {:+.2})",
+                self.offset.0, self.offset.1
+            )
+            .as_str(),
             10.0,
             55.0,
             15.0,
@@ -168,4 +187,8 @@ async fn main_() {
         );
         draw_text(fc, "HELLO", 30.0, 200.0, 30.0, BLACK);
     }
+}
+
+fn main() {
+    frogquad::start(Conf::from_title("Camera"), |_| Box::new(CamTfApp::new()));
 }
