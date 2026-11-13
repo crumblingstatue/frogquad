@@ -1,23 +1,33 @@
-use frogquad::prelude::*;
+use frogquad::{FrogCx, prelude::*};
 
-fn main() {
-    frogquad::start(Conf::from_title("Post processing"), main_());
+struct PostProcessExample {
+    material: Material,
+    render_target: RenderTarget,
 }
-async fn main_() {
-    let render_target = render_target(fc, 320, 150);
-    render_target.texture.set_filter(fc, FilterMode::Nearest);
 
-    let material = load_material(
-        fc,
-        ShaderSource::Glsl {
-            vertex: CRT_VERTEX_SHADER,
-            fragment: CRT_FRAGMENT_SHADER,
-        },
-        Default::default(),
-    )
-    .unwrap();
+impl PostProcessExample {
+    fn new(fc: &mut FrogCx) -> Self {
+        let render_target = render_target(fc, 320, 150);
+        render_target.texture.set_filter(fc, FilterMode::Nearest);
 
-    loop {
+        let material = load_material(
+            fc,
+            ShaderSource::Glsl {
+                vertex: CRT_VERTEX_SHADER,
+                fragment: CRT_FRAGMENT_SHADER,
+            },
+            Default::default(),
+        )
+        .unwrap();
+        Self {
+            render_target,
+            material,
+        }
+    }
+}
+
+impl frogquad::App for PostProcessExample {
+    fn update(&mut self, fc: &mut frogquad::FrogCx) {
         // drawing to the texture
 
         // 0..100, 0..100 camera
@@ -26,7 +36,7 @@ async fn main_() {
             &Camera2D {
                 zoom: vec2(0.01, 0.01),
                 target: vec2(0.0, 0.0),
-                render_target: Some(render_target.clone()),
+                render_target: Some(self.render_target.clone()),
                 ..Default::default()
             },
         );
@@ -41,10 +51,10 @@ async fn main_() {
         set_default_camera(fc);
 
         clear_background(fc, WHITE);
-        gl_use_material(&mut fc.gl, &material);
+        gl_use_material(&mut fc.gl, &self.material);
         draw_texture_ex(
             fc,
-            &render_target.texture,
+            &self.render_target.texture,
             0.,
             0.,
             WHITE,
@@ -57,7 +67,13 @@ async fn main_() {
     }
 }
 
-const CRT_FRAGMENT_SHADER: &'static str = r#"#version 100
+fn main() {
+    frogquad::start(Conf::from_title("Post processing"), |fc| {
+        Box::new(PostProcessExample::new(fc))
+    });
+}
+
+const CRT_FRAGMENT_SHADER: &str = r#"#version 100
 precision lowp float;
 
 varying vec4 color;
@@ -106,7 +122,7 @@ void main() {
 }
 "#;
 
-const CRT_VERTEX_SHADER: &'static str = "#version 100
+const CRT_VERTEX_SHADER: &str = "#version 100
 attribute vec3 position;
 attribute vec2 texcoord;
 attribute vec4 color0;
