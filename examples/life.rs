@@ -1,4 +1,4 @@
-use frogquad::prelude::*;
+use frogquad::{FrogCx, prelude::*};
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 enum CellState {
@@ -6,30 +6,44 @@ enum CellState {
     Dead,
 }
 
-fn main() {
-    frogquad::start(Conf::from_title("Life"), main_());
+struct LifeApp {
+    image: Image,
+    cells: Vec<CellState>,
+    buffer: Vec<CellState>,
+    texture: Texture2D,
 }
-async fn main_() {
-    let w = screen_width(fc) as usize;
-    let h = screen_height(fc) as usize;
 
-    let mut cells = vec![CellState::Dead; w * h];
-    let mut buffer = vec![CellState::Dead; w * h];
+impl LifeApp {
+    fn new(fc: &mut FrogCx) -> Self {
+        let w = screen_width(fc) as usize;
+        let h = screen_height(fc) as usize;
 
-    let mut image = Image::gen_image_color(w as u16, h as u16, WHITE);
+        let mut cells = vec![CellState::Dead; w * h];
+        let buffer = vec![CellState::Dead; w * h];
 
-    for cell in cells.iter_mut() {
-        if rand::gen_range(0, 5) == 0 {
-            *cell = CellState::Alive;
+        let image = Image::gen_image_color(w as u16, h as u16, WHITE);
+
+        for cell in cells.iter_mut() {
+            if rand::gen_range(0, 5) == 0 {
+                *cell = CellState::Alive;
+            }
+        }
+        let texture = Texture2D::from_image(fc, &image);
+        Self {
+            image,
+            cells,
+            buffer,
+            texture,
         }
     }
-    let texture = Texture2D::from_image(fc, &image);
+}
 
-    loop {
+impl frogquad::App for LifeApp {
+    fn update(&mut self, fc: &mut frogquad::FrogCx) {
         clear_background(fc, WHITE);
 
-        let w = image.width();
-        let h = image.height();
+        let w = self.image.width();
+        let h = self.image.height();
 
         for y in 0..h as i32 {
             for x in 0..w as i32 {
@@ -46,15 +60,15 @@ async fn main_() {
                             continue;
                         }
 
-                        let neighbor = cells[(y + j) as usize * w + (x + i) as usize];
+                        let neighbor = self.cells[(y + j) as usize * w + (x + i) as usize];
                         if neighbor == CellState::Alive {
                             neighbors_count += 1;
                         }
                     }
                 }
 
-                let current_cell = cells[y as usize * w + x as usize];
-                buffer[y as usize * w + x as usize] = match (current_cell, neighbors_count) {
+                let current_cell = self.cells[y as usize * w + x as usize];
+                self.buffer[y as usize * w + x as usize] = match (current_cell, neighbors_count) {
                     // Rule 1: Any live cell with fewer than two live neighbours
                     // dies, as if caused by underpopulation.
                     (CellState::Alive, x) if x < 2 => CellState::Dead,
@@ -73,21 +87,25 @@ async fn main_() {
             }
         }
 
-        for i in 0..buffer.len() {
-            cells[i] = buffer[i];
+        for i in 0..self.buffer.len() {
+            self.cells[i] = self.buffer[i];
 
-            image.set_pixel(
+            self.image.set_pixel(
                 (i % w) as u32,
                 (i / w) as u32,
-                match buffer[i as usize] {
+                match self.buffer[i as usize] {
                     CellState::Alive => BLACK,
                     CellState::Dead => WHITE,
                 },
             );
         }
 
-        texture.update(fc, &image);
+        self.texture.update(fc, &self.image);
 
-        draw_texture(fc, &texture, 0., 0., WHITE);
+        draw_texture(fc, &self.texture, 0., 0., WHITE);
     }
+}
+
+fn main() {
+    frogquad::start(Conf::from_title("Life"), |fc| Box::new(LifeApp::new(fc)));
 }
