@@ -5,12 +5,12 @@ static LOREM: &str = "Lorem ipsum odor amet, consectetuer adipiscing elit. Ultri
 Intentional newlines
 are preserved.";
 
-fn main() {
-    frogquad::start(Conf::from_title("Text Wrap"), main_());
-}
-async fn main_() {
-    let font_size = 24;
-    loop {
+struct TextWrapApp {}
+
+impl frogquad::App for TextWrapApp {
+    fn update(&mut self, fc: &mut frogquad::FrogCx) {
+        let font_size = 24;
+
         clear_background(fc, BLACK);
 
         let maximum_line_length = f32::max(20.0, mouse_position(fc).0 - 20.0);
@@ -52,4 +52,10 @@ async fn main_() {
             RED,
         );
     }
+}
+
+fn main() {
+    frogquad::start(Conf::from_title("Text Wrap"), |_fc| {
+        Box::new(TextWrapApp {})
+    });
 }
