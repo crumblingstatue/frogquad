@@ -223,7 +223,5 @@ async fn main_() {
         gl_use_default_material(&mut fc.gl);
 
         draw_rectangle(fc, 380.0, 50.0, 100., 100., YELLOW);
-
-        next_frame().await
     }
 }

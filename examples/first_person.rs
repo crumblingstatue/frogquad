@@ -143,7 +143,5 @@ async fn main_() {
             30.0,
             BLACK,
         );
-
-        next_frame().await
     }
 }

@@ -54,8 +54,6 @@ async fn main_() {
             },
         );
         gl_use_default_material(&mut fc.gl);
-
-        next_frame().await;
     }
 }
 

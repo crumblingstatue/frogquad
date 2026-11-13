@@ -18,7 +18,5 @@ async fn main_() {
         );
 
         draw_text(fc, "HELLO", 20.0, 20.0, 30.0, DARKGRAY);
-
-        next_frame().await
     }
 }

@@ -19,6 +19,5 @@ async fn main_() {
     let fc = get_context();
     loop {
         clear_background(fc, WHITE);
-        next_frame().await
     }
 }

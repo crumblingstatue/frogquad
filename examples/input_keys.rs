@@ -32,6 +32,5 @@ async fn main_() {
             20.0,
             DARKGRAY,
         );
-        next_frame().await
     }
 }

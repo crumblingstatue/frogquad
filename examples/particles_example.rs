@@ -103,7 +103,5 @@ async fn main_() {
 
         flying_emitter_world.draw(world_emitter_pos);
         draw_circle(fc, world_emitter_pos.x, world_emitter_pos.y, 15.0, GREEN);
-
-        next_frame().await
     }
 }

@@ -49,7 +49,5 @@ async fn main_() {
         draw_circle(fc, 0., 0., 0.03, DARKGRAY);
         let time = get_time(fc);
         tree(fc, time, 0, 1., 0.3);
-
-        next_frame().await
     }
 }

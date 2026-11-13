@@ -89,7 +89,5 @@ async fn main_() {
         texture.update(fc, &image);
 
         draw_texture(fc, &texture, 0., 0., WHITE);
-
-        next_frame().await
     }
 }

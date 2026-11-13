@@ -114,7 +114,5 @@ async fn main_() {
             platform_height,
             DARKPURPLE,
         );
-
-        next_frame().await
     }
 }

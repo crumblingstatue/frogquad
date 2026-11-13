@@ -103,7 +103,6 @@ async fn main_() {
                     })
                 }
             }
-            next_frame().await;
             continue;
         }
         let frame_t = get_time(fc);
@@ -246,7 +245,5 @@ async fn main_() {
             ship.pos.y + rotation.sin() * SHIP_BASE / 2. + rotation.cos() * SHIP_HEIGHT / 2.,
         );
         draw_triangle_lines(fc, v1, v2, v3, 2., BLACK);
-
-        next_frame().await
     }
 }

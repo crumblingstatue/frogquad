@@ -18,7 +18,5 @@ async fn main_() {
         clear_background(fc, LIGHTGRAY);
 
         debug!("Still alive!");
-
-        next_frame().await
     }
 }

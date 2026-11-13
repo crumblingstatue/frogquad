@@ -58,8 +58,6 @@ async fn main_() {
 
         set_default_camera(fc);
         draw_text(fc, "HELLO", 30.0, 200.0, 30.0, BLACK);
-
-        next_frame().await
     }
 }
 

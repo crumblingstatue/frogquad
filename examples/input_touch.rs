@@ -19,6 +19,5 @@ async fn main_() {
         }
 
         draw_text(fc, "touch the screen!", 20.0, 20.0, 20.0, DARKGRAY);
-        next_frame().await
     }
 }

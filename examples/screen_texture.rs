@@ -41,8 +41,6 @@ async fn main_() {
         gl_use_material(&mut fc.gl, &lens_material);
         draw_circle(fc, lens_center.0, lens_center.1, 250.0, RED);
         gl_use_default_material(&mut fc.gl);
-
-        next_frame().await
     }
 }
 

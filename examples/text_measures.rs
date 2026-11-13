@@ -110,7 +110,5 @@ async fn main_() {
 
         draw_text_annotated(fc, text, None, 40.0, 200.0);
         draw_text_annotated(fc, text, Some(&font), 400.0, 400.0);
-
-        next_frame().await
     }
 }
