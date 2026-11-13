@@ -1,4 +1,4 @@
-use frogquad::prelude::*;
+use frogquad::{FrogCx, prelude::*};
 // use glam::vec3;
 
 const MOVE_SPEED: f32 = 0.1;
@@ -14,84 +14,115 @@ fn conf() -> miniquad::conf::Conf {
     }
 }
 
-fn main() {
-    frogquad::start(conf(), main_());
+struct FirstPersonApp {
+    x: f32,
+    switch: bool,
+    bounds: f32,
+    pitch: f32,
+    yaw: f32,
+    front: Vec3,
+    right: Vec3,
+    up: Vec3,
+    position: Vec3,
+    last_mouse_position: Vec2,
+    grabbed: bool,
+    world_up: Vec3,
 }
-async fn main_() {
-    let mut x = 0.0;
-    let mut switch = false;
-    let bounds = 8.0;
 
-    let world_up = vec3(0.0, 1.0, 0.0);
-    let mut yaw: f32 = 1.18;
-    let mut pitch: f32 = 0.0;
+impl FirstPersonApp {
+    fn new(fc: &mut FrogCx) -> Self {
+        let x = 0.0;
+        let switch = false;
+        let bounds = 8.0;
 
-    let mut front = vec3(
-        yaw.cos() * pitch.cos(),
-        pitch.sin(),
-        yaw.sin() * pitch.cos(),
-    )
-    .normalize();
-    let mut right = front.cross(world_up).normalize();
-    let mut up = right.cross(front).normalize();
+        let world_up = vec3(0.0, 1.0, 0.0);
+        let yaw: f32 = 1.18;
+        let pitch: f32 = 0.0;
 
-    let mut position = vec3(0.0, 1.0, 0.0);
-    let mut last_mouse_position: Vec2 = mouse_position(fc).into();
+        let front = vec3(
+            yaw.cos() * pitch.cos(),
+            pitch.sin(),
+            yaw.sin() * pitch.cos(),
+        )
+        .normalize();
+        let right = front.cross(world_up).normalize();
+        let up = right.cross(front).normalize();
 
-    let mut grabbed = true;
-    set_cursor_grab(fc, grabbed);
-    show_mouse(false);
+        let position = vec3(0.0, 1.0, 0.0);
+        let last_mouse_position: Vec2 = mouse_position(fc).into();
 
-    loop {
+        let grabbed = true;
+        set_cursor_grab(fc, grabbed);
+        show_mouse(false);
+        Self {
+            x,
+            switch,
+            bounds,
+            yaw,
+            pitch,
+            front,
+            right,
+            up,
+            position,
+            last_mouse_position,
+            grabbed,
+            world_up,
+        }
+    }
+}
+
+impl frogquad::App for FirstPersonApp {
+    fn update(&mut self, fc: &mut frogquad::FrogCx) {
         let delta = get_frame_time(fc);
 
         if is_key_pressed(fc, KeyCode::Escape) {
-            break;
+            fc.request_quit();
+            return;
         }
         if is_key_pressed(fc, KeyCode::Tab) {
-            grabbed = !grabbed;
-            set_cursor_grab(fc, grabbed);
-            show_mouse(!grabbed);
+            self.grabbed = !self.grabbed;
+            set_cursor_grab(fc, self.grabbed);
+            show_mouse(!self.grabbed);
         }
 
         if is_key_down(fc, KeyCode::Up) {
-            position += front * MOVE_SPEED;
+            self.position += self.front * MOVE_SPEED;
         }
         if is_key_down(fc, KeyCode::Down) {
-            position -= front * MOVE_SPEED;
+            self.position -= self.front * MOVE_SPEED;
         }
         if is_key_down(fc, KeyCode::Left) {
-            position -= right * MOVE_SPEED;
+            self.position -= self.right * MOVE_SPEED;
         }
         if is_key_down(fc, KeyCode::Right) {
-            position += right * MOVE_SPEED;
+            self.position += self.right * MOVE_SPEED;
         }
 
         let mouse_position: Vec2 = mouse_position(fc).into();
-        let mouse_delta = mouse_position - last_mouse_position;
+        let mouse_delta = mouse_position - self.last_mouse_position;
 
-        last_mouse_position = mouse_position;
+        self.last_mouse_position = mouse_position;
 
-        if grabbed {
-            yaw += mouse_delta.x * delta * LOOK_SPEED;
-            pitch += mouse_delta.y * delta * -LOOK_SPEED;
+        if self.grabbed {
+            self.yaw += mouse_delta.x * delta * LOOK_SPEED;
+            self.pitch += mouse_delta.y * delta * -LOOK_SPEED;
 
-            pitch = if pitch > 1.5 { 1.5 } else { pitch };
-            pitch = if pitch < -1.5 { -1.5 } else { pitch };
+            self.pitch = if self.pitch > 1.5 { 1.5 } else { self.pitch };
+            self.pitch = if self.pitch < -1.5 { -1.5 } else { self.pitch };
 
-            front = vec3(
-                yaw.cos() * pitch.cos(),
-                pitch.sin(),
-                yaw.sin() * pitch.cos(),
+            self.front = vec3(
+                self.yaw.cos() * self.pitch.cos(),
+                self.pitch.sin(),
+                self.yaw.sin() * self.pitch.cos(),
             )
             .normalize();
 
-            right = front.cross(world_up).normalize();
-            up = right.cross(front).normalize();
+            self.right = self.front.cross(self.world_up).normalize();
+            self.up = self.right.cross(self.front).normalize();
 
-            x += if switch { 0.04 } else { -0.04 };
-            if x >= bounds || x <= -bounds {
-                switch = !switch;
+            self.x += if self.switch { 0.04 } else { -0.04 };
+            if self.x >= self.bounds || self.x <= -self.bounds {
+                self.switch = !self.switch;
             }
         }
 
@@ -102,9 +133,9 @@ async fn main_() {
         set_camera(
             fc,
             &Camera3D {
-                position: position,
-                up: up,
-                target: position + front,
+                position: self.position,
+                up: self.up,
+                target: self.position + self.front,
                 ..Default::default()
             },
         );
@@ -113,7 +144,7 @@ async fn main_() {
 
         draw_line_3d(
             fc,
-            vec3(x, 0.0, x),
+            vec3(self.x, 0.0, self.x),
             vec3(5.0, 5.0, 5.0),
             Color::new(1.0, 1.0, 0.0, 1.0),
         );
@@ -137,11 +168,15 @@ async fn main_() {
         );
         draw_text(
             fc,
-            format!("Press <TAB> to toggle mouse grab: {grabbed}").as_str(),
+            format!("Press <TAB> to toggle mouse grab: {}", self.grabbed).as_str(),
             10.0,
             48.0 + 42.0,
             30.0,
             BLACK,
         );
     }
+}
+
+fn main() {
+    frogquad::start(conf().into(), |fc| Box::new(FirstPersonApp::new(fc)));
 }
