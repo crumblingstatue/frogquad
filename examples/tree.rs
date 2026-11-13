@@ -32,22 +32,27 @@ fn tree(fc: &mut FrogCx, time: f64, deep: u32, angle: f32, tall: f32) {
     get_internal_gl(fc).quad_gl.pop_model_matrix();
 }
 
-fn main() {
-    frogquad::start(Conf::from_title("Tree"), main_());
-}
-async fn main_() {
-    let camera = Camera2D {
-        zoom: vec2(1., 1.),
-        target: vec2(0.0, 0.5),
-        ..Default::default()
-    };
+struct TreeApp {}
 
-    set_camera(fc, &camera);
-    loop {
+impl frogquad::App for TreeApp {
+    fn update(&mut self, fc: &mut FrogCx) {
         clear_background(fc, LIGHTGRAY);
 
         draw_circle(fc, 0., 0., 0.03, DARKGRAY);
         let time = get_time(fc);
         tree(fc, time, 0, 1., 0.3);
     }
+}
+
+fn main() {
+    frogquad::start(Conf::from_title("Tree"), |fc| {
+        let camera = Camera2D {
+            zoom: vec2(1., 1.),
+            target: vec2(0.0, 0.5),
+            ..Default::default()
+        };
+
+        set_camera(fc, &camera);
+        Box::new(TreeApp {})
+    });
 }
