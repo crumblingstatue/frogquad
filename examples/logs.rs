@@ -2,7 +2,7 @@
 //! They will use browser console, android console or just stdout depending on the platform.
 //! Those macros are the recommended way to output debug traces and logs.
 
-use frogquad::{get_context, prelude::*};
+use frogquad::prelude::*;
 
 fn main() {
     frogquad::start(Conf::from_title("Logs"), main_());

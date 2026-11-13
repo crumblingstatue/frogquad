@@ -1,4 +1,4 @@
-use frogquad::{get_context, prelude::*};
+use frogquad::prelude::*;
 
 fn window_conf() -> miniquad::conf::Conf {
     miniquad::conf::Conf {
