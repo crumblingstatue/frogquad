@@ -1,18 +1,25 @@
-use frogquad::prelude::*;
+use frogquad::{FrogCx, prelude::*};
 
-fn main() {
-    frogquad::start(Conf::from_title("Raw miniquad"), main_());
+struct RawMqApp {
+    stage: raw_miniquad::Stage,
 }
-async fn main_() {
-    let stage = {
-        let InternalGlContext {
-            quad_context: ctx, ..
-        } = get_internal_gl(fc);
 
-        raw_miniquad::Stage::new(ctx)
-    };
+impl RawMqApp {
+    fn new(fc: &mut FrogCx) -> Self {
+        Self {
+            stage: {
+                let InternalGlContext {
+                    quad_context: ctx, ..
+                } = get_internal_gl(fc);
 
-    loop {
+                raw_miniquad::Stage::new(ctx)
+            },
+        }
+    }
+}
+
+impl frogquad::App for RawMqApp {
+    fn update(&mut self, fc: &mut frogquad::FrogCx) {
         clear_background(fc, LIGHTGRAY);
 
         // Render some primitives in camera space
@@ -34,11 +41,11 @@ async fn main_() {
 
             let t = get_time(fc);
             let gl = get_internal_gl(fc);
-            gl.quad_context.apply_pipeline(&stage.pipeline);
+            gl.quad_context.apply_pipeline(&self.stage.pipeline);
 
             gl.quad_context
                 .begin_default_pass(miniquad::PassAction::Nothing);
-            gl.quad_context.apply_bindings(&stage.bindings);
+            gl.quad_context.apply_bindings(&self.stage.bindings);
 
             for i in 0..10 {
                 let t = t + i as f64 * 0.3;
@@ -59,6 +66,12 @@ async fn main_() {
         set_default_camera(fc);
         draw_text(fc, "HELLO", 30.0, 200.0, 30.0, BLACK);
     }
+}
+
+fn main() {
+    frogquad::start(Conf::from_title("Raw miniquad"), |fc| {
+        Box::new(RawMqApp::new(fc))
+    });
 }
 
 mod raw_miniquad {
