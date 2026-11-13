@@ -1,29 +1,37 @@
-use frogquad::prelude::*;
+use frogquad::{FrogCx, prelude::*};
 
-fn main() {
-    frogquad::start(Conf::from_title("InputKeys"), main_());
+struct InputKeysApp {
+    x: f32,
+    y: f32,
 }
-async fn main_() {
-    let mut x = screen_width(fc) / 2.0;
-    let mut y = screen_height(fc) / 2.0;
 
-    loop {
+impl InputKeysApp {
+    fn new(fc: &mut FrogCx) -> Self {
+        Self {
+            x: screen_width(fc) / 2.0,
+            y: screen_height(fc) / 2.0,
+        }
+    }
+}
+
+impl frogquad::App for InputKeysApp {
+    fn update(&mut self, fc: &mut FrogCx) {
         clear_background(fc, LIGHTGRAY);
 
         if is_key_down(fc, KeyCode::Right) {
-            x += 1.0;
+            self.x += 1.0;
         }
         if is_key_down(fc, KeyCode::Left) {
-            x -= 1.0;
+            self.x -= 1.0;
         }
         if is_key_down(fc, KeyCode::Down) {
-            y += 1.0;
+            self.y += 1.0;
         }
         if is_key_down(fc, KeyCode::Up) {
-            y -= 1.0;
+            self.y -= 1.0;
         }
 
-        draw_circle(fc, x, y, 15.0, YELLOW);
+        draw_circle(fc, self.x, self.y, 15.0, YELLOW);
         draw_text(
             fc,
             "move the ball with arrow keys",
@@ -33,4 +41,10 @@ async fn main_() {
             DARKGRAY,
         );
     }
+}
+
+fn main() {
+    frogquad::start(Conf::from_title("InputKeys"), |cx| {
+        Box::new(InputKeysApp::new(cx))
+    });
 }
