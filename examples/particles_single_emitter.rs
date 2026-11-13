@@ -1,33 +1,49 @@
-use frogquad::prelude::*;
+use frogquad::{FrogCx, prelude::*};
 
 use frogquad_particles::{BlendMode, Curve, Emitter, EmitterConfig};
 
-fn main() {
-    frogquad::start(Conf::from_title("Fountain"), main_());
+struct ParticlesSingleApp {
+    emitter: Emitter,
 }
-async fn main_() {
-    let mut emitter = Emitter::new(EmitterConfig {
-        lifetime: 0.5,
-        amount: 5,
-        initial_direction_spread: 0.0,
-        initial_velocity: -50.0,
-        size: 2.0,
-        size_curve: Some(Curve {
-            points: vec![(0.0, 0.5), (0.5, 1.0), (1.0, 0.0)],
-            ..Default::default()
-        }),
 
-        blend_mode: BlendMode::Additive,
-        ..Default::default()
-    });
+impl ParticlesSingleApp {
+    fn new(fc: &mut FrogCx) -> Self {
+        Self {
+            emitter: Emitter::new(
+                EmitterConfig {
+                    lifetime: 0.5,
+                    amount: 5,
+                    initial_direction_spread: 0.0,
+                    initial_velocity: -50.0,
+                    size: 2.0,
+                    size_curve: Some(Curve {
+                        points: vec![(0.0, 0.5), (0.5, 1.0), (1.0, 0.0)],
+                        ..Default::default()
+                    }),
 
-    loop {
+                    blend_mode: BlendMode::Additive,
+                    ..Default::default()
+                },
+                fc,
+            ),
+        }
+    }
+}
+
+impl frogquad::App for ParticlesSingleApp {
+    fn update(&mut self, fc: &mut frogquad::FrogCx) {
         clear_background(fc, BLACK);
 
         let camera = Camera2D::from_display_rect(Rect::new(0.0, 0.0, 100.0, 100.0));
 
         set_camera(fc, &camera);
 
-        emitter.draw(vec2(50., 50.));
+        self.emitter.draw(fc, vec2(50., 50.));
     }
+}
+
+fn main() {
+    frogquad::start(Conf::from_title("Fountain"), |fc| {
+        Box::new(ParticlesSingleApp::new(fc))
+    });
 }
