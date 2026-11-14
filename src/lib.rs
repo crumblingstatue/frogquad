@@ -217,7 +217,7 @@ impl MiniquadInputEvent {
 impl FrogCx {
     const DEFAULT_BG_COLOR: Color = Color::BLACK;
 
-    pub fn new(
+    pub(crate) fn new(
         update_on: conf::UpdateTrigger,
         default_filter_mode: miniquad::FilterMode,
         draw_call_vertex_capacity: usize,
