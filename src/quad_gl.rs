@@ -228,7 +228,7 @@ impl MagicSnapshotter {
                 self.screen_texture = Some(color_img);
             }
 
-            if self.bindings.images.len() == 0 {
+            if self.bindings.images.is_empty() {
                 self.bindings.images.push(texture);
             } else {
                 self.bindings.images[0] = texture;
@@ -904,7 +904,7 @@ impl QuadGl {
         };
         let previous_dc = previous_dc_ix.and_then(|ix| self.draw_calls.get(ix));
 
-        if previous_dc.map_or(true, |draw_call| {
+        if previous_dc.is_none_or(|draw_call| {
             draw_call.texture != self.state.texture
                 || draw_call.clip != self.state.clip
                 || draw_call.viewport != self.state.viewport
@@ -917,13 +917,11 @@ impl QuadGl {
                 || draw_call.capture != self.state.capture
                 || self.state.break_batching
         }) {
-            let uniforms = self.state.pipeline.map_or(None, |pipeline| {
-                Some(
-                    self.pipelines
-                        .get_quad_pipeline_mut(pipeline)
-                        .uniforms_data
-                        .clone(),
-                )
+            let uniforms = self.state.pipeline.map(|pipeline| {
+                self.pipelines
+                    .get_quad_pipeline_mut(pipeline)
+                    .uniforms_data
+                    .clone()
             });
 
             if self.draw_calls_count >= self.draw_calls.len() {

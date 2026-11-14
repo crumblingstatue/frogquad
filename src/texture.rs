@@ -148,7 +148,7 @@ impl Image {
     pub fn gen_image_color(width: u16, height: u16, color: Color) -> Image {
         let mut bytes = vec![0; width as usize * height as usize * 4];
         for i in 0..width as usize * height as usize {
-            bytes[i * 4 + 0] = (color.r * 255.) as u8;
+            bytes[i * 4] = (color.r * 255.) as u8;
             bytes[i * 4 + 1] = (color.g * 255.) as u8;
             bytes[i * 4 + 2] = (color.b * 255.) as u8;
             bytes[i * 4 + 3] = (color.a * 255.) as u8;
@@ -234,7 +234,7 @@ impl Image {
         let mut n = 0;
         for y in y..y + height {
             for x in x..x + width {
-                bytes[n] = self.bytes[y * self.width as usize * 4 + x * 4 + 0];
+                bytes[n] = self.bytes[y * self.width as usize * 4 + x * 4];
                 bytes[n + 1] = self.bytes[y * self.width as usize * 4 + x * 4 + 1];
                 bytes[n + 2] = self.bytes[y * self.width as usize * 4 + x * 4 + 2];
                 bytes[n + 3] = self.bytes[y * self.width as usize * 4 + x * 4 + 3];
@@ -450,26 +450,28 @@ pub fn render_target_ex(
     } else {
         None
     };
-    let render_pass;
-    let texture;
-    if params.sample_count > 1 {
+
+    let (render_pass, texture) = if params.sample_count > 1 {
         let color_resolve_texture = fc.quad_context.new_render_texture(miniquad::TextureParams {
             width,
             height,
             ..Default::default()
         });
-        render_pass = fc.quad_context.new_render_pass_mrt(
-            &[color_texture],
-            Some(&[color_resolve_texture]),
-            depth_texture,
-        );
-        texture = color_resolve_texture;
+        (
+            fc.quad_context.new_render_pass_mrt(
+                &[color_texture],
+                Some(&[color_resolve_texture]),
+                depth_texture,
+            ),
+            color_resolve_texture,
+        )
     } else {
-        render_pass = fc
-            .quad_context
-            .new_render_pass_mrt(&[color_texture], None, depth_texture);
-        texture = color_texture;
-    }
+        (
+            fc.quad_context
+                .new_render_pass_mrt(&[color_texture], None, depth_texture),
+            color_texture,
+        )
+    };
 
     let texture = Texture2D {
         texture: fc.textures.store_texture(texture),

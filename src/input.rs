@@ -121,7 +121,7 @@ pub fn is_key_released(fc: &mut FrogCx, key_code: KeyCode) -> bool {
 
 /// Detect if any key is being pressed
 pub fn is_any_key_down(fc: &mut FrogCx) -> bool {
-    fc.keys_down.len() > 0
+    !fc.keys_down.is_empty()
 }
 
 /// Return the last pressed char.

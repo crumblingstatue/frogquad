@@ -39,6 +39,8 @@
 //! }
 //!```
 
+#![allow(clippy::needless_doctest_main)]
+
 use std::collections::{HashMap, HashSet, VecDeque};
 
 mod exec;
@@ -553,7 +555,7 @@ impl EventHandler for Stage {
 
     fn key_down_event(&mut self, keycode: KeyCode, modifiers: KeyMods, repeat: bool) {
         self.fc.keys_down.insert(keycode);
-        if repeat == false {
+        if !repeat {
             self.fc.keys_pressed.insert(keycode);
         }
 
@@ -644,7 +646,7 @@ impl EventHandler for Stage {
         self.fc.keys_released.extend(self.fc.keys_down.drain());
 
         // Announce all touches as released
-        for (_, touch) in self.fc.touches.iter_mut() {
+        for touch in self.fc.touches.values_mut() {
             touch.phase = input::TouchPhase::Ended;
         }
 
