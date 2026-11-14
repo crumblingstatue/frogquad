@@ -224,6 +224,7 @@ impl FrogCx {
         let mut ctx: Box<dyn miniquad::RenderingBackend> =
             miniquad::window::new_rendering_backend();
         let (screen_width, screen_height) = miniquad::window::screen_size();
+        let textures = crate::texture::TexturesContext::new();
 
         FrogCx {
             screen_width,
@@ -258,8 +259,8 @@ impl FrogCx {
             ),
             snapshotter: MagicSnapshotter::new(&mut *ctx),
 
-            fonts_storage: text::FontsStorage::new(&mut *ctx),
-            texture_batcher: texture::Batcher::new(&mut *ctx),
+            fonts_storage: text::FontsStorage::new(&mut *ctx, &textures),
+            texture_batcher: texture::Batcher::new(&mut *ctx, &textures),
             camera_stack: vec![],
 
             pc_assets_folder: None,
@@ -271,7 +272,7 @@ impl FrogCx {
             quad_context: ctx,
 
             default_filter_mode,
-            textures: crate::texture::TexturesContext::new(),
+            textures,
             update_on,
 
             dropped_files: Vec::new(),

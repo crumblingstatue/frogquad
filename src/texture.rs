@@ -26,24 +26,28 @@ pub(crate) enum TextureHandle {
     Unmanaged(miniquad::TextureId),
 }
 
+pub(crate) enum TextureCmd {
+    RemoveTexture(TextureHandle),
+    RemoveRenderPass(miniquad::RenderPass),
+}
+
+pub(crate) type TextureCmdSend = std::sync::mpsc::Sender<TextureCmd>;
+pub(crate) type TextureCmdRecv = std::sync::mpsc::Receiver<TextureCmd>;
+
 pub struct TexturesContext {
     textures: TextureIdSlotMap,
-    removed: Vec<TextureSlotId>,
-    removed_render_passes: Vec<miniquad::RenderPass>,
+    pub(crate) cmd_send: TextureCmdSend,
+    cmd_recv: TextureCmdRecv,
 }
+
 impl TexturesContext {
     pub(crate) fn new() -> TexturesContext {
+        let (send, recv) = std::sync::mpsc::channel();
         TexturesContext {
             textures: TextureIdSlotMap::new(),
-            removed: Vec::with_capacity(200),
-            removed_render_passes: Vec::with_capacity(10),
+            cmd_send: send,
+            cmd_recv: recv,
         }
-    }
-    fn schedule_removed(&mut self, texture: TextureSlotId) {
-        self.removed.push(texture);
-    }
-    fn schedule_render_pass_removed(&mut self, pass: miniquad::RenderPass) {
-        self.removed_render_passes.push(pass);
     }
     fn store_texture(&mut self, texture: miniquad::TextureId) -> TextureHandle {
         TextureHandle::Managed(Arc::new(TextureSlotGuarded(self.textures.insert(texture))))
@@ -53,16 +57,22 @@ impl TexturesContext {
     }
 
     pub(crate) fn garbage_collect(&mut self, ctx: &mut miniquad::Context) {
-        // Delete RenderPasses first, then textures (safer for attachments/FBOs)
-        for pass in self.removed_render_passes.drain(0..) {
-            ctx.delete_render_pass(pass);
-        }
-
-        for texture in self.removed.drain(0..) {
-            if let Some(texture) = self.textures.get(texture) {
-                ctx.delete_texture(texture);
+        while let Ok(cmd) = self.cmd_recv.try_recv() {
+            match cmd {
+                TextureCmd::RemoveTexture(handle) => match handle {
+                    TextureHandle::Managed(texture_slot_guarded) => {
+                        if let Some(texture) = self.textures.get(texture_slot_guarded.0) {
+                            ctx.delete_texture(texture);
+                        }
+                        self.textures.remove(texture_slot_guarded.0);
+                    }
+                    TextureHandle::ManagedWeak(_texture_slot_id) => todo!(),
+                    TextureHandle::Unmanaged(texture_id) => {
+                        ctx.delete_texture(texture_id);
+                    }
+                },
+                TextureCmd::RemoveRenderPass(render_pass) => ctx.delete_render_pass(render_pass),
             }
-            self.textures.remove(texture);
         }
     }
 }
@@ -352,6 +362,19 @@ pub struct RenderPass {
     pub color_texture: Texture2D,
     pub depth_texture: Option<Texture2D>,
     pub(crate) render_pass: Arc<miniquad::RenderPass>,
+    tex_cmd_send: TextureCmdSend,
+}
+
+impl Drop for RenderPass {
+    fn drop(&mut self) {
+        // Safety: if strong_count < 2, this is the last strong ref.
+        // No new strong references can be created after this point.
+        if Arc::strong_count(&self.render_pass) < 2 {
+            let _ = self
+                .tex_cmd_send
+                .send(TextureCmd::RemoveRenderPass(*self.render_pass));
+        }
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -456,6 +479,7 @@ pub fn render_target_ex(
         color_texture: texture.clone(),
         depth_texture: None,
         render_pass: Arc::new(render_pass),
+        tex_cmd_send: fc.textures.cmd_send.clone(),
     };
     RenderTarget {
         texture,
@@ -889,10 +913,10 @@ pub(crate) struct Batcher {
 }
 
 impl Batcher {
-    pub fn new(ctx: &mut dyn miniquad::RenderingBackend) -> Batcher {
+    pub fn new(rend: &mut dyn miniquad::RenderingBackend, tex_ctx: &TexturesContext) -> Batcher {
         Batcher {
             unbatched: vec![],
-            atlas: crate::text::atlas::Atlas::new(ctx, miniquad::FilterMode::Linear),
+            atlas: crate::text::atlas::Atlas::new(rend, tex_ctx, miniquad::FilterMode::Linear),
         }
     }
 
@@ -932,8 +956,8 @@ pub fn build_textures_atlas(fc: &mut FrogCx) {
 /// Fonts store their characters as ID's in the atlas.
 /// There fore resetting the atlas will render all fonts unusable.
 pub unsafe fn reset_textures_atlas(fc: &mut FrogCx) {
-    fc.fonts_storage = crate::text::FontsStorage::new(&mut *fc.quad_context);
-    fc.texture_batcher = Batcher::new(&mut *fc.quad_context);
+    fc.fonts_storage = crate::text::FontsStorage::new(&mut *fc.quad_context, &fc.textures);
+    fc.texture_batcher = Batcher::new(&mut *fc.quad_context, &fc.textures);
 }
 
 pub fn set_default_filter_mode(fc: &mut FrogCx, filter: FilterMode) {

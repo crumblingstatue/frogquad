@@ -6,7 +6,7 @@ use crate::{
     Error, FrogCx,
     color::Color,
     math::{Rect, vec3},
-    texture::{Image, TextureHandle},
+    texture::{Image, TextureHandle, TexturesContext},
 };
 
 use crate::color::WHITE;
@@ -248,6 +248,7 @@ pub async fn load_ttf_font(fc: &mut crate::FrogCx, path: &str) -> Result<Font, E
 pub fn load_ttf_font_from_bytes(fc: &mut crate::FrogCx, bytes: &[u8]) -> Result<Font, Error> {
     let atlas = Arc::new(Mutex::new(Atlas::new(
         &mut *fc.quad_context,
+        &fc.textures,
         miniquad::FilterMode::Linear,
     )));
 
@@ -586,8 +587,15 @@ pub(crate) struct FontsStorage {
 }
 
 impl FontsStorage {
-    pub(crate) fn new(ctx: &mut dyn miniquad::RenderingBackend) -> FontsStorage {
-        let atlas = Arc::new(Mutex::new(Atlas::new(ctx, miniquad::FilterMode::Linear)));
+    pub(crate) fn new(
+        rend: &mut dyn miniquad::RenderingBackend,
+        tex_ctx: &TexturesContext,
+    ) -> FontsStorage {
+        let atlas = Arc::new(Mutex::new(Atlas::new(
+            rend,
+            tex_ctx,
+            miniquad::FilterMode::Linear,
+        )));
 
         let default_font = Font::load_from_bytes(atlas, include_bytes!("ProggyClean.ttf")).unwrap();
         FontsStorage { default_font }
