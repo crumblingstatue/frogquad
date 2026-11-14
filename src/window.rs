@@ -4,9 +4,6 @@ use crate::FrogCx;
 
 use crate::color::Color;
 
-// miniquad is re-exported for the use in combination with `get_internal_gl`
-pub use miniquad;
-
 /// Fill window background with solid color.
 /// Note: even when "clear_background" is not called explicitly,
 /// the screen will be cleared at the beginning of the frame.

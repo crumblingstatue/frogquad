@@ -4,8 +4,12 @@ use frogquad::{Color, FrogCx};
 use frogquad::material::{
     Material, MaterialParams, gl_use_default_material, gl_use_material, load_material,
 };
-use frogquad::window::{clear_background, miniquad::*};
+use frogquad::window::clear_background;
 use glam::{Vec4, vec4};
+use miniquad::{
+    Backend, BlendFactor, BlendState, BlendValue, Equation, PipelineParams, ShaderSource,
+    UniformDesc, UniformType, conf,
+};
 
 const VERTEX: &str = r#"#version 100
 attribute vec3 position;

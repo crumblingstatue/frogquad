@@ -1,9 +1,14 @@
 use frogquad::Color;
 use frogquad::math::{Vec2, Vec4, vec2, vec3, vec4};
-use frogquad::texture::Texture2D;
+use frogquad::miniquad::{
+    self, Bindings, BlendFactor, BlendState, BlendValue, BufferId, BufferLayout, BufferSource,
+    BufferType, BufferUsage, Equation, MipmapFilterMode, PassAction, Pipeline, PipelineParams,
+    ShaderSource, TextureFormat, TextureParams, UniformsSource, VertexAttribute, VertexFormat,
+    VertexStep,
+};
+use frogquad::texture::{FilterMode, Texture2D};
 use frogquad::time::get_frame_time;
-use frogquad::window::miniquad::*;
-use frogquad::{FrogCx, QuadGl, glam, miniquad, rand};
+use frogquad::{FrogCx, QuadGl, glam, rand};
 use miniquad::graphics::RenderPass;
 
 #[cfg(feature = "nanoserde")]
@@ -1084,9 +1089,9 @@ impl EmittersCache {
 }
 
 mod shader {
-    use {
-        super::*,
-        frogquad::math::{Mat4, Vec3},
+    use frogquad::{
+        math::{Mat4, Vec3},
+        miniquad::{ShaderMeta, UniformBlockLayout, UniformDesc, UniformType},
     };
 
     pub const VERTEX: &str = r#"#version 100
@@ -1136,7 +1141,7 @@ mod shader {
 }
 
 mod post_processing_shader {
-    use super::*;
+    use frogquad::miniquad::{ShaderMeta, UniformBlockLayout};
 
     pub const VERTEX: &str = r#"#version 100
     attribute vec2 pos;
