@@ -145,32 +145,3 @@ Adding the following snippet to your Cargo.toml ensures that all dependencies co
 opt-level = 3
 ```
 </details>
-
-<details>
-<summary>Details</summary>
-
-
-The problem: on WASM and android it's not really easy to organize the main loop like this:
-```rust
-fn main() {
-    // do some initialization
-
-    // start main loop
-    loop {
-        // handle input
-
-        // update logic
-
-        // draw frame
-    }
-}
-```
-
-It is fixable on Android with threads, but on web there is not way to "pause" and "resume" WASM execution, so no WASM code should block ever.
-While that loop is blocking for the entire game execution!
-The C++ solution for that problem: https://kripken.github.io/blog/wasm/2019/07/16/asyncify.html
-
-But in Rust we have async/await. Rust's `futures` are basically continuations - `future`'s stack may be stored into a variable to pause/resume execution of future's code at a later point.
-
-async/await support in frogquad comes without any external dependencies - no runtime, no executors and futures-rs is not involved. It's just a way to preserve `main`'s stack on WASM and keep the code cross platform without any WASM-specific main loop.
-</Details>
