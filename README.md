@@ -146,11 +146,6 @@ opt-level = 3
 ```
 </details>
 
-## async/await
-
-While frogquad attempts to use as few Rust-specific concepts as possible, `.await` in all examples looks a bit scary.
-Rust's `async/await` is used to solve just one problem - cross platform main loop organization.
-
 <details>
 <summary>Details</summary>
 
