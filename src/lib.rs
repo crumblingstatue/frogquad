@@ -692,9 +692,9 @@ pub mod conf {
         ///
         /// Some examples when altering those values migh be convinient:
         /// - for huge 3d models that do not fit into a single draw call, increasing
-        ///     the buffer size might be easier than splitting the model.
+        ///   the buffer size might be easier than splitting the model.
         /// - when each draw_* call got its own material,
-        ///     buffer size might be reduced to save some memory
+        ///   buffer size might be reduced to save some memory
         pub draw_call_vertex_capacity: usize,
         pub draw_call_index_capacity: usize,
     }

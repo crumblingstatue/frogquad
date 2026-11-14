@@ -150,7 +150,7 @@ pub fn draw_plane(
 /// * `offset` - Offset of the first point from the origin
 /// * `e1`, `e2` - Base vectors for the parallelogram
 /// * `texture` - Optional [Texture2D] to apply, which will be streched on the entire shape (todo!
-/// support custom uv values per vertex)
+///   support custom uv values per vertex)
 /// * `color` - The [Color] to draw the parallelogram
 ///
 /// # Examples
@@ -196,7 +196,7 @@ pub fn draw_affine_parallelogram(
 /// * `offset` - Offset of the first point from the origin
 /// * `e1`, `e2`, `e3` - Base vectors for the parallelepiped
 /// * `texture` - Optional [Texture2D] to apply, which will repeat on each face (todo!
-/// support custom uv values per vertex, multiple textures?)
+///   support custom uv values per vertex, multiple textures?)
 /// * `color` - The [Color] to draw the parallelepiped (todo! support color per face?)
 ///
 /// # Examples
