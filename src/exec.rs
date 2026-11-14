@@ -5,8 +5,10 @@ use std::task::{Context, Poll};
 
 use crate::Error;
 
+pub type FileLoadResult = Result<Vec<u8>, Error>;
+
 pub struct FileLoadingFuture {
-    pub contents: Arc<Mutex<Option<Result<Vec<u8>, Error>>>>,
+    pub contents: Arc<Mutex<Option<FileLoadResult>>>,
 }
 
 impl Future for FileLoadingFuture {
