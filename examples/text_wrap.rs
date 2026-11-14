@@ -1,7 +1,6 @@
 use frogquad::{
     Color,
     conf::Conf,
-    shapes::{draw_line, draw_rectangle_lines},
     text::{draw_multiline_text, measure_multiline_text, wrap_text},
 };
 
@@ -38,8 +37,7 @@ impl frogquad::App for TextWrapApp {
             Some(1.0),
             Color::WHITE,
         );
-        draw_rectangle_lines(
-            fc,
+        fc.draw_rectangle_lines(
             20.0,
             20.0,
             dimensions.width,
@@ -47,8 +45,7 @@ impl frogquad::App for TextWrapApp {
             2.0,
             Color::BLUE,
         );
-        draw_line(
-            fc,
+        fc.draw_line(
             20.0 + maximum_line_length,
             0.0,
             20.0 + maximum_line_length,

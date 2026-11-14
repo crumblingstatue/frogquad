@@ -3,7 +3,6 @@ use {
         Color, FrogCx,
         conf::Conf,
         rand,
-        shapes::{draw_line, draw_rectangle},
         text::{draw_text, measure_text},
         time::get_time,
     },
@@ -107,8 +106,7 @@ impl frogquad::App for SnakeApp {
             let offset_y = (fc.screen_height() - game_size) / 2. + 10.;
             let sq_size = (fc.screen_height() - offset_y * 2.) / SQUARES as f32;
 
-            draw_rectangle(
-                fc,
+            fc.draw_rectangle(
                 offset_x,
                 offset_y,
                 game_size - 20.,
@@ -117,8 +115,7 @@ impl frogquad::App for SnakeApp {
             );
 
             for i in 1..SQUARES {
-                draw_line(
-                    fc,
+                fc.draw_line(
                     offset_x,
                     offset_y + sq_size * i as f32,
                     fc.screen_width() - offset_x,
@@ -129,8 +126,7 @@ impl frogquad::App for SnakeApp {
             }
 
             for i in 1..SQUARES {
-                draw_line(
-                    fc,
+                fc.draw_line(
                     offset_x + sq_size * i as f32,
                     offset_y,
                     offset_x + sq_size * i as f32,
@@ -140,8 +136,7 @@ impl frogquad::App for SnakeApp {
                 );
             }
 
-            draw_rectangle(
-                fc,
+            fc.draw_rectangle(
                 offset_x + self.snake.head.0 as f32 * sq_size,
                 offset_y + self.snake.head.1 as f32 * sq_size,
                 sq_size,
@@ -150,8 +145,7 @@ impl frogquad::App for SnakeApp {
             );
 
             for (x, y) in &self.snake.body {
-                draw_rectangle(
-                    fc,
+                fc.draw_rectangle(
                     offset_x + *x as f32 * sq_size,
                     offset_y + *y as f32 * sq_size,
                     sq_size,
@@ -160,8 +154,7 @@ impl frogquad::App for SnakeApp {
                 );
             }
 
-            draw_rectangle(
-                fc,
+            fc.draw_rectangle(
                 offset_x + self.fruit.0 as f32 * sq_size,
                 offset_y + self.fruit.1 as f32 * sq_size,
                 sq_size,

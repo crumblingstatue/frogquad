@@ -3,7 +3,6 @@ use {
         Color,
         camera::{Camera2D, set_camera, set_default_camera},
         conf::Conf,
-        shapes::{draw_circle, draw_line, draw_rectangle},
         text::draw_text,
     },
     glam::vec2,
@@ -24,9 +23,9 @@ impl frogquad::App for CameraApp {
                 ..Default::default()
             },
         );
-        draw_line(fc, -0.4, 0.4, -0.8, 0.9, 0.05, Color::BLUE);
-        draw_rectangle(fc, -0.3, 0.3, 0.2, 0.2, Color::GREEN);
-        draw_circle(fc, 0., 0., 0.1, Color::YELLOW);
+        fc.draw_line(-0.4, 0.4, -0.8, 0.9, 0.05, Color::BLUE);
+        fc.draw_rectangle(-0.3, 0.3, 0.2, 0.2, Color::GREEN);
+        fc.draw_circle(0., 0., 0.1, Color::YELLOW);
 
         // Back to screen space, render some text
 

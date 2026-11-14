@@ -3,7 +3,6 @@ use {
         Color, FrogCx,
         camera::{Camera2D, set_camera, set_default_camera},
         conf::Conf,
-        shapes::{draw_circle, draw_line, draw_rectangle},
         text::draw_text,
     },
     glam::vec2,
@@ -23,8 +22,8 @@ fn angle_lerp(a0: f32, a1: f32, t: f32) -> f32 {
 fn draw_cross(fc: &mut FrogCx, x: f32, y: f32, color: Color) {
     let size = 0.1;
     let thickness = 0.005;
-    draw_line(fc, x - size, y, x + size, y, thickness, color);
-    draw_line(fc, x, y - size, x, y + size, thickness, color);
+    fc.draw_line(x - size, y, x + size, y, thickness, color);
+    fc.draw_line(x, y - size, x, y + size, thickness, color);
 }
 
 struct CamTfApp {
@@ -155,9 +154,9 @@ impl frogquad::App for CamTfApp {
         );
 
         // Render some primitives in camera space
-        draw_line(fc, -0.4, 0.4, -0.8, 0.9, 0.05, Color::BLUE);
-        draw_rectangle(fc, -0.3, 0.3, 0.2, 0.2, Color::GREEN);
-        draw_circle(fc, 0., 0., 0.1, Color::YELLOW);
+        fc.draw_line(-0.4, 0.4, -0.8, 0.9, 0.05, Color::BLUE);
+        fc.draw_rectangle(-0.3, 0.3, 0.2, 0.2, Color::GREEN);
+        fc.draw_circle(0., 0., 0.1, Color::YELLOW);
 
         // Back to screen space, render some text
         set_default_camera(fc);

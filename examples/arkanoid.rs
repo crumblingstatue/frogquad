@@ -3,7 +3,6 @@ use {
         Color, FrogCx,
         camera::{Camera2D, set_camera},
         conf::Conf,
-        shapes::{draw_circle, draw_rectangle},
         text::{TextParams, camera_font_scale, draw_text_ex},
         time::get_frame_time,
     },
@@ -123,8 +122,7 @@ impl frogquad::App for ArkanoidApp {
                     let block_x = i as f32 * block_w + 0.05;
                     let block_y = j as f32 * block_h + 0.05;
 
-                    draw_rectangle(
-                        fc,
+                    fc.draw_rectangle(
                         block_x,
                         block_y,
                         block_w - 0.1,
@@ -143,9 +141,8 @@ impl frogquad::App for ArkanoidApp {
             }
         }
 
-        draw_circle(fc, self.ball_x, self.ball_y, 0.2, Color::RED);
-        draw_rectangle(
-            fc,
+        fc.draw_circle(self.ball_x, self.ball_y, 0.2, Color::RED);
+        fc.draw_rectangle(
             self.platform_x - platform_width / 2.,
             SCR_H - platform_height,
             platform_width,

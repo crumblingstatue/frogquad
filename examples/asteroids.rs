@@ -3,7 +3,6 @@ use {
         Color, FrogCx,
         conf::Conf,
         rand,
-        shapes::{draw_circle, draw_poly_lines, draw_triangle_lines},
         text::{draw_text, measure_text},
         time::get_time,
     },
@@ -243,12 +242,11 @@ impl frogquad::App for AsteroidsApp {
         fc.clear_background(Color::LIGHTGRAY);
 
         for bullet in self.bullets.iter() {
-            draw_circle(fc, bullet.pos.x, bullet.pos.y, 2., Color::BLACK);
+            fc.draw_circle(bullet.pos.x, bullet.pos.y, 2., Color::BLACK);
         }
 
         for asteroid in self.asteroids.iter() {
-            draw_poly_lines(
-                fc,
+            fc.draw_poly_lines(
                 asteroid.pos.x,
                 asteroid.pos.y,
                 asteroid.sides,
@@ -271,7 +269,7 @@ impl frogquad::App for AsteroidsApp {
             self.ship.pos.x + rotation.cos() * SHIP_BASE / 2. - rotation.sin() * SHIP_HEIGHT / 2.,
             self.ship.pos.y + rotation.sin() * SHIP_BASE / 2. + rotation.cos() * SHIP_HEIGHT / 2.,
         );
-        draw_triangle_lines(fc, v1, v2, v3, 2., Color::BLACK);
+        fc.draw_triangle_lines(v1, v2, v3, 2., Color::BLACK);
     }
 }
 

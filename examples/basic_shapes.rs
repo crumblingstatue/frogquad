@@ -1,9 +1,4 @@
-use frogquad::{
-    Color,
-    conf::Conf,
-    shapes::{draw_circle, draw_line, draw_rectangle},
-    text::draw_text,
-};
+use frogquad::{Color, conf::Conf, text::draw_text};
 
 struct BasicShapesApp {}
 
@@ -11,17 +6,15 @@ impl frogquad::App for BasicShapesApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
         fc.clear_background(Color::LIGHTGRAY);
 
-        draw_line(fc, 40.0, 40.0, 100.0, 200.0, 15.0, Color::BLUE);
-        draw_rectangle(
-            fc,
+        fc.draw_line(40.0, 40.0, 100.0, 200.0, 15.0, Color::BLUE);
+        fc.draw_rectangle(
             fc.screen_width() / 2.0 - 60.0,
             100.0,
             120.0,
             60.0,
             Color::GREEN,
         );
-        draw_circle(
-            fc,
+        fc.draw_circle(
             fc.screen_width() - 30.0,
             fc.screen_height() - 30.0,
             15.0,

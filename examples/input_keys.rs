@@ -1,5 +1,5 @@
 use {
-    frogquad::{Color, FrogCx, conf::Conf, shapes::draw_circle, text::draw_text},
+    frogquad::{Color, FrogCx, conf::Conf, text::draw_text},
     miniquad::KeyCode,
 };
 
@@ -34,7 +34,7 @@ impl frogquad::App for InputKeysApp {
             self.y -= 1.0;
         }
 
-        draw_circle(fc, self.x, self.y, 15.0, Color::YELLOW);
+        fc.draw_circle(self.x, self.y, 15.0, Color::YELLOW);
         draw_text(
             fc,
             "move the ball with arrow keys",

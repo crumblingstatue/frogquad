@@ -1,4 +1,4 @@
-use frogquad::{Color, conf::Conf, input::TouchPhase, shapes::draw_circle, text::draw_text};
+use frogquad::{Color, conf::Conf, input::TouchPhase, text::draw_text};
 
 struct InputTouchApp {}
 
@@ -14,7 +14,7 @@ impl frogquad::App for InputTouchApp {
                 TouchPhase::Ended => (Color::BLUE, 80.0),
                 TouchPhase::Cancelled => (Color::BLACK, 80.0),
             };
-            draw_circle(fc, touch.position.x, touch.position.y, size, fill_color);
+            fc.draw_circle(touch.position.x, touch.position.y, size, fill_color);
         }
 
         draw_text(fc, "touch the screen!", 20.0, 20.0, 20.0, Color::DARKGRAY);

@@ -4,7 +4,6 @@ use {
         camera::{Camera2D, set_camera, set_default_camera},
         conf::Conf,
         material::{Material, gl_use_default_material, gl_use_material, load_material},
-        shapes::{draw_circle, draw_line},
         texture::{DrawTextureParams, RenderTarget, draw_texture_ex, render_target},
     },
     glam::vec2,
@@ -53,9 +52,9 @@ impl frogquad::App for PostProcessExample {
         );
 
         fc.clear_background(Color::LIGHTGRAY);
-        draw_line(fc, -30.0, 45.0, 30.0, 45.0, 3.0, Color::BLUE);
-        draw_circle(fc, -45.0, -35.0, 20.0, Color::YELLOW);
-        draw_circle(fc, 45.0, -35.0, 20.0, Color::GREEN);
+        fc.draw_line(-30.0, 45.0, 30.0, 45.0, 3.0, Color::BLUE);
+        fc.draw_circle(-45.0, -35.0, 20.0, Color::YELLOW);
+        fc.draw_circle(45.0, -35.0, 20.0, Color::GREEN);
 
         // drawing to the screen
 

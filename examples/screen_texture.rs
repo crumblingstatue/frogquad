@@ -5,7 +5,6 @@ use {
         material::{
             Material, MaterialParams, gl_use_default_material, gl_use_material, load_material,
         },
-        shapes::draw_circle,
         texture::{DrawTextureParams, Texture2D, draw_texture_ex, load_texture},
     },
     glam::vec2,
@@ -62,7 +61,7 @@ impl frogquad::App for ScreenTexExample {
             .set_uniform(&mut fc.gl, "Center", lens_center);
 
         gl_use_material(&mut fc.gl, &self.lens_material);
-        draw_circle(fc, lens_center.0, lens_center.1, 250.0, Color::RED);
+        fc.draw_circle(lens_center.0, lens_center.1, 250.0, Color::RED);
         gl_use_default_material(&mut fc.gl);
     }
 }

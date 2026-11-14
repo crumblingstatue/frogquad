@@ -2,7 +2,6 @@ use {
     frogquad::{
         Color,
         conf::Conf,
-        shapes::draw_rectangle,
         text::{Font, TextParams, draw_text, draw_text_ex, load_ttf_font, measure_text},
     },
     pollster::FutureExt,
@@ -18,8 +17,7 @@ fn draw_text_annotated(
     let size = measure_text(text, font.unwrap_or_else(|| fc.default_font()), 100, 1.0);
 
     // Full background rect
-    draw_rectangle(
-        fc,
+    fc.draw_rectangle(
         x,
         baseline - size.offset_y,
         size.width,
@@ -28,10 +26,10 @@ fn draw_text_annotated(
     );
 
     // Base line
-    draw_rectangle(fc, x, baseline - 2.0, size.width, 4.0, Color::RED);
+    fc.draw_rectangle(x, baseline - 2.0, size.width, 4.0, Color::RED);
 
     // Base line annotation
-    draw_rectangle(fc, x + size.width, baseline - 1.0, 120.0, 1.0, Color::GRAY);
+    fc.draw_rectangle(x + size.width, baseline - 1.0, 120.0, 1.0, Color::GRAY);
     draw_text(
         fc,
         "baseline",
@@ -42,8 +40,7 @@ fn draw_text_annotated(
     );
 
     // Top line
-    draw_rectangle(
-        fc,
+    fc.draw_rectangle(
         x,
         baseline - 2.0 - size.offset_y,
         size.width,
@@ -52,8 +49,7 @@ fn draw_text_annotated(
     );
 
     // Top line annotation
-    draw_rectangle(
-        fc,
+    fc.draw_rectangle(
         x + size.width,
         baseline - size.offset_y - 1.0,
         120.0,
@@ -70,8 +66,7 @@ fn draw_text_annotated(
     );
 
     // Bottom line
-    draw_rectangle(
-        fc,
+    fc.draw_rectangle(
         x,
         baseline - 2.0 - size.offset_y + size.height,
         size.width,
@@ -80,8 +75,7 @@ fn draw_text_annotated(
     );
 
     // Bottom line annotation
-    draw_rectangle(
-        fc,
+    fc.draw_rectangle(
         x + size.width,
         baseline - size.offset_y + size.height - 1.0,
         120.0,

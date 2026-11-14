@@ -1,7 +1,4 @@
-use frogquad::{
-    Color, FrogCx, conf::Conf, shapes::draw_circle, text::draw_text, texture::load_texture,
-    time::get_time,
-};
+use frogquad::{Color, FrogCx, conf::Conf, text::draw_text, texture::load_texture, time::get_time};
 use frogquad_particles::{self as particles, AtlasConfig, BlendMode, Emitter, EmitterConfig};
 use glam::vec2;
 use miniquad::KeyCode;
@@ -110,7 +107,7 @@ impl frogquad::App for ParticlesApp {
             Color::YELLOW,
         );
         self.one_shot_emitter.draw(fc, vec2(650.0, 82.0));
-        draw_circle(fc, 650.0, 82.0, 15.0, Color::YELLOW);
+        fc.draw_circle(650.0, 82.0, 15.0, Color::YELLOW);
 
         if fc.is_key_pressed(KeyCode::Space) {
             self.one_shot_emitter.config.emitting = true;
@@ -121,13 +118,7 @@ impl frogquad::App for ParticlesApp {
             (get_time(fc) * 0.5).cos() as f32 * fc.screen_height() / 2.5 + fc.screen_height() / 2.0,
         );
         self.flying_emitter_local.draw(fc, local_emitter_pos);
-        draw_circle(
-            fc,
-            local_emitter_pos.x,
-            local_emitter_pos.y,
-            15.0,
-            Color::RED,
-        );
+        fc.draw_circle(local_emitter_pos.x, local_emitter_pos.y, 15.0, Color::RED);
 
         let world_emitter_pos = vec2(
             (get_time(fc) * 0.6 + 1.0).sin() as f32 * fc.screen_width() / 2.5
@@ -137,13 +128,7 @@ impl frogquad::App for ParticlesApp {
         );
 
         self.flying_emitter_world.draw(fc, world_emitter_pos);
-        draw_circle(
-            fc,
-            world_emitter_pos.x,
-            world_emitter_pos.y,
-            15.0,
-            Color::GREEN,
-        );
+        fc.draw_circle(world_emitter_pos.x, world_emitter_pos.y, 15.0, Color::GREEN);
     }
 }
 

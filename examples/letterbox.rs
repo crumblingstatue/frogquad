@@ -4,7 +4,6 @@ use {
         camera::{Camera2D, set_camera, set_default_camera},
         conf::Conf,
         math::Rect,
-        shapes::draw_circle,
         text::draw_text,
         texture::{DrawTextureParams, RenderTarget, draw_texture_ex, render_target},
     },
@@ -60,35 +59,26 @@ impl frogquad::App for LetterboxApp {
         fc.clear_background(Color::LIGHTGRAY);
 
         draw_text(fc, "Hello Letterbox", 20.0, 20.0, 30.0, Color::DARKGRAY);
-        draw_circle(
-            fc,
+        fc.draw_circle(
             VIRTUAL_WIDTH / 2.0 - 65.0,
             VIRTUAL_HEIGHT / 2.0,
             35.0,
             Color::RED,
         );
-        draw_circle(
-            fc,
+        fc.draw_circle(
             VIRTUAL_WIDTH / 2.0 + 65.0,
             VIRTUAL_HEIGHT / 2.0,
             35.0,
             Color::BLUE,
         );
-        draw_circle(
-            fc,
+        fc.draw_circle(
             VIRTUAL_WIDTH / 2.0,
             VIRTUAL_HEIGHT / 2.0 - 65.0,
             35.0,
             Color::YELLOW,
         );
 
-        draw_circle(
-            fc,
-            virtual_mouse_pos.x,
-            virtual_mouse_pos.y,
-            15.0,
-            Color::BLACK,
-        );
+        fc.draw_circle(virtual_mouse_pos.x, virtual_mouse_pos.y, 15.0, Color::BLACK);
 
         // ------------------------------------------------------------------------
         // Begin drawing the window screen
