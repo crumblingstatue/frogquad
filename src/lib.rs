@@ -82,7 +82,7 @@ use miniquad::{EventHandler, KeyCode, KeyMods, MouseButton, TouchPhase, date};
 
 use crate::quad_gl::MagicSnapshotter;
 use crate::text::Font;
-use crate::texture::TexturesContext;
+use crate::texture::{Texture2D, TexturesContext};
 use crate::{
     color::{Color, colors::*},
     quad_gl::QuadGl,
@@ -282,9 +282,9 @@ impl FrogCx {
     pub fn raw_miniquad_id(
         gl: &QuadGl,
         textures: &TexturesContext,
-        handle: &TextureHandle,
+        texture: &Texture2D,
     ) -> miniquad::TextureId {
-        match handle {
+        match &texture.texture {
             TextureHandle::Unmanaged(texture) => *texture,
             TextureHandle::Managed(texture) => {
                 textures.texture(texture.0).unwrap_or(gl.white_texture)

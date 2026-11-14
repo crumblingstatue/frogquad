@@ -377,7 +377,7 @@ impl ParticleShape {
                     fc.quad_context
                         .new_texture_from_rgba8(1, 1, &[255, 255, 255, 255])
                 },
-                |texture| frogquad::FrogCx::raw_miniquad_id(&fc.gl, &fc.textures, &texture.texture),
+                |texture| frogquad::FrogCx::raw_miniquad_id(&fc.gl, &fc.textures, &texture),
             )],
         }
     }

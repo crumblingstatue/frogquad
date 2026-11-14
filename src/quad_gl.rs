@@ -841,8 +841,7 @@ impl QuadGl {
     }
 
     pub fn texture(&mut self, texture_ctx: &TexturesContext, texture: Option<&Texture2D>) {
-        self.state.texture =
-            texture.map(|t| FrogCx::raw_miniquad_id(self, texture_ctx, &t.texture));
+        self.state.texture = texture.map(|t| FrogCx::raw_miniquad_id(self, texture_ctx, t));
     }
 
     pub fn scissor(&mut self, clip: Option<(i32, i32, i32, i32)>) {
@@ -996,7 +995,7 @@ impl QuadGl {
         name: &str,
         texture: Texture2D,
     ) {
-        let quad_texture = FrogCx::raw_miniquad_id(self, texture_ctx, &texture.texture);
+        let quad_texture = FrogCx::raw_miniquad_id(self, texture_ctx, &texture);
         let pipeline = self.pipelines.get_quad_pipeline_mut(pipeline);
         pipeline
             .textures
