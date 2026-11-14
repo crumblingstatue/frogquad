@@ -4,19 +4,22 @@
 
 use frogquad::prelude::*;
 
-fn main() {
-    frogquad::start(Conf::from_title("Logs"), main_());
-}
-async fn main_() {
-    let fc = get_context();
-    debug!("This is a debug message");
-    info!("and info message");
-    error!("and errors, the red ones!");
-    warn!("Or warnings, the yellow ones.");
+struct LogsApp {}
 
-    loop {
+impl frogquad::App for LogsApp {
+    fn update(&mut self, fc: &mut frogquad::FrogCx) {
         clear_background(fc, LIGHTGRAY);
 
         debug!("Still alive!");
     }
+}
+
+fn main() {
+    frogquad::start(Conf::from_title("Logs"), |_fc| {
+        debug!("This is a debug message");
+        info!("and info message");
+        error!("and errors, the red ones!");
+        warn!("Or warnings, the yellow ones.");
+        Box::new(LogsApp {})
+    });
 }
