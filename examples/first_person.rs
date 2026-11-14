@@ -4,7 +4,6 @@ use {
         camera::{Camera3D, set_camera, set_default_camera},
         input::show_mouse,
         models::{draw_cube_wires, draw_grid, draw_line_3d},
-        text::draw_text,
         time::get_frame_time,
     },
     glam::{Vec2, Vec3, vec3},
@@ -167,18 +166,16 @@ impl frogquad::App for FirstPersonApp {
         // Back to screen space, render some text
 
         set_default_camera(fc);
-        draw_text(fc, "First Person Camera", 10.0, 20.0, 30.0, Color::BLACK);
+        fc.draw_text("First Person Camera", 10.0, 20.0, 30.0, Color::BLACK);
 
-        draw_text(
-            fc,
+        fc.draw_text(
             format!("X: {} Y: {}", mouse_position.x, mouse_position.y).as_str(),
             10.0,
             48.0 + 18.0,
             30.0,
             Color::BLACK,
         );
-        draw_text(
-            fc,
+        fc.draw_text(
             format!("Press <TAB> to toggle mouse grab: {}", self.grabbed).as_str(),
             10.0,
             48.0 + 42.0,

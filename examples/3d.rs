@@ -4,7 +4,6 @@ use {
         camera::{Camera3D, set_camera, set_default_camera},
         conf::Conf,
         models::{draw_cube, draw_cube_wires, draw_grid, draw_plane, draw_sphere},
-        text::draw_text,
         texture::{Texture2D, load_texture},
     },
     glam::{vec2, vec3},
@@ -82,7 +81,7 @@ impl frogquad::App for App3d {
         // Back to screen space, render some text
 
         set_default_camera(fc);
-        draw_text(fc, "WELCOME TO 3D WORLD", 10.0, 20.0, 30.0, Color::BLACK);
+        fc.draw_text("WELCOME TO 3D WORLD", 10.0, 20.0, 30.0, Color::BLACK);
     }
 }
 

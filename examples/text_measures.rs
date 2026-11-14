@@ -2,7 +2,7 @@ use {
     frogquad::{
         Color,
         conf::Conf,
-        text::{Font, TextParams, draw_text, draw_text_ex, load_ttf_font, measure_text},
+        text::{Font, TextParams, measure_text},
     },
     pollster::FutureExt,
 };
@@ -30,8 +30,7 @@ fn draw_text_annotated(
 
     // Base line annotation
     fc.draw_rectangle(x + size.width, baseline - 1.0, 120.0, 1.0, Color::GRAY);
-    draw_text(
-        fc,
+    fc.draw_text(
         "baseline",
         x + size.width + 10.0,
         baseline - 5.0,
@@ -56,8 +55,7 @@ fn draw_text_annotated(
         1.0,
         Color::GRAY,
     );
-    draw_text(
-        fc,
+    fc.draw_text(
         "topline",
         x + size.width + 10.0,
         baseline - size.offset_y - 5.0,
@@ -82,8 +80,7 @@ fn draw_text_annotated(
         1.0,
         Color::GRAY,
     );
-    draw_text(
-        fc,
+    fc.draw_text(
         "bottomline",
         x + size.width + 10.0,
         baseline - size.offset_y + size.height - 5.0,
@@ -91,8 +88,7 @@ fn draw_text_annotated(
         Color::WHITE,
     );
 
-    draw_text_ex(
-        fc,
+    fc.draw_text_ex(
         text,
         x,
         baseline,
@@ -109,7 +105,8 @@ struct TextMeasApp {
 }
 impl TextMeasApp {
     fn new(fc: &mut frogquad::FrogCx) -> Self {
-        let font = load_ttf_font(fc, "./examples/DancingScriptRegular.ttf")
+        let font = fc
+            .load_ttf_font("./examples/DancingScriptRegular.ttf")
             .block_on()
             .unwrap();
         Self { font }

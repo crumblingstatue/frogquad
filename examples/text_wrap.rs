@@ -1,7 +1,7 @@
 use frogquad::{
     Color,
     conf::Conf,
-    text::{draw_multiline_text, measure_multiline_text, wrap_text},
+    text::{measure_multiline_text, wrap_text},
 };
 
 static LOREM: &str = "Lorem ipsum odor amet, consectetuer adipiscing elit. Ultrices nostra volutpat facilisis magna mus. Rhoncus tempor feugiat netus maecenas pretium leo vitae. Eros aliquet maecenas eu diam aliquet varius hac elementum. Sociosqu platea per ultricies vitae praesent mauris nostra ridiculus. Est cursus pulvinar efficitur mus vel leo. Integer et nec eleifend non leo. Lorem rutrum ultrices potenti facilisis hendrerit facilisi metus sit. AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
@@ -28,8 +28,7 @@ impl frogquad::App for TextWrapApp {
         let dimensions =
             measure_multiline_text(&text, fc.default_font(), font_size, 1.0, Some(1.0));
 
-        draw_multiline_text(
-            fc,
+        fc.draw_multiline_text(
             &text,
             20.0,
             20.0 + dimensions.offset_y,

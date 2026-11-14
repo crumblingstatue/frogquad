@@ -1,11 +1,5 @@
 use {
-    frogquad::{
-        Color, FrogCx,
-        conf::Conf,
-        rand,
-        text::{draw_text, measure_text},
-        time::get_time,
-    },
+    frogquad::{Color, FrogCx, conf::Conf, rand, text::measure_text, time::get_time},
     miniquad::KeyCode,
 };
 
@@ -162,8 +156,7 @@ impl frogquad::App for SnakeApp {
                 Color::GOLD,
             );
 
-            draw_text(
-                fc,
+            fc.draw_text(
                 format!("SCORE: {}", self.score).as_str(),
                 10.,
                 20.,
@@ -176,8 +169,7 @@ impl frogquad::App for SnakeApp {
             let font_size = 30.;
             let text_size = measure_text(text, fc.default_font(), font_size as _, 1.0);
 
-            draw_text(
-                fc,
+            fc.draw_text(
                 text,
                 fc.screen_width() / 2. - text_size.width / 2.,
                 fc.screen_height() / 2. + text_size.height / 2.,

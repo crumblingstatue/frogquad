@@ -1,9 +1,5 @@
 use {
-    frogquad::{
-        Color,
-        conf::Conf,
-        text::{TextParams, draw_text, draw_text_ex, load_ttf_font, set_default_font},
-    },
+    frogquad::{Color, conf::Conf, text::TextParams},
     pollster::FutureExt,
 };
 
@@ -13,8 +9,7 @@ impl frogquad::App for DefaultFontApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
         fc.clear_background(Color::WHITE);
 
-        draw_text(
-            fc,
+        fc.draw_text(
             "Hello world in a new default font!",
             100.0,
             100.0,
@@ -22,8 +17,7 @@ impl frogquad::App for DefaultFontApp {
             Color::BLACK,
         );
 
-        draw_text_ex(
-            fc,
+        fc.draw_text_ex(
             "And with extra formatting options",
             100.0,
             230.0,
@@ -39,10 +33,11 @@ impl frogquad::App for DefaultFontApp {
 
 fn main() {
     frogquad::start(Conf::from_title("DefaultFont"), |fc| {
-        let font = load_ttf_font(fc, "./examples/DancingScriptRegular.ttf")
+        let font = fc
+            .load_ttf_font("./examples/DancingScriptRegular.ttf")
             .block_on()
             .unwrap();
-        set_default_font(fc, font);
+        fc.set_default_font(font);
         Box::new(DefaultFontApp {})
     });
 }

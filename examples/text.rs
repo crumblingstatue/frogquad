@@ -2,7 +2,7 @@ use {
     frogquad::{
         Color, FrogCx,
         conf::Conf,
-        text::{Font, TextParams, draw_text_ex, get_text_center, load_ttf_font},
+        text::{Font, TextParams, get_text_center},
         time::get_time,
     },
     pollster::FutureExt,
@@ -15,7 +15,8 @@ struct TextApp {
 
 impl TextApp {
     fn new(fc: &mut FrogCx) -> Self {
-        let font = load_ttf_font(fc, "./examples/DancingScriptRegular.ttf")
+        let font = fc
+            .load_ttf_font("./examples/DancingScriptRegular.ttf")
             .block_on()
             .unwrap();
 
@@ -27,7 +28,7 @@ impl frogquad::App for TextApp {
     fn update(&mut self, fc: &mut FrogCx) {
         fc.clear_background(Color::BLACK);
 
-        draw_text_ex(fc, "Custom font size:", 20.0, 20.0, TextParams::default());
+        fc.draw_text_ex("Custom font size:", 20.0, 20.0, TextParams::default());
         let mut y = 20.0;
 
         for font_size in (30..100).step_by(20) {
@@ -38,19 +39,12 @@ impl frogquad::App for TextApp {
             };
 
             y += font_size as f32;
-            draw_text_ex(fc, text, 20.0, y, params);
+            fc.draw_text_ex(text, 20.0, y, params);
         }
 
-        draw_text_ex(
-            fc,
-            "Dynamic font scale:",
-            20.0,
-            400.0,
-            TextParams::default(),
-        );
+        fc.draw_text_ex("Dynamic font scale:", 20.0, 400.0, TextParams::default());
         let time = get_time(fc);
-        draw_text_ex(
-            fc,
+        fc.draw_text_ex(
             "abcd",
             20.0,
             450.0,
@@ -61,9 +55,8 @@ impl frogquad::App for TextApp {
             },
         );
 
-        draw_text_ex(fc, "Custom font:", 400.0, 20.0, TextParams::default());
-        draw_text_ex(
-            fc,
+        fc.draw_text_ex("Custom font:", 400.0, 20.0, TextParams::default());
+        fc.draw_text_ex(
             "abcd",
             400.0,
             70.0,
@@ -74,8 +67,7 @@ impl frogquad::App for TextApp {
             },
         );
 
-        draw_text_ex(
-            fc,
+        fc.draw_text_ex(
             "abcd",
             400.0,
             160.0,
@@ -86,8 +78,7 @@ impl frogquad::App for TextApp {
             },
         );
 
-        draw_text_ex(
-            fc,
+        fc.draw_text_ex(
             "abcd",
             fc.screen_width() / 4.0 * 2.0,
             fc.screen_height() / 3.0 * 2.0,
@@ -100,8 +91,7 @@ impl frogquad::App for TextApp {
         );
 
         let center = get_text_center("abcd", fc.default_font(), 70, 1.0, self.angle * 2.0);
-        draw_text_ex(
-            fc,
+        fc.draw_text_ex(
             "abcd",
             fc.screen_width() / 4.0 * 3.0 - center.x,
             fc.screen_height() / 3.0 * 2.0 - center.y,

@@ -3,7 +3,6 @@ use {
         Color, FrogCx,
         camera::{Camera2D, set_camera, set_default_camera},
         conf::Conf,
-        text::draw_text,
     },
     glam::vec2,
     miniquad::KeyCode,
@@ -160,8 +159,7 @@ impl frogquad::App for CamTfApp {
 
         // Back to screen space, render some text
         set_default_camera(fc);
-        draw_text(
-            fc,
+        fc.draw_text(
             format!(
                 "target (WASD keys) = ({:+.2}, {:+.2})",
                 self.target.0, self.target.1
@@ -172,24 +170,21 @@ impl frogquad::App for CamTfApp {
             15.0,
             Color::BLACK,
         );
-        draw_text(
-            fc,
+        fc.draw_text(
             format!("rotation (mouse wheel) = {} degrees", self.rotation).as_str(),
             10.0,
             25.0,
             15.0,
             Color::BLACK,
         );
-        draw_text(
-            fc,
+        fc.draw_text(
             format!("zoom (ctrl + mouse wheel) = {:.2}", self.zoom).as_str(),
             10.0,
             40.0,
             15.0,
             Color::BLACK,
         );
-        draw_text(
-            fc,
+        fc.draw_text(
             format!(
                 "offset (arrow keys) = ({:+.2}, {:+.2})",
                 self.offset.0, self.offset.1
@@ -200,7 +195,7 @@ impl frogquad::App for CamTfApp {
             15.0,
             Color::BLACK,
         );
-        draw_text(fc, "HELLO", 30.0, 200.0, 30.0, Color::BLACK);
+        fc.draw_text("HELLO", 30.0, 200.0, 30.0, Color::BLACK);
     }
 }
 

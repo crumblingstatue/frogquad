@@ -4,7 +4,6 @@ use {
         camera::{Camera2D, set_camera, set_default_camera},
         conf::Conf,
         math::Rect,
-        text::draw_text,
         texture::{DrawTextureParams, RenderTarget, draw_texture_ex, render_target},
     },
     glam::{Vec2, vec2},
@@ -58,7 +57,7 @@ impl frogquad::App for LetterboxApp {
 
         fc.clear_background(Color::LIGHTGRAY);
 
-        draw_text(fc, "Hello Letterbox", 20.0, 20.0, 30.0, Color::DARKGRAY);
+        fc.draw_text("Hello Letterbox", 20.0, 20.0, 30.0, Color::DARKGRAY);
         fc.draw_circle(
             VIRTUAL_WIDTH / 2.0 - 65.0,
             VIRTUAL_HEIGHT / 2.0,

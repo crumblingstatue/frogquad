@@ -3,7 +3,7 @@ use {
         Color, FrogCx,
         camera::{Camera2D, set_camera},
         conf::Conf,
-        text::{TextParams, camera_font_scale, draw_text_ex},
+        text::TextParams,
         time::get_frame_time,
     },
     glam::vec2,
@@ -77,15 +77,14 @@ impl frogquad::App for ArkanoidApp {
             self.ball_x += self.dx * delta;
             self.ball_y += self.dy * delta;
         } else {
-            let (font_size, font_scale, font_aspect) = camera_font_scale(fc, 1.);
+            let (font_size, font_scale, font_aspect) = fc.camera_font_scale(1.);
             let text_params = TextParams {
                 font_size,
                 font_scale,
                 font_scale_aspect: font_aspect,
                 ..Default::default()
             };
-            draw_text_ex(
-                fc,
+            fc.draw_text_ex(
                 "Press space to start",
                 SCR_W / 2. - 5.,
                 SCR_H / 2.,

@@ -1,11 +1,5 @@
 use {
-    frogquad::{
-        Color, FrogCx,
-        conf::Conf,
-        rand,
-        text::{draw_text, measure_text},
-        time::get_time,
-    },
+    frogquad::{Color, FrogCx, conf::Conf, rand, text::measure_text, time::get_time},
     glam::Vec2,
     miniquad::KeyCode,
 };
@@ -94,8 +88,7 @@ impl frogquad::App for AsteroidsApp {
                 text = "Game Over. Press [enter] to play again.";
             }
             let text_size = measure_text(text, fc.default_font(), font_size as _, 1.0);
-            draw_text(
-                fc,
+            fc.draw_text(
                 text,
                 fc.screen_width() / 2. - text_size.width / 2.,
                 fc.screen_height() / 2. - text_size.height / 2.,

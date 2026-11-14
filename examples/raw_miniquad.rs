@@ -3,7 +3,6 @@ use {
         Color, FrogCx,
         camera::{Camera2D, set_camera, set_default_camera},
         conf::Conf,
-        text::draw_text,
         time::get_time,
         window::InternalGlContext,
     },
@@ -74,7 +73,7 @@ impl frogquad::App for RawMqApp {
         // Back to screen space, render some text
 
         set_default_camera(fc);
-        draw_text(fc, "HELLO", 30.0, 200.0, 30.0, Color::BLACK);
+        fc.draw_text("HELLO", 30.0, 200.0, 30.0, Color::BLACK);
     }
 }
 

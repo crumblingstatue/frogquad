@@ -1,4 +1,4 @@
-use frogquad::{Color, FrogCx, conf::Conf, text::draw_text, texture::load_texture, time::get_time};
+use frogquad::{Color, FrogCx, conf::Conf, texture::load_texture, time::get_time};
 use frogquad_particles::{self as particles, AtlasConfig, BlendMode, Emitter, EmitterConfig};
 use glam::vec2;
 use miniquad::KeyCode;
@@ -94,12 +94,11 @@ impl frogquad::App for ParticlesApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
         fc.clear_background(Color::BLACK);
 
-        draw_text(fc, "Local coord emitter", 20.0, 30.0, 30.0, Color::RED);
+        fc.draw_text("Local coord emitter", 20.0, 30.0, 30.0, Color::RED);
 
-        draw_text(fc, "World coord emitter", 20.0, 60.0, 30.0, Color::GREEN);
+        fc.draw_text("World coord emitter", 20.0, 60.0, 30.0, Color::GREEN);
 
-        draw_text(
-            fc,
+        fc.draw_text(
             "One shot emitter, press Space to emit",
             20.0,
             90.0,

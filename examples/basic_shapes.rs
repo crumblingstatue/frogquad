@@ -1,4 +1,4 @@
-use frogquad::{Color, conf::Conf, text::draw_text};
+use frogquad::{Color, conf::Conf};
 
 struct BasicShapesApp {}
 
@@ -21,7 +21,7 @@ impl frogquad::App for BasicShapesApp {
             Color::YELLOW,
         );
 
-        draw_text(fc, "HELLO", 20.0, 20.0, 30.0, Color::DARKGRAY);
+        fc.draw_text("HELLO", 20.0, 20.0, 30.0, Color::DARKGRAY);
     }
 }
 

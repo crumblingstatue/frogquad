@@ -1,11 +1,11 @@
 //! Cross platform system time access and FPS counters.
 
-use crate::{FrogCx, color::Color, text::draw_text};
+use crate::{FrogCx, color::Color};
 
 /// Draws the current FPS on the screen. For extra customization, please use `draw_text` instead.
 pub fn draw_fps(fc: &mut FrogCx) {
     let fps = get_fps(fc);
-    draw_text(fc, format!("FPS: {fps}"), 0., 16., 32., Color::WHITE);
+    fc.draw_text(format!("FPS: {fps}"), 0., 16., 32., Color::WHITE);
 }
 
 /// Returns current FPS
