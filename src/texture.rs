@@ -48,7 +48,7 @@ impl TexturesContext {
     fn store_texture(&mut self, texture: miniquad::TextureId) -> TextureHandle {
         TextureHandle::Managed(Arc::new(TextureSlotGuarded(self.textures.insert(texture))))
     }
-    pub fn texture(&self, texture: TextureSlotId) -> Option<miniquad::TextureId> {
+    pub(crate) fn texture(&self, texture: TextureSlotId) -> Option<miniquad::TextureId> {
         self.textures.get(texture)
     }
 
