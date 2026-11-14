@@ -3,8 +3,7 @@
 use crate::{
     FrogCx,
     math::Rect,
-    prelude::RenderPass,
-    texture::RenderTarget,
+    texture::{RenderPass, RenderTarget},
     window::{screen_height, screen_width},
 };
 use glam::{Mat4, Vec2, Vec3, vec2, vec3};

@@ -186,10 +186,10 @@ impl Font {
     ///
     /// # Example
     /// ```no_run
-    /// # use frogquad::prelude::*;
+    ///
     /// # let fc: &mut frogquad::FrogCx = unimplemented!();
-    /// let mut font = get_default_font(fc);
-    /// font.set_filter(FilterMode::Linear, &mut *fc.quad_context);
+    /// let mut font = frogquad::text::get_default_font(fc);
+    /// font.set_filter(miniquad::FilterMode::Linear, &mut *fc.quad_context);
     /// ```
     pub fn set_filter(
         &mut self,

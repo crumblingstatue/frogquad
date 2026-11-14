@@ -1,5 +1,16 @@
-use frogquad::{FrogCx, prelude::*};
+use frogquad::{
+    FrogCx, color,
+    conf::Conf,
+    input::is_key_pressed,
+    shapes::draw_circle,
+    text::draw_text,
+    texture::load_texture,
+    time::get_time,
+    window::{clear_background, screen_height, screen_width},
+};
 use frogquad_particles::{self as particles, AtlasConfig, BlendMode, Emitter, EmitterConfig};
+use glam::vec2;
+use miniquad::KeyCode;
 use pollster::FutureExt;
 
 fn explosion() -> particles::EmitterConfig {
@@ -90,11 +101,11 @@ impl ParticlesApp {
 
 impl frogquad::App for ParticlesApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
-        clear_background(fc, BLACK);
+        clear_background(fc, color::BLACK);
 
-        draw_text(fc, "Local coord emitter", 20.0, 30.0, 30.0, RED);
+        draw_text(fc, "Local coord emitter", 20.0, 30.0, 30.0, color::RED);
 
-        draw_text(fc, "World coord emitter", 20.0, 60.0, 30.0, GREEN);
+        draw_text(fc, "World coord emitter", 20.0, 60.0, 30.0, color::GREEN);
 
         draw_text(
             fc,
@@ -102,10 +113,10 @@ impl frogquad::App for ParticlesApp {
             20.0,
             90.0,
             30.0,
-            YELLOW,
+            color::YELLOW,
         );
         self.one_shot_emitter.draw(fc, vec2(650.0, 82.0));
-        draw_circle(fc, 650.0, 82.0, 15.0, YELLOW);
+        draw_circle(fc, 650.0, 82.0, 15.0, color::YELLOW);
 
         if is_key_pressed(fc, KeyCode::Space) {
             self.one_shot_emitter.config.emitting = true;
@@ -116,7 +127,13 @@ impl frogquad::App for ParticlesApp {
             (get_time(fc) * 0.5).cos() as f32 * screen_height(fc) / 2.5 + screen_height(fc) / 2.0,
         );
         self.flying_emitter_local.draw(fc, local_emitter_pos);
-        draw_circle(fc, local_emitter_pos.x, local_emitter_pos.y, 15.0, RED);
+        draw_circle(
+            fc,
+            local_emitter_pos.x,
+            local_emitter_pos.y,
+            15.0,
+            color::RED,
+        );
 
         let world_emitter_pos = vec2(
             (get_time(fc) * 0.6 + 1.0).sin() as f32 * screen_width(fc) / 2.5
@@ -126,7 +143,13 @@ impl frogquad::App for ParticlesApp {
         );
 
         self.flying_emitter_world.draw(fc, world_emitter_pos);
-        draw_circle(fc, world_emitter_pos.x, world_emitter_pos.y, 15.0, GREEN);
+        draw_circle(
+            fc,
+            world_emitter_pos.x,
+            world_emitter_pos.y,
+            15.0,
+            color::GREEN,
+        );
     }
 }
 

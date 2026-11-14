@@ -1,5 +1,9 @@
+use frogquad::color::{self, Color};
+use frogquad::math::{Vec2, Vec4, vec2, vec3, vec4};
+use frogquad::texture::Texture2D;
+use frogquad::time::get_frame_time;
 use frogquad::window::miniquad::*;
-use frogquad::{FrogCx, prelude::*};
+use frogquad::{FrogCx, QuadGl, glam, miniquad, rand};
 use miniquad::graphics::RenderPass;
 
 #[cfg(feature = "nanoserde")]
@@ -147,9 +151,9 @@ pub struct ColorCurve {
 impl Default for ColorCurve {
     fn default() -> ColorCurve {
         ColorCurve {
-            start: WHITE,
-            mid: WHITE,
-            end: WHITE,
+            start: color::WHITE,
+            mid: color::WHITE,
+            end: color::WHITE,
         }
     }
 }
@@ -1080,7 +1084,10 @@ impl EmittersCache {
 }
 
 mod shader {
-    use super::*;
+    use {
+        super::*,
+        frogquad::math::{Mat4, Vec3},
+    };
 
     pub const VERTEX: &str = r#"#version 100
     #define DEF_VERTEX_ATTRIBUTES

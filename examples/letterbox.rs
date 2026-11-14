@@ -1,4 +1,18 @@
-use frogquad::prelude::*;
+use {
+    frogquad::{
+        camera::{Camera2D, set_camera, set_default_camera},
+        color,
+        conf::Conf,
+        input::mouse_position,
+        math::Rect,
+        shapes::draw_circle,
+        text::draw_text,
+        texture::{DrawTextureParams, RenderTarget, draw_texture_ex, render_target},
+        window::{clear_background, screen_height, screen_width},
+    },
+    glam::{Vec2, vec2},
+    miniquad::FilterMode,
+};
 
 const VIRTUAL_WIDTH: f32 = 1280.0;
 const VIRTUAL_HEIGHT: f32 = 720.0;
@@ -44,39 +58,45 @@ impl frogquad::App for LetterboxApp {
         // ------------------------------------------------------------------------
         set_camera(fc, &self.render_target_cam);
 
-        clear_background(fc, LIGHTGRAY);
+        clear_background(fc, color::LIGHTGRAY);
 
-        draw_text(fc, "Hello Letterbox", 20.0, 20.0, 30.0, DARKGRAY);
+        draw_text(fc, "Hello Letterbox", 20.0, 20.0, 30.0, color::DARKGRAY);
         draw_circle(
             fc,
             VIRTUAL_WIDTH / 2.0 - 65.0,
             VIRTUAL_HEIGHT / 2.0,
             35.0,
-            RED,
+            color::RED,
         );
         draw_circle(
             fc,
             VIRTUAL_WIDTH / 2.0 + 65.0,
             VIRTUAL_HEIGHT / 2.0,
             35.0,
-            BLUE,
+            color::BLUE,
         );
         draw_circle(
             fc,
             VIRTUAL_WIDTH / 2.0,
             VIRTUAL_HEIGHT / 2.0 - 65.0,
             35.0,
-            YELLOW,
+            color::YELLOW,
         );
 
-        draw_circle(fc, virtual_mouse_pos.x, virtual_mouse_pos.y, 15.0, BLACK);
+        draw_circle(
+            fc,
+            virtual_mouse_pos.x,
+            virtual_mouse_pos.y,
+            15.0,
+            color::BLACK,
+        );
 
         // ------------------------------------------------------------------------
         // Begin drawing the window screen
         // ------------------------------------------------------------------------
         set_default_camera(fc);
 
-        clear_background(fc, BLACK); // Will be the letterbox color
+        clear_background(fc, color::BLACK); // Will be the letterbox color
 
         // Draw 'render_target' to window screen, porperly scaled and letterboxed
         draw_texture_ex(
@@ -84,7 +104,7 @@ impl frogquad::App for LetterboxApp {
             &self.render_target.texture,
             (screen_width(fc) - (VIRTUAL_WIDTH * scale)) * 0.5,
             (screen_height(fc) - (VIRTUAL_HEIGHT * scale)) * 0.5,
-            WHITE,
+            color::WHITE,
             DrawTextureParams {
                 dest_size: Some(vec2(VIRTUAL_WIDTH * scale, VIRTUAL_HEIGHT * scale)),
                 flip_y: true, // Must flip y otherwise 'render_target' will be upside down

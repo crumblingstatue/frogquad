@@ -99,8 +99,7 @@ impl Image {
     /// Creates an empty Image.
     ///
     /// ```
-    /// # use frogquad::prelude::*;
-    /// let image = Image::empty();
+    /// let image = frogquad::texture::Image::empty();
     /// ```
     pub const fn empty() -> Image {
         Image {
@@ -118,10 +117,9 @@ impl Image {
     /// # Example
     ///
     /// ```
-    /// # use frogquad::prelude::*;
-    /// let icon = Image::from_file_with_format(
+    /// let icon = frogquad::texture::Image::from_file_with_format(
     ///     include_bytes!("../examples/rust.png"),
-    ///     Some(ImageFormat::Png),
+    ///     Some(image::ImageFormat::Png),
     ///     );
     /// ```
     pub fn from_file_with_format(
@@ -673,9 +671,9 @@ impl Texture2D {
     ///
     /// # Example
     /// ```no_run
-    /// # use frogquad::prelude::*;
+    ///
     /// # let fc: &mut frogquad::FrogCx = unimplemented!();
-    /// let texture = Texture2D::empty(fc);
+    /// let texture = frogquad::texture::Texture2D::empty(fc);
     /// ```
     pub fn empty(fc: &mut FrogCx) -> Texture2D {
         Texture2D::unmanaged(fc.gl.white_texture)
@@ -688,9 +686,9 @@ impl Texture2D {
     ///
     /// # Example
     /// ```no_run
-    /// # use frogquad::prelude::*;
+    ///
     /// # let fc: &mut frogquad::FrogCx = unimplemented!();
-    /// let texture = Texture2D::from_file_with_format(
+    /// let texture = frogquad::texture::Texture2D::from_file_with_format(
     ///     fc,
     ///     include_bytes!("../examples/rust.png"),
     ///     None,
@@ -736,11 +734,11 @@ impl Texture2D {
     /// # Example
     ///
     /// ```no_run
-    /// # use frogquad::prelude::*;
+    ///
     /// # let fc: &mut frogquad::FrogCx = unimplemented!();
     /// // Create a 2x2 texture from a byte slice with 4 rgba pixels
     /// let bytes: Vec<u8> = vec![255, 0, 0, 192, 0, 255, 0, 192, 0, 0, 255, 192, 255, 255, 255, 192];
-    /// let texture = Texture2D::from_rgba8(fc, 2, 2, &bytes);
+    /// let texture = frogquad::texture::Texture2D::from_rgba8(fc, 2, 2, &bytes);
     /// ```
     pub fn from_rgba8(fc: &mut FrogCx, width: u16, height: u16, bytes: &[u8]) -> Texture2D {
         let texture = fc.quad_context.new_texture_from_rgba8(width, height, bytes);
@@ -830,10 +828,10 @@ impl Texture2D {
     ///
     /// # Example
     /// ```no_run
-    /// # use frogquad::prelude::*;
+    ///
     /// # let fc: &mut frogquad::FrogCx = unimplemented!();
-    /// let texture = Texture2D::empty(fc);
-    /// texture.set_filter(fc, FilterMode::Linear);
+    /// let texture = frogquad::texture::Texture2D::empty(fc);
+    /// texture.set_filter(fc, miniquad::FilterMode::Linear);
     /// ```
     pub fn set_filter(&self, fc: &mut FrogCx, filter_mode: FilterMode) {
         let ctx = &mut fc.quad_context;

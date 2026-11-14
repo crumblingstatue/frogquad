@@ -19,23 +19,24 @@
 //! * Single command deploy for both WASM and Android [build instructions](https://github.com/not-fl3/miniquad/#building-examples)
 //! # Example
 //! ```no_run
-//! use frogquad::prelude::*;
+//!
+//! use frogquad::color;
 //!
 //! struct ExampleApp;
 //!
 //! impl frogquad::App for ExampleApp {
 //!     fn update(&mut self, fc: &mut frogquad::FrogCx) {
-//!         clear_background(fc, RED);
+//!         frogquad::window::clear_background(fc, color::RED);
 //!
-//!         draw_line(fc, 40.0, 40.0, 100.0, 200.0, 15.0, BLUE);
-//!         draw_rectangle(fc, screen_width(fc) / 2.0 - 60.0, 100.0, 120.0, 60.0, GREEN);
-//!         draw_circle(fc, screen_width(fc) - 30.0, screen_height(fc) - 30.0, 15.0, YELLOW);
-//!         draw_text(fc, "HELLO", 20.0, 20.0, 20.0, DARKGRAY);
+//!         frogquad::shapes::draw_line(fc, 40.0, 40.0, 100.0, 200.0, 15.0, color::BLUE);
+//!         frogquad::shapes::draw_rectangle(fc, frogquad::window::screen_width(fc) / 2.0 - 60.0, 100.0, 120.0, 60.0, color::GREEN);
+//!         frogquad::shapes::draw_circle(fc, frogquad::window::screen_width(fc) - 30.0, frogquad::window::screen_height(fc) - 30.0, 15.0, color::YELLOW);
+//!         frogquad::text::draw_text(fc, "HELLO", 20.0, 20.0, 20.0, color::DARKGRAY);
 //!     }
 //! }
 //!
 //! fn main() {
-//!     frogquad::start(Conf::from_title("BasicShapes"), |_fc| { Box::new(ExampleApp)});
+//!     frogquad::start(frogquad::conf::Conf::from_title("BasicShapes"), |_fc| { Box::new(ExampleApp)});
 //! }
 //!```
 
@@ -60,11 +61,12 @@ pub mod texture;
 pub mod time;
 pub mod window;
 
-pub mod prelude;
-
 mod error;
 
 pub use error::Error;
+pub use quad_gl::QuadGl;
+// Re-export glam library
+pub use glam;
 
 /// Cross platform random generator.
 pub mod rand {
@@ -82,12 +84,12 @@ pub use ::log as logging;
 pub use miniquad;
 use miniquad::{EventHandler, KeyCode, KeyMods, MouseButton, TouchPhase, date};
 
+use crate::input::mouse_position_local;
 use crate::quad_gl::MagicSnapshotter;
 use crate::text::Font;
 use crate::texture::{Texture2D, TexturesContext};
 use crate::{
     color::{Color, colors::*},
-    quad_gl::QuadGl,
     texture::TextureHandle,
 };
 
@@ -329,7 +331,7 @@ impl FrogCx {
         self.keys_released.clear();
         self.mouse_pressed.clear();
         self.mouse_released.clear();
-        self.last_mouse_position = Some(crate::prelude::mouse_position_local(self));
+        self.last_mouse_position = Some(mouse_position_local(self));
 
         self.quit_requested = false;
 

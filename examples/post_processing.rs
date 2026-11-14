@@ -1,4 +1,17 @@
-use frogquad::{FrogCx, prelude::*};
+use {
+    frogquad::{
+        FrogCx,
+        camera::{Camera2D, set_camera, set_default_camera},
+        color,
+        conf::Conf,
+        material::{Material, gl_use_default_material, gl_use_material, load_material},
+        shapes::{draw_circle, draw_line},
+        texture::{DrawTextureParams, RenderTarget, draw_texture_ex, render_target},
+        window::{clear_background, screen_height, screen_width},
+    },
+    glam::vec2,
+    miniquad::{FilterMode, ShaderSource},
+};
 
 struct PostProcessExample {
     material: Material,
@@ -41,23 +54,23 @@ impl frogquad::App for PostProcessExample {
             },
         );
 
-        clear_background(fc, LIGHTGRAY);
-        draw_line(fc, -30.0, 45.0, 30.0, 45.0, 3.0, BLUE);
-        draw_circle(fc, -45.0, -35.0, 20.0, YELLOW);
-        draw_circle(fc, 45.0, -35.0, 20.0, GREEN);
+        clear_background(fc, color::LIGHTGRAY);
+        draw_line(fc, -30.0, 45.0, 30.0, 45.0, 3.0, color::BLUE);
+        draw_circle(fc, -45.0, -35.0, 20.0, color::YELLOW);
+        draw_circle(fc, 45.0, -35.0, 20.0, color::GREEN);
 
         // drawing to the screen
 
         set_default_camera(fc);
 
-        clear_background(fc, WHITE);
+        clear_background(fc, color::WHITE);
         gl_use_material(&mut fc.gl, &self.material);
         draw_texture_ex(
             fc,
             &self.render_target.texture,
             0.,
             0.,
-            WHITE,
+            color::WHITE,
             DrawTextureParams {
                 dest_size: Some(vec2(screen_width(fc), screen_height(fc))),
                 ..Default::default()

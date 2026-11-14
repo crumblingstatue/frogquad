@@ -1,4 +1,4 @@
-use frogquad::prelude::*;
+use frogquad::{color, window::clear_background};
 
 fn window_conf() -> miniquad::conf::Conf {
     miniquad::conf::Conf {
@@ -17,7 +17,7 @@ struct WindowConfApp {}
 impl frogquad::App for WindowConfApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
         loop {
-            clear_background(fc, WHITE);
+            clear_background(fc, color::WHITE);
         }
     }
 }

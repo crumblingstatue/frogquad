@@ -1,10 +1,20 @@
-use frogquad::prelude::*;
+use {
+    frogquad::{
+        camera::{Camera2D, set_camera, set_default_camera},
+        color,
+        conf::Conf,
+        shapes::{draw_circle, draw_line, draw_rectangle},
+        text::draw_text,
+        window::{clear_background, screen_height, screen_width},
+    },
+    glam::vec2,
+};
 
 struct CameraApp {}
 
 impl frogquad::App for CameraApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
-        clear_background(fc, LIGHTGRAY);
+        clear_background(fc, color::LIGHTGRAY);
 
         // Render some primitives in camera space
 
@@ -15,14 +25,14 @@ impl frogquad::App for CameraApp {
                 ..Default::default()
             },
         );
-        draw_line(fc, -0.4, 0.4, -0.8, 0.9, 0.05, BLUE);
-        draw_rectangle(fc, -0.3, 0.3, 0.2, 0.2, GREEN);
-        draw_circle(fc, 0., 0., 0.1, YELLOW);
+        draw_line(fc, -0.4, 0.4, -0.8, 0.9, 0.05, color::BLUE);
+        draw_rectangle(fc, -0.3, 0.3, 0.2, 0.2, color::GREEN);
+        draw_circle(fc, 0., 0., 0.1, color::YELLOW);
 
         // Back to screen space, render some text
 
         set_default_camera(fc);
-        draw_text(fc, "HELLO", 30.0, 200.0, 30.0, BLACK);
+        draw_text(fc, "HELLO", 30.0, 200.0, 30.0, color::BLACK);
     }
 }
 

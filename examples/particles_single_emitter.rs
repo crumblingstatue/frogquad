@@ -1,6 +1,14 @@
-use frogquad::{FrogCx, prelude::*};
+use frogquad::{
+    FrogCx,
+    camera::{Camera2D, set_camera},
+    color,
+    conf::Conf,
+    math::Rect,
+    window::clear_background,
+};
 
 use frogquad_particles::{BlendMode, Curve, Emitter, EmitterConfig};
+use glam::vec2;
 
 struct ParticlesSingleApp {
     emitter: Emitter,
@@ -32,7 +40,7 @@ impl ParticlesSingleApp {
 
 impl frogquad::App for ParticlesSingleApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
-        clear_background(fc, BLACK);
+        clear_background(fc, color::BLACK);
 
         let camera = Camera2D::from_display_rect(Rect::new(0.0, 0.0, 100.0, 100.0));
 

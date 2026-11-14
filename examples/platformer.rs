@@ -1,4 +1,19 @@
-use frogquad::{FrogCx, prelude::*};
+use {
+    frogquad::{
+        FrogCx,
+        camera::{Camera2D, set_camera},
+        color,
+        conf::Conf,
+        file::load_string,
+        input::{is_key_down, is_key_pressed},
+        math::Rect,
+        texture::load_texture,
+        time::get_frame_time,
+        window::clear_background,
+    },
+    glam::{Vec2, vec2},
+    miniquad::{FilterMode, KeyCode},
+};
 
 use frogquad_tiled as tiled;
 
@@ -66,7 +81,7 @@ impl PlatformerApp {
 
 impl frogquad::App for PlatformerApp {
     fn update(&mut self, fc: &mut FrogCx) {
-        clear_background(fc, BLACK);
+        clear_background(fc, color::BLACK);
 
         set_camera(fc, &self.camera);
 

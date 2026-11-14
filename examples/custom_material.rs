@@ -1,6 +1,11 @@
-use frogquad::{FrogCx, prelude::*};
+use frogquad::shapes::draw_rectangle;
+use frogquad::{FrogCx, color};
 
-use frogquad::window::miniquad::*;
+use frogquad::material::{
+    Material, MaterialParams, gl_use_default_material, gl_use_material, load_material,
+};
+use frogquad::window::{clear_background, miniquad::*};
+use glam::{Vec4, vec4};
 
 const VERTEX: &str = r#"#version 100
 attribute vec3 position;
@@ -210,33 +215,33 @@ impl CustomMatApp {
 
 impl frogquad::App for CustomMatApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
-        clear_background(fc, GRAY);
+        clear_background(fc, color::GRAY);
 
         gl_use_material(&mut fc.gl, &self.mat);
 
         self.mat
             .set_uniform(&mut fc.gl, "test_color", vec4(1., 0., 0., 1.));
 
-        draw_rectangle(fc, 50.0, 50.0, 100., 100., WHITE);
+        draw_rectangle(fc, 50.0, 50.0, 100., 100., color::WHITE);
 
         self.mat
             .set_uniform(&mut fc.gl, "test_color", vec4(0., 1., 0., 1.));
-        draw_rectangle(fc, 160.0, 50.0, 100., 100., WHITE);
+        draw_rectangle(fc, 160.0, 50.0, 100., 100., color::WHITE);
 
         self.mat
             .set_uniform(&mut fc.gl, "test_color", vec4(0., 0., 1., 1.));
-        draw_rectangle(fc, 270.0, 50.0, 100., 100., WHITE);
+        draw_rectangle(fc, 270.0, 50.0, 100., 100., color::WHITE);
 
         gl_use_material(&mut fc.gl, &self.mat_with_array);
         let mut colors: [Vec4; 10] = [vec4(0.0, 1.0, 0.0, 0.0); 10];
         colors[5] = vec4(0.0, 1.0, 1.0, 1.0);
         self.mat_with_array
             .set_uniform_array(&mut fc.gl, "test_color", &colors[..]);
-        draw_rectangle(fc, 50.0, 160.0, 100., 100., WHITE);
+        draw_rectangle(fc, 50.0, 160.0, 100., 100., color::WHITE);
 
         gl_use_default_material(&mut fc.gl);
 
-        draw_rectangle(fc, 380.0, 50.0, 100., 100., YELLOW);
+        draw_rectangle(fc, 380.0, 50.0, 100., 100., color::YELLOW);
     }
 }
 

@@ -1,4 +1,17 @@
-use frogquad::{FrogCx, prelude::*};
+use {
+    frogquad::{
+        FrogCx, color,
+        conf::Conf,
+        input::is_key_down,
+        rand,
+        shapes::{draw_circle, draw_poly_lines, draw_triangle_lines},
+        text::{draw_text, measure_text},
+        time::get_time,
+        window::{clear_background, screen_height, screen_width},
+    },
+    glam::Vec2,
+    miniquad::KeyCode,
+};
 
 const SHIP_HEIGHT: f32 = 25.;
 const SHIP_BASE: f32 = 22.;
@@ -76,7 +89,7 @@ impl AsteroidsApp {
 impl frogquad::App for AsteroidsApp {
     fn update(&mut self, fc: &mut FrogCx) {
         if self.gameover {
-            clear_background(fc, LIGHTGRAY);
+            clear_background(fc, color::LIGHTGRAY);
             let mut text = "You Win!. Press [enter] to play again.";
             let font_size = 30.;
 
@@ -90,7 +103,7 @@ impl frogquad::App for AsteroidsApp {
                 screen_width(fc) / 2. - text_size.width / 2.,
                 screen_height(fc) / 2. - text_size.height / 2.,
                 font_size,
-                DARKGRAY,
+                color::DARKGRAY,
             );
             if is_key_down(fc, KeyCode::Enter) {
                 self.ship = Ship {
@@ -229,10 +242,10 @@ impl frogquad::App for AsteroidsApp {
             return;
         }
 
-        clear_background(fc, LIGHTGRAY);
+        clear_background(fc, color::LIGHTGRAY);
 
         for bullet in self.bullets.iter() {
-            draw_circle(fc, bullet.pos.x, bullet.pos.y, 2., BLACK);
+            draw_circle(fc, bullet.pos.x, bullet.pos.y, 2., color::BLACK);
         }
 
         for asteroid in self.asteroids.iter() {
@@ -244,7 +257,7 @@ impl frogquad::App for AsteroidsApp {
                 asteroid.size,
                 asteroid.rot,
                 2.,
-                BLACK,
+                color::BLACK,
             )
         }
 
@@ -260,7 +273,7 @@ impl frogquad::App for AsteroidsApp {
             self.ship.pos.x + rotation.cos() * SHIP_BASE / 2. - rotation.sin() * SHIP_HEIGHT / 2.,
             self.ship.pos.y + rotation.sin() * SHIP_BASE / 2. + rotation.cos() * SHIP_HEIGHT / 2.,
         );
-        draw_triangle_lines(fc, v1, v2, v3, 2., BLACK);
+        draw_triangle_lines(fc, v1, v2, v3, 2., color::BLACK);
     }
 }
 

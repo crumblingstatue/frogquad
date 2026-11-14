@@ -1,5 +1,10 @@
 use {
-    frogquad::{FrogCx, prelude::*},
+    frogquad::{
+        FrogCx, color,
+        conf::Conf,
+        texture::{Texture2D, draw_texture, load_texture},
+        window::clear_background,
+    },
     pollster::FutureExt,
 };
 
@@ -17,8 +22,8 @@ impl TextureApp {
 
 impl frogquad::App for TextureApp {
     fn update(&mut self, fc: &mut FrogCx) {
-        clear_background(fc, LIGHTGRAY);
-        draw_texture(fc, &self.texture, 0., 0., WHITE);
+        clear_background(fc, color::LIGHTGRAY);
+        draw_texture(fc, &self.texture, 0., 0., color::WHITE);
     }
 }
 

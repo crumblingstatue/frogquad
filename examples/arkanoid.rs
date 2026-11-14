@@ -1,4 +1,18 @@
-use frogquad::{FrogCx, prelude::*};
+use {
+    frogquad::{
+        FrogCx,
+        camera::{Camera2D, set_camera},
+        color,
+        conf::Conf,
+        input::is_key_down,
+        shapes::{draw_circle, draw_rectangle},
+        text::{TextParams, camera_font_scale, draw_text_ex},
+        time::get_frame_time,
+        window::clear_background,
+    },
+    glam::vec2,
+    miniquad::KeyCode,
+};
 
 struct ArkanoidApp {
     stick: bool,
@@ -52,7 +66,7 @@ impl frogquad::App for ArkanoidApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
         let platform_width = 5.;
         let platform_height = 0.2;
-        clear_background(fc, SKYBLUE);
+        clear_background(fc, color::SKYBLUE);
 
         let delta = get_frame_time(fc);
 
@@ -112,7 +126,14 @@ impl frogquad::App for ArkanoidApp {
                     let block_x = i as f32 * block_w + 0.05;
                     let block_y = j as f32 * block_h + 0.05;
 
-                    draw_rectangle(fc, block_x, block_y, block_w - 0.1, block_h - 0.1, DARKBLUE);
+                    draw_rectangle(
+                        fc,
+                        block_x,
+                        block_y,
+                        block_w - 0.1,
+                        block_h - 0.1,
+                        color::DARKBLUE,
+                    );
                     if self.ball_x >= block_x
                         && self.ball_x < block_x + block_w
                         && self.ball_y >= block_y
@@ -125,14 +146,14 @@ impl frogquad::App for ArkanoidApp {
             }
         }
 
-        draw_circle(fc, self.ball_x, self.ball_y, 0.2, RED);
+        draw_circle(fc, self.ball_x, self.ball_y, 0.2, color::RED);
         draw_rectangle(
             fc,
             self.platform_x - platform_width / 2.,
             SCR_H - platform_height,
             platform_width,
             platform_height,
-            DARKPURPLE,
+            color::DARKPURPLE,
         );
     }
 }

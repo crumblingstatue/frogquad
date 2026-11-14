@@ -87,9 +87,7 @@ impl Color {
     /// # Example
     ///
     /// ```
-    /// use frogquad::prelude::*;
-    ///
-    /// let pink = Color::new(1.00, 0.43, 0.76, 1.00);
+    /// let pink = frogquad::color::Color::new(1.00, 0.43, 0.76, 1.00);
     /// assert_eq!(pink.r, 1.00);
     /// assert_eq!(pink.g, 0.43);
     /// assert_eq!(pink.b, 0.76);
@@ -117,9 +115,7 @@ impl Color {
     /// # Example
     ///
     /// ```
-    /// use frogquad::prelude::*;
-    ///
-    /// let light_blue = Color::from_hex(0x3CA7D5);
+    /// let light_blue = frogquad::color::Color::from_hex(0x3CA7D5);
     /// assert_eq!(light_blue.r, 0.23529412);
     /// assert_eq!(light_blue.g, 0.654902);
     /// assert_eq!(light_blue.b, 0.8352941);

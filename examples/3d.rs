@@ -1,5 +1,15 @@
 use {
-    frogquad::{FrogCx, prelude::*},
+    frogquad::{
+        FrogCx,
+        camera::{Camera3D, set_camera, set_default_camera},
+        color,
+        conf::Conf,
+        models::{draw_cube, draw_cube_wires, draw_grid, draw_plane, draw_sphere},
+        text::draw_text,
+        texture::{Texture2D, load_texture},
+        window::clear_background,
+    },
+    glam::{vec2, vec3},
     pollster::FutureExt,
 };
 
@@ -19,7 +29,7 @@ impl App3d {
 
 impl frogquad::App for App3d {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
-        clear_background(fc, LIGHTGRAY);
+        clear_background(fc, color::LIGHTGRAY);
 
         // Going 3d!
 
@@ -33,18 +43,18 @@ impl frogquad::App for App3d {
             },
         );
 
-        draw_grid(fc, 20, 1., BLACK, GRAY);
+        draw_grid(fc, 20, 1., color::BLACK, color::GRAY);
 
-        draw_cube_wires(fc, vec3(0., 1., -6.), vec3(2., 2., 2.), DARKGREEN);
-        draw_cube_wires(fc, vec3(0., 1., 6.), vec3(2., 2., 2.), DARKBLUE);
-        draw_cube_wires(fc, vec3(2., 1., 2.), vec3(2., 2., 2.), YELLOW);
+        draw_cube_wires(fc, vec3(0., 1., -6.), vec3(2., 2., 2.), color::DARKGREEN);
+        draw_cube_wires(fc, vec3(0., 1., 6.), vec3(2., 2., 2.), color::DARKBLUE);
+        draw_cube_wires(fc, vec3(2., 1., 2.), vec3(2., 2., 2.), color::YELLOW);
 
         draw_plane(
             fc,
             vec3(-8., 0., -8.),
             vec2(5., 5.),
             Some(&self.ferris),
-            WHITE,
+            color::WHITE,
         );
 
         draw_cube(
@@ -52,23 +62,29 @@ impl frogquad::App for App3d {
             vec3(-5., 1., -2.),
             vec3(2., 2., 2.),
             Some(&self.rust_logo),
-            WHITE,
+            color::WHITE,
         );
         draw_cube(
             fc,
             vec3(-5., 1., 2.),
             vec3(2., 2., 2.),
             Some(&self.ferris),
-            WHITE,
+            color::WHITE,
         );
-        draw_cube(fc, vec3(2., 0., -2.), vec3(0.4, 0.4, 0.4), None, BLACK);
+        draw_cube(
+            fc,
+            vec3(2., 0., -2.),
+            vec3(0.4, 0.4, 0.4),
+            None,
+            color::BLACK,
+        );
 
-        draw_sphere(fc, vec3(-8., 0., 0.), 1., None, BLUE);
+        draw_sphere(fc, vec3(-8., 0., 0.), 1., None, color::BLUE);
 
         // Back to screen space, render some text
 
         set_default_camera(fc);
-        draw_text(fc, "WELCOME TO 3D WORLD", 10.0, 20.0, 30.0, BLACK);
+        draw_text(fc, "WELCOME TO 3D WORLD", 10.0, 20.0, 30.0, color::BLACK);
     }
 }
 

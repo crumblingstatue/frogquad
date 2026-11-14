@@ -1,4 +1,11 @@
-use frogquad::prelude::*;
+use frogquad::{
+    color,
+    conf::Conf,
+    input::mouse_position,
+    shapes::{draw_line, draw_rectangle_lines},
+    text::{draw_multiline_text, measure_multiline_text, wrap_text},
+    window::{clear_background, screen_height},
+};
 
 static LOREM: &str = "Lorem ipsum odor amet, consectetuer adipiscing elit. Ultrices nostra volutpat facilisis magna mus. Rhoncus tempor feugiat netus maecenas pretium leo vitae. Eros aliquet maecenas eu diam aliquet varius hac elementum. Sociosqu platea per ultricies vitae praesent mauris nostra ridiculus. Est cursus pulvinar efficitur mus vel leo. Integer et nec eleifend non leo. Lorem rutrum ultrices potenti facilisis hendrerit facilisi metus sit. AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 
@@ -11,7 +18,7 @@ impl frogquad::App for TextWrapApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
         let font_size = 24;
 
-        clear_background(fc, BLACK);
+        clear_background(fc, color::BLACK);
 
         let maximum_line_length = f32::max(20.0, mouse_position(fc).0 - 20.0);
         let text = wrap_text(
@@ -31,7 +38,7 @@ impl frogquad::App for TextWrapApp {
             20.0 + dimensions.offset_y,
             font_size as f32,
             Some(1.0),
-            WHITE,
+            color::WHITE,
         );
         draw_rectangle_lines(
             fc,
@@ -40,7 +47,7 @@ impl frogquad::App for TextWrapApp {
             dimensions.width,
             dimensions.height,
             2.0,
-            BLUE,
+            color::BLUE,
         );
         draw_line(
             fc,
@@ -49,7 +56,7 @@ impl frogquad::App for TextWrapApp {
             20.0 + maximum_line_length,
             screen_height(fc),
             1.0,
-            RED,
+            color::RED,
         );
     }
 }

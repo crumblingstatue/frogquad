@@ -1,5 +1,18 @@
-use frogquad::{FrogCx, prelude::*};
 use pollster::FutureExt;
+use {
+    frogquad::{
+        FrogCx,
+        color::{self, Color},
+        conf::Conf,
+        rand,
+        text::draw_text,
+        texture::{Texture2D, draw_texture, load_texture},
+        time::draw_fps,
+        window::{clear_background, screen_height, screen_width},
+    },
+    glam::Vec2,
+    miniquad::{FilterMode, MouseButton},
+};
 
 struct Rustaceane {
     pos: Vec2,
@@ -78,7 +91,7 @@ impl frogquad::App for RustaceanMarkApp {
             0.,
             32.,
             32.,
-            WHITE,
+            color::WHITE,
         );
     }
 }

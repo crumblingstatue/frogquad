@@ -1,4 +1,15 @@
-use frogquad::{FrogCx, prelude::*};
+use {
+    frogquad::{
+        FrogCx,
+        camera::{Camera2D, set_camera},
+        color,
+        conf::Conf,
+        shapes::{draw_circle, draw_rectangle},
+        time::get_time,
+        window::{clear_background, get_internal_gl},
+    },
+    glam::vec2,
+};
 
 fn tree(fc: &mut FrogCx, time: f64, deep: u32, angle: f32, tall: f32) {
     if deep >= 8 {
@@ -6,7 +17,7 @@ fn tree(fc: &mut FrogCx, time: f64, deep: u32, angle: f32, tall: f32) {
     }
 
     // we can use normal frogquad drawing API here
-    draw_rectangle(fc, -0.01 / 2., 0., 0.01, tall, DARKGRAY);
+    draw_rectangle(fc, -0.01 / 2., 0., 0.01, tall, color::DARKGRAY);
 
     // and we can also modify internal frogquad render state with "gl" reference
     get_internal_gl(fc)
@@ -36,9 +47,9 @@ struct TreeApp {}
 
 impl frogquad::App for TreeApp {
     fn update(&mut self, fc: &mut FrogCx) {
-        clear_background(fc, LIGHTGRAY);
+        clear_background(fc, color::LIGHTGRAY);
 
-        draw_circle(fc, 0., 0., 0.03, DARKGRAY);
+        draw_circle(fc, 0., 0., 0.03, color::DARKGRAY);
         let time = get_time(fc);
         tree(fc, time, 0, 1., 0.3);
     }

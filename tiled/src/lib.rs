@@ -1,7 +1,9 @@
+use frogquad::{
+    color::{self, Color},
+    math::{Rect, vec2},
+    texture::{DrawTextureParams, Texture2D, draw_texture_ex},
+};
 use nanoserde::DeJson;
-
-use frogquad::prelude::*;
-
 use std::collections::HashMap;
 
 mod error;
@@ -139,7 +141,7 @@ impl Map {
             &tileset.texture,
             dest.x,
             dest.y,
-            WHITE,
+            color::WHITE,
             DrawTextureParams {
                 dest_size: Some(vec2(dest.w, dest.h)),
                 source: Some(Rect::new(
@@ -164,7 +166,7 @@ impl Map {
             &tileset.texture,
             dest.x,
             dest.y,
-            WHITE,
+            color::WHITE,
             DrawTextureParams {
                 dest_size: Some(vec2(dest.w, dest.h)),
                 source: Some(source),
