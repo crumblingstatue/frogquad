@@ -1,10 +1,9 @@
 use frogquad::prelude::*;
 
-fn main() {
-    frogquad::start(Conf::from_title("InputTouch"), main_());
-}
-async fn main_() {
-    loop {
+struct InputTouchApp {}
+
+impl frogquad::App for InputTouchApp {
+    fn update(&mut self, fc: &mut frogquad::FrogCx) {
         clear_background(fc, LIGHTGRAY);
 
         for touch in touches(fc) {
@@ -20,4 +19,10 @@ async fn main_() {
 
         draw_text(fc, "touch the screen!", 20.0, 20.0, 20.0, DARKGRAY);
     }
+}
+
+fn main() {
+    frogquad::start(Conf::from_title("InputTouch"), |_fc| {
+        Box::new(InputTouchApp {})
+    });
 }
