@@ -52,7 +52,7 @@ impl TexturesContext {
         self.textures.get(texture)
     }
 
-    pub fn garbage_collect(&mut self, ctx: &mut miniquad::Context) {
+    pub(crate) fn garbage_collect(&mut self, ctx: &mut miniquad::Context) {
         // Delete RenderPasses first, then textures (safer for attachments/FBOs)
         for pass in self.removed_render_passes.drain(0..) {
             ctx.delete_render_pass(pass);
