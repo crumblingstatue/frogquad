@@ -93,7 +93,7 @@ impl frogquad::App for LifeApp {
             self.image.set_pixel(
                 (i % w) as u32,
                 (i / w) as u32,
-                match self.buffer[i as usize] {
+                match self.buffer[i] {
                     CellState::Alive => BLACK,
                     CellState::Dead => WHITE,
                 },

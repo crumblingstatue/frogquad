@@ -114,7 +114,7 @@ impl frogquad::App for PlatformerApp {
                 .world
                 .collide_check(self.player.collider, pos + vec2(0., 1.));
 
-            if on_ground == false {
+            if !on_ground {
                 self.player.speed.y += 500. * get_frame_time(fc);
             }
 
@@ -126,10 +126,8 @@ impl frogquad::App for PlatformerApp {
                 self.player.speed.x = 0.;
             }
 
-            if is_key_pressed(fc, KeyCode::Space) {
-                if on_ground {
-                    self.player.speed.y = -120.;
-                }
+            if is_key_pressed(fc, KeyCode::Space) && on_ground {
+                self.player.speed.y = -120.;
             }
 
             self.world.move_h(

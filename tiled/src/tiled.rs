@@ -42,7 +42,7 @@ impl DeJson for PropertyVal {
             DeJsonTok::U64(x) => PropertyVal::UInt(x),
             DeJsonTok::I64(x) => PropertyVal::Integer(x),
             DeJsonTok::F64(x) => PropertyVal::Float(x),
-            DeJsonTok::Str => PropertyVal::String(core::mem::replace(&mut s.strbuf, String::new())),
+            DeJsonTok::Str => PropertyVal::String(core::mem::take(&mut s.strbuf)),
             _ => {
                 return Err(s.err_token(
                     "Incorrect property value. Must be either string, number or boolean",

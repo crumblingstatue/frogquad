@@ -245,7 +245,6 @@ qwe
             shader_string,
             &PreprocessorConfig {
                 includes: vec![("hello.glsl".to_string(), "iii\njjj".to_string())],
-                ..Default::default()
             },
         );
 

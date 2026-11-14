@@ -309,7 +309,7 @@ impl ParticleShape {
                 let vertex_buffer = fc.quad_context.new_buffer(
                     BufferType::VertexBuffer,
                     BufferUsage::Immutable,
-                    BufferSource::slice(&vertices),
+                    BufferSource::slice(vertices),
                 );
 
                 #[rustfmt::skip]
@@ -319,7 +319,7 @@ impl ParticleShape {
                 let index_buffer = fc.quad_context.new_buffer(
                     BufferType::IndexBuffer,
                     BufferUsage::Immutable,
-                    BufferSource::slice(&indices),
+                    BufferSource::slice(indices),
                 );
 
                 (vertex_buffer, index_buffer)
@@ -358,12 +358,12 @@ impl ParticleShape {
                 let vertex_buffer = fc.quad_context.new_buffer(
                     BufferType::VertexBuffer,
                     BufferUsage::Immutable,
-                    BufferSource::slice(&vertices),
+                    BufferSource::slice(vertices),
                 );
                 let index_buffer = fc.quad_context.new_buffer(
                     BufferType::IndexBuffer,
                     BufferUsage::Immutable,
-                    BufferSource::slice(&indices),
+                    BufferSource::slice(indices),
                 );
                 (vertex_buffer, index_buffer)
             }
@@ -551,10 +551,12 @@ impl Emitter {
                 .shape
                 .build_bindings(fc, positions_vertex_buffer, config.texture.clone());
 
-        let (vertex, fragment) = config.material.as_ref().map_or_else(
-            || (shader::VERTEX, shader::FRAGMENT),
-            |material| (&material.vertex, &material.fragment),
-        );
+        let (vertex, fragment) = config
+            .material
+            .as_ref()
+            .map_or((shader::VERTEX, shader::FRAGMENT), |material| {
+                (&material.vertex, &material.fragment)
+            });
 
         let shader = {
             use frogquad::material::shaders::{PreprocessorConfig, preprocess_shader};
@@ -564,11 +566,10 @@ impl Emitter {
                     "particles.glsl".to_string(),
                     include_str!("particles.glsl").to_owned(),
                 )],
-                ..Default::default()
             };
 
-            let vertex = preprocess_shader(&vertex, &config);
-            let fragment = preprocess_shader(&fragment, &config);
+            let vertex = preprocess_shader(vertex, &config);
+            let fragment = preprocess_shader(fragment, &config);
 
             fc.quad_context
                 .new_shader(
@@ -615,8 +616,8 @@ impl Emitter {
             .quad_context
             .new_shader(
                 ShaderSource::Glsl {
-                    vertex: &post_processing_shader::VERTEX,
-                    fragment: &post_processing_shader::FRAGMENT,
+                    vertex: post_processing_shader::VERTEX,
+                    fragment: post_processing_shader::FRAGMENT,
                 },
                 post_processing_shader::meta(),
             )
@@ -667,7 +668,7 @@ impl Emitter {
             let vertex_buffer = fc.quad_context.new_buffer(
                 BufferType::VertexBuffer,
                 BufferUsage::Immutable,
-                BufferSource::slice(&vertices),
+                BufferSource::slice(vertices),
             );
 
             #[rustfmt::skip]
@@ -677,7 +678,7 @@ impl Emitter {
             let index_buffer = fc.quad_context.new_buffer(
                 BufferType::IndexBuffer,
                 BufferUsage::Immutable,
-                BufferSource::slice(&indices),
+                BufferSource::slice(indices),
             );
             Bindings {
                 vertex_buffers: vec![vertex_buffer],
@@ -687,7 +688,7 @@ impl Emitter {
         };
 
         Emitter {
-            blend_mode: config.blend_mode.clone(),
+            blend_mode: config.blend_mode,
             batched_size_curve: config.size_curve.as_ref().map(|curve| curve.batch()),
             post_processing_pass,
             post_processing_pipeline,
@@ -945,7 +946,7 @@ impl Emitter {
             // TODO: recreate pipeline
             //self.pipeline
             //    .set_blend(ctx, Some(self.config.blend_mode.blend_state()));
-            self.blend_mode = self.config.blend_mode.clone();
+            self.blend_mode = self.config.blend_mode;
         }
 
         if self.config.post_processing.is_none() {
@@ -1053,7 +1054,7 @@ impl EmittersCache {
     pub fn draw(&mut self, fc: &mut FrogCx) {
         fc.perform_render_passes();
 
-        if self.active_emitters.len() > 0 {
+        if !self.active_emitters.is_empty() {
             self.emitter
                 .setup_render_pass(&fc.gl, &mut *fc.quad_context);
         }
@@ -1065,12 +1066,12 @@ impl EmittersCache {
 
                 emitter.perform_render_pass(fc.projection_matrix(), &mut *fc.quad_context);
 
-                if emitter.config.emitting == false {
+                if !emitter.config.emitting {
                     self.emitters_cache.push(i.take().unwrap().0);
                 }
             }
         }
-        if self.active_emitters.len() > 0 {
+        if !self.active_emitters.is_empty() {
             self.emitter.end_render_pass(fc);
         }
 

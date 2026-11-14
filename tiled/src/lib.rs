@@ -97,20 +97,11 @@ pub struct Map {
     pub raw_tiled_map: tiled::Map,
 }
 
+#[derive(Default)]
 pub struct TileFlippedParams {
     flip_x: bool,
     flip_y: bool,
     flip_d: bool,
-}
-
-impl Default for TileFlippedParams {
-    fn default() -> Self {
-        TileFlippedParams {
-            flip_x: false,
-            flip_y: false,
-            flip_d: false,
-        }
-    }
 }
 
 impl Map {
@@ -126,7 +117,7 @@ impl Map {
         dest: Rect,
         flip: TileFlippedParams,
     ) {
-        if self.tilesets.contains_key(tileset) == false {
+        if !self.tilesets.contains_key(tileset) {
             panic!(
                 "No such tileset: {}, tilesets available: {:?}",
                 tileset,
@@ -159,7 +150,7 @@ impl Map {
                 )),
                 flip_x: flip.flip_x,
                 flip_y: flip.flip_y ^ flip.flip_d,
-                rotation: rotation,
+                rotation,
                 ..Default::default()
             },
         );
@@ -226,7 +217,7 @@ impl Map {
                     separated_by_ts
                         .get_mut(tile.tileset.as_str())
                         .unwrap()
-                        .push((&tile, Rect::new(pos.x, pos.y, spr_width, spr_height)));
+                        .push((tile, Rect::new(pos.x, pos.y, spr_width, spr_height)));
                 }
             }
         }
@@ -336,16 +327,11 @@ impl<'a> Iterator for TilesIterator<'a> {
     type Item = (u32, u32, &'a Option<Tile>);
 
     fn next(&mut self) -> Option<Self::Item> {
-        let next_x;
-        let next_y;
-
-        if self.current.0 + 1 >= self.rect.x as u32 + self.rect.w as u32 {
-            next_x = self.rect.x as u32;
-            next_y = self.current.1 + 1;
+        let (next_x, next_y) = if self.current.0 + 1 >= self.rect.x as u32 + self.rect.w as u32 {
+            (self.rect.x as u32, self.current.1 + 1)
         } else {
-            next_x = self.current.0 + 1;
-            next_y = self.current.1;
-        }
+            (self.current.0 + 1, self.current.1)
+        };
 
         if next_y >= self.rect.y as u32 + self.rect.h as u32 {
             return None;
@@ -386,9 +372,9 @@ pub fn load_map(
         } else {
             let tileset_data = external_tilesets
                 .iter()
-                .find(|(name, _)| *name == &tileset.source)
+                .find(|(name, _)| *name == tileset.source)
                 .unwrap();
-            let mut map_tileset: tiled::Tileset = DeJson::deserialize_json(&tileset_data.1)?;
+            let mut map_tileset: tiled::Tileset = DeJson::deserialize_json(tileset_data.1)?;
             map_tileset.firstgid = tileset.firstgid;
             map_tileset
         };
@@ -494,7 +480,7 @@ pub fn load_map(
                 },
                 "imagelayer" => {
                     let img_name = layer.image.clone().unwrap();
-                    if img_name == "" {
+                    if img_name.is_empty() {
                         continue;
                     }
                     let offsetx = match layer.offsetx {
