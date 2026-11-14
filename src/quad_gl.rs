@@ -375,9 +375,8 @@ impl PipelineExt {
             );
             return;
         }
-        for i in 0..uniform_byte_size {
-            self.uniforms_data[uniform_byte_offset + i] = data[i];
-        }
+        self.uniforms_data[uniform_byte_offset..(uniform_byte_offset + uniform_byte_size)]
+            .copy_from_slice(&data[..uniform_byte_size]);
     }
 }
 
@@ -796,9 +795,7 @@ impl QuadGl {
             quad_context.apply_bindings(bindings);
 
             if let Some(ref uniforms) = dc.uniforms {
-                for i in 0..uniforms.len() {
-                    pipeline.uniforms_data[i] = uniforms[i];
-                }
+                pipeline.uniforms_data[..uniforms.len()].copy_from_slice(&uniforms[..]);
             }
             pipeline.set_uniform("Projection", projection);
             pipeline.set_uniform("Model", dc.model);
