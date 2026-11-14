@@ -3,20 +3,29 @@ use frogquad::prelude::*;
 const VIRTUAL_WIDTH: f32 = 1280.0;
 const VIRTUAL_HEIGHT: f32 = 720.0;
 
-fn main() {
-    frogquad::start(Conf::from_title("Letterbox"), main_());
+struct LetterboxApp {
+    render_target: RenderTarget,
+    render_target_cam: Camera2D,
 }
-async fn main_() {
-    // Setup 'render_target', used to hold the rendering result so we can resize it
-    let render_target = render_target(fc, VIRTUAL_WIDTH as u32, VIRTUAL_HEIGHT as u32);
-    render_target.texture.set_filter(fc, FilterMode::Linear);
+impl LetterboxApp {
+    fn new(fc: &mut frogquad::FrogCx) -> Self {
+        // Setup 'render_target', used to hold the rendering result so we can resize it
+        let render_target = render_target(fc, VIRTUAL_WIDTH as u32, VIRTUAL_HEIGHT as u32);
+        render_target.texture.set_filter(fc, FilterMode::Linear);
 
-    // Setup camera for the virtual screen, that will render to 'render_target'
-    let mut render_target_cam =
-        Camera2D::from_display_rect(Rect::new(0., 0., VIRTUAL_WIDTH, VIRTUAL_HEIGHT));
-    render_target_cam.render_target = Some(render_target.clone());
+        // Setup camera for the virtual screen, that will render to 'render_target'
+        let mut render_target_cam =
+            Camera2D::from_display_rect(Rect::new(0., 0., VIRTUAL_WIDTH, VIRTUAL_HEIGHT));
+        render_target_cam.render_target = Some(render_target.clone());
+        Self {
+            render_target,
+            render_target_cam,
+        }
+    }
+}
 
-    loop {
+impl frogquad::App for LetterboxApp {
+    fn update(&mut self, fc: &mut frogquad::FrogCx) {
         // Get required scaling value
         let scale: f32 = f32::min(
             screen_width(fc) / VIRTUAL_WIDTH,
@@ -33,7 +42,7 @@ async fn main_() {
         // ------------------------------------------------------------------------
         // Begin drawing the virtual screen to 'render_target'
         // ------------------------------------------------------------------------
-        set_camera(fc, &render_target_cam);
+        set_camera(fc, &self.render_target_cam);
 
         clear_background(fc, LIGHTGRAY);
 
@@ -72,7 +81,7 @@ async fn main_() {
         // Draw 'render_target' to window screen, porperly scaled and letterboxed
         draw_texture_ex(
             fc,
-            &render_target.texture,
+            &self.render_target.texture,
             (screen_width(fc) - (VIRTUAL_WIDTH * scale)) * 0.5,
             (screen_height(fc) - (VIRTUAL_HEIGHT * scale)) * 0.5,
             WHITE,
@@ -83,4 +92,10 @@ async fn main_() {
             },
         );
     }
+}
+
+fn main() {
+    frogquad::start(Conf::from_title("Letterbox"), |fc| {
+        Box::new(LetterboxApp::new(fc))
+    });
 }
