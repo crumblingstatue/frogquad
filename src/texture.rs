@@ -32,7 +32,7 @@ pub struct TexturesContext {
     removed_render_passes: Vec<miniquad::RenderPass>,
 }
 impl TexturesContext {
-    pub fn new() -> TexturesContext {
+    pub(crate) fn new() -> TexturesContext {
         TexturesContext {
             textures: TextureIdSlotMap::new(),
             removed: Vec::with_capacity(200),
