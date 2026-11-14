@@ -4,7 +4,6 @@ use {
         camera::{Camera2D, set_camera},
         conf::Conf,
         file::load_string,
-        input::{is_key_down, is_key_pressed},
         math::Rect,
         texture::load_texture,
         time::get_frame_time,
@@ -131,15 +130,15 @@ impl frogquad::App for PlatformerApp {
                 self.player.speed.y += 500. * get_frame_time(fc);
             }
 
-            if is_key_down(fc, KeyCode::Right) {
+            if fc.is_key_down(KeyCode::Right) {
                 self.player.speed.x = 100.0;
-            } else if is_key_down(fc, KeyCode::Left) {
+            } else if fc.is_key_down(KeyCode::Left) {
                 self.player.speed.x = -100.0;
             } else {
                 self.player.speed.x = 0.;
             }
 
-            if is_key_pressed(fc, KeyCode::Space) && on_ground {
+            if fc.is_key_pressed(KeyCode::Space) && on_ground {
                 self.player.speed.y = -120.;
             }
 

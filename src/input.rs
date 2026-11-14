@@ -35,138 +35,151 @@ pub struct Touch {
     pub position: Vec2,
 }
 
-/// Constrain mouse to window
-pub fn set_cursor_grab(fc: &mut FrogCx, grab: bool) {
-    fc.cursor_grabbed = grab;
-    miniquad::window::set_cursor_grab(grab);
+impl FrogCx {
+    /// Constrain mouse to window
+    pub fn set_cursor_grab(&mut self, grab: bool) {
+        self.cursor_grabbed = grab;
+        miniquad::window::set_cursor_grab(grab);
+    }
+    /// Return mouse position in pixels.
+    pub fn mouse_position(&mut self) -> (f32, f32) {
+        (
+            self.mouse_position.x / miniquad::window::dpi_scale(),
+            self.mouse_position.y / miniquad::window::dpi_scale(),
+        )
+    }
+    /// Return mouse position in range [-1; 1].
+    pub fn mouse_position_local(&mut self) -> Vec2 {
+        let (pixels_x, pixels_y) = self.mouse_position();
+
+        convert_to_local(Vec2::new(pixels_x, pixels_y), self)
+    }
+
+    /// Returns the difference between the current mouse position and the mouse position on the previous frame.
+    pub fn mouse_delta_position(&mut self) -> Vec2 {
+        let current_position = self.mouse_position_local();
+        let last_position = self.last_mouse_position.unwrap_or(current_position);
+
+        // Calculate the delta
+        last_position - current_position
+    }
+
+    /// This is set to true by default, meaning touches will raise mouse events in addition to raising touch events.
+    /// If set to false, touches won't affect mouse events.
+    pub fn is_simulating_mouse_with_touch(&mut self) -> bool {
+        self.simulate_mouse_with_touch
+    }
+
+    /// This is set to true by default, meaning touches will raise mouse events in addition to raising touch events.
+    /// If set to false, touches won't affect mouse events.
+    pub fn simulate_mouse_with_touch(&mut self, option: bool) {
+        self.simulate_mouse_with_touch = option;
+    }
+
+    /// Return touches with positions in pixels.
+    pub fn touches(&self) -> Vec<Touch> {
+        self.touches.values().cloned().collect()
+    }
+    /// Return touches with positions in range [-1; 1].
+    pub fn touches_local(&self) -> Vec<Touch> {
+        self.touches
+            .values()
+            .map(|touch| {
+                let mut touch = touch.clone();
+                touch.position = convert_to_local(touch.position, self);
+                touch
+            })
+            .collect()
+    }
+
+    pub fn mouse_wheel(&mut self) -> (f32, f32) {
+        (self.mouse_wheel.x, self.mouse_wheel.y)
+    }
+
+    /// Detect if the key has been pressed once
+    pub fn is_key_pressed(&mut self, key_code: KeyCode) -> bool {
+        self.keys_pressed.contains(&key_code)
+    }
+
+    /// Detect if the key is being pressed
+    pub fn is_key_down(&mut self, key_code: KeyCode) -> bool {
+        self.keys_down.contains(&key_code)
+    }
+
+    /// Detect if the key has been released this frame
+    pub fn is_key_released(&mut self, key_code: KeyCode) -> bool {
+        self.keys_released.contains(&key_code)
+    }
+
+    /// Detect if any key is being pressed
+    pub fn is_any_key_down(&mut self) -> bool {
+        !self.keys_down.is_empty()
+    }
+
+    /// Return the last pressed char.
+    /// Each "get_char_pressed" call will consume a character from the input queue.
+    pub fn get_char_pressed(&mut self) -> Option<char> {
+        self.chars_pressed_queue.pop_front()
+    }
+
+    /// Return the last pressed key.
+    pub fn get_last_key_pressed(&mut self) -> Option<KeyCode> {
+        // TODO: this will return a random key from keys_pressed HashMap instead of the last one, fix me later
+        self.keys_pressed.iter().next().cloned()
+    }
+
+    pub fn get_keys_pressed(&mut self) -> HashSet<KeyCode> {
+        self.keys_pressed.clone()
+    }
+
+    pub fn get_keys_down(&mut self) -> HashSet<KeyCode> {
+        self.keys_down.clone()
+    }
+
+    pub fn get_keys_released(&mut self) -> HashSet<KeyCode> {
+        self.keys_released.clone()
+    }
+
+    /// Clears input queue
+    pub fn clear_input_queue(&mut self) {
+        self.chars_pressed_queue.clear();
+        self.mouse_pressed.clear();
+        self.keys_pressed.clear();
+    }
+
+    /// Detect if the button is being pressed
+    pub fn is_mouse_button_down(&mut self, btn: MouseButton) -> bool {
+        self.mouse_down.contains(&btn)
+    }
+
+    /// Detect if the button has been pressed once
+    pub fn is_mouse_button_pressed(&mut self, btn: MouseButton) -> bool {
+        self.mouse_pressed.contains(&btn)
+    }
+
+    /// Detect if the button has been released this frame
+    pub fn is_mouse_button_released(&mut self, btn: MouseButton) -> bool {
+        self.mouse_released.contains(&btn)
+    }
+    /// Prevents quit
+    pub fn prevent_quit(&mut self) {
+        self.prevent_quit_event = true;
+    }
+
+    /// Detect if quit has been requested
+    pub fn is_quit_requested(&mut self) -> bool {
+        self.quit_requested
+    }
+
+    /// Gets the files which have been dropped on the window.
+    pub fn get_dropped_files(&mut self) -> Vec<DroppedFile> {
+        self.dropped_files()
+    }
 }
 
 /// Set mouse cursor visibility
 pub fn show_mouse(shown: bool) {
     miniquad::window::show_mouse(shown);
-}
-
-/// Return mouse position in pixels.
-pub fn mouse_position(fc: &mut FrogCx) -> (f32, f32) {
-    (
-        fc.mouse_position.x / miniquad::window::dpi_scale(),
-        fc.mouse_position.y / miniquad::window::dpi_scale(),
-    )
-}
-
-/// Return mouse position in range [-1; 1].
-pub fn mouse_position_local(fc: &mut FrogCx) -> Vec2 {
-    let (pixels_x, pixels_y) = mouse_position(fc);
-
-    convert_to_local(Vec2::new(pixels_x, pixels_y), fc)
-}
-
-/// Returns the difference between the current mouse position and the mouse position on the previous frame.
-pub fn mouse_delta_position(fc: &mut FrogCx) -> Vec2 {
-    let current_position = mouse_position_local(fc);
-    let last_position = fc.last_mouse_position.unwrap_or(current_position);
-
-    // Calculate the delta
-    last_position - current_position
-}
-
-/// This is set to true by default, meaning touches will raise mouse events in addition to raising touch events.
-/// If set to false, touches won't affect mouse events.
-pub fn is_simulating_mouse_with_touch(fc: &mut FrogCx) -> bool {
-    fc.simulate_mouse_with_touch
-}
-
-/// This is set to true by default, meaning touches will raise mouse events in addition to raising touch events.
-/// If set to false, touches won't affect mouse events.
-pub fn simulate_mouse_with_touch(fc: &mut FrogCx, option: bool) {
-    fc.simulate_mouse_with_touch = option;
-}
-
-/// Return touches with positions in pixels.
-pub fn touches(fc: &FrogCx) -> Vec<Touch> {
-    fc.touches.values().cloned().collect()
-}
-
-/// Return touches with positions in range [-1; 1].
-pub fn touches_local(fc: &FrogCx) -> Vec<Touch> {
-    fc.touches
-        .values()
-        .map(|touch| {
-            let mut touch = touch.clone();
-            touch.position = convert_to_local(touch.position, fc);
-            touch
-        })
-        .collect()
-}
-
-pub fn mouse_wheel(fc: &mut FrogCx) -> (f32, f32) {
-    (fc.mouse_wheel.x, fc.mouse_wheel.y)
-}
-
-/// Detect if the key has been pressed once
-pub fn is_key_pressed(fc: &mut FrogCx, key_code: KeyCode) -> bool {
-    fc.keys_pressed.contains(&key_code)
-}
-
-/// Detect if the key is being pressed
-pub fn is_key_down(fc: &mut FrogCx, key_code: KeyCode) -> bool {
-    fc.keys_down.contains(&key_code)
-}
-
-/// Detect if the key has been released this frame
-pub fn is_key_released(fc: &mut FrogCx, key_code: KeyCode) -> bool {
-    fc.keys_released.contains(&key_code)
-}
-
-/// Detect if any key is being pressed
-pub fn is_any_key_down(fc: &mut FrogCx) -> bool {
-    !fc.keys_down.is_empty()
-}
-
-/// Return the last pressed char.
-/// Each "get_char_pressed" call will consume a character from the input queue.
-pub fn get_char_pressed(fc: &mut FrogCx) -> Option<char> {
-    fc.chars_pressed_queue.pop_front()
-}
-
-/// Return the last pressed key.
-pub fn get_last_key_pressed(fc: &mut FrogCx) -> Option<KeyCode> {
-    // TODO: this will return a random key from keys_pressed HashMap instead of the last one, fix me later
-    fc.keys_pressed.iter().next().cloned()
-}
-
-pub fn get_keys_pressed(fc: &mut FrogCx) -> HashSet<KeyCode> {
-    fc.keys_pressed.clone()
-}
-
-pub fn get_keys_down(fc: &mut FrogCx) -> HashSet<KeyCode> {
-    fc.keys_down.clone()
-}
-
-pub fn get_keys_released(fc: &mut FrogCx) -> HashSet<KeyCode> {
-    fc.keys_released.clone()
-}
-
-/// Clears input queue
-pub fn clear_input_queue(fc: &mut FrogCx) {
-    fc.chars_pressed_queue.clear();
-    fc.mouse_pressed.clear();
-    fc.keys_pressed.clear();
-}
-
-/// Detect if the button is being pressed
-pub fn is_mouse_button_down(fc: &mut FrogCx, btn: MouseButton) -> bool {
-    fc.mouse_down.contains(&btn)
-}
-
-/// Detect if the button has been pressed once
-pub fn is_mouse_button_pressed(fc: &mut FrogCx, btn: MouseButton) -> bool {
-    fc.mouse_pressed.contains(&btn)
-}
-
-/// Detect if the button has been released this frame
-pub fn is_mouse_button_released(fc: &mut FrogCx, btn: MouseButton) -> bool {
-    fc.mouse_released.contains(&btn)
 }
 
 /// Convert a position in pixels to a position in the range [-1; 1].
@@ -176,21 +189,6 @@ fn convert_to_local(pixel_pos: Vec2, fc: &FrogCx) -> Vec2 {
         pixel_pos.y / fc.screen_height(),
     ) * 2.0
         - Vec2::new(1.0, 1.0)
-}
-
-/// Prevents quit
-pub fn prevent_quit(fc: &mut FrogCx) {
-    fc.prevent_quit_event = true;
-}
-
-/// Detect if quit has been requested
-pub fn is_quit_requested(fc: &mut FrogCx) -> bool {
-    fc.quit_requested
-}
-
-/// Gets the files which have been dropped on the window.
-pub fn get_dropped_files(fc: &mut FrogCx) -> Vec<DroppedFile> {
-    fc.dropped_files()
 }
 
 /// Functions for advanced input processing.

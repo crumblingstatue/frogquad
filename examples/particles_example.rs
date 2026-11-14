@@ -1,6 +1,6 @@
 use frogquad::{
-    Color, FrogCx, conf::Conf, input::is_key_pressed, shapes::draw_circle, text::draw_text,
-    texture::load_texture, time::get_time,
+    Color, FrogCx, conf::Conf, shapes::draw_circle, text::draw_text, texture::load_texture,
+    time::get_time,
 };
 use frogquad_particles::{self as particles, AtlasConfig, BlendMode, Emitter, EmitterConfig};
 use glam::vec2;
@@ -112,7 +112,7 @@ impl frogquad::App for ParticlesApp {
         self.one_shot_emitter.draw(fc, vec2(650.0, 82.0));
         draw_circle(fc, 650.0, 82.0, 15.0, Color::YELLOW);
 
-        if is_key_pressed(fc, KeyCode::Space) {
+        if fc.is_key_pressed(KeyCode::Space) {
             self.one_shot_emitter.config.emitting = true;
         }
 

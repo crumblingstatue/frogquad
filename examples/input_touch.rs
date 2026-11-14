@@ -1,10 +1,4 @@
-use frogquad::{
-    Color,
-    conf::Conf,
-    input::{TouchPhase, touches},
-    shapes::draw_circle,
-    text::draw_text,
-};
+use frogquad::{Color, conf::Conf, input::TouchPhase, shapes::draw_circle, text::draw_text};
 
 struct InputTouchApp {}
 
@@ -12,7 +6,7 @@ impl frogquad::App for InputTouchApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
         fc.clear_background(Color::LIGHTGRAY);
 
-        for touch in touches(fc) {
+        for touch in fc.touches() {
             let (fill_color, size) = match touch.phase {
                 TouchPhase::Started => (Color::GREEN, 80.0),
                 TouchPhase::Stationary => (Color::WHITE, 60.0),

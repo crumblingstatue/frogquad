@@ -41,10 +41,10 @@ impl frogquad::App for RustaceanMarkApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
         fc.clear_background(Color::default());
 
-        if frogquad::input::is_mouse_button_down(fc, MouseButton::Left) {
+        if fc.is_mouse_button_down(MouseButton::Left) {
             for _i in 0..100 {
                 self.rustaceanes.push(Rustaceane {
-                    pos: Vec2::from(frogquad::input::mouse_position(fc)),
+                    pos: Vec2::from(fc.mouse_position()),
                     speed: Vec2::new(
                         rand::gen_range(-250., 250.) / 60.,
                         rand::gen_range(-250., 250.) / 60.,

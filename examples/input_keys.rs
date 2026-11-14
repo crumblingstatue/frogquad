@@ -1,7 +1,5 @@
 use {
-    frogquad::{
-        Color, FrogCx, conf::Conf, input::is_key_down, shapes::draw_circle, text::draw_text,
-    },
+    frogquad::{Color, FrogCx, conf::Conf, shapes::draw_circle, text::draw_text},
     miniquad::KeyCode,
 };
 
@@ -23,16 +21,16 @@ impl frogquad::App for InputKeysApp {
     fn update(&mut self, fc: &mut FrogCx) {
         fc.clear_background(Color::LIGHTGRAY);
 
-        if is_key_down(fc, KeyCode::Right) {
+        if fc.is_key_down(KeyCode::Right) {
             self.x += 1.0;
         }
-        if is_key_down(fc, KeyCode::Left) {
+        if fc.is_key_down(KeyCode::Left) {
             self.x -= 1.0;
         }
-        if is_key_down(fc, KeyCode::Down) {
+        if fc.is_key_down(KeyCode::Down) {
             self.y += 1.0;
         }
-        if is_key_down(fc, KeyCode::Up) {
+        if fc.is_key_down(KeyCode::Up) {
             self.y -= 1.0;
         }
 

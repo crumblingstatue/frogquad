@@ -2,7 +2,6 @@ use {
     frogquad::{
         Color, FrogCx,
         conf::Conf,
-        input::mouse_position,
         material::{
             Material, MaterialParams, gl_use_default_material, gl_use_material, load_material,
         },
@@ -57,7 +56,7 @@ impl frogquad::App for ScreenTexExample {
             },
         );
 
-        let lens_center = mouse_position(fc);
+        let lens_center = fc.mouse_position();
 
         self.lens_material
             .set_uniform(&mut fc.gl, "Center", lens_center);

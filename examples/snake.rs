@@ -2,7 +2,6 @@ use {
     frogquad::{
         Color, FrogCx,
         conf::Conf,
-        input::is_key_down,
         rand,
         shapes::{draw_line, draw_rectangle},
         text::{draw_text, measure_text},
@@ -52,24 +51,20 @@ impl frogquad::App for SnakeApp {
         let right = (1, 0);
         let left = (-1, 0);
         if !self.game_over {
-            if is_key_down(fc, KeyCode::Right) && self.snake.dir != left && !self.navigation_lock {
+            if fc.is_key_down(KeyCode::Right) && self.snake.dir != left && !self.navigation_lock {
                 self.snake.dir = right;
                 self.navigation_lock = true;
-            } else if is_key_down(fc, KeyCode::Left)
+            } else if fc.is_key_down(KeyCode::Left)
                 && self.snake.dir != right
                 && !self.navigation_lock
             {
                 self.snake.dir = left;
                 self.navigation_lock = true;
-            } else if is_key_down(fc, KeyCode::Up)
-                && self.snake.dir != down
-                && !self.navigation_lock
+            } else if fc.is_key_down(KeyCode::Up) && self.snake.dir != down && !self.navigation_lock
             {
                 self.snake.dir = up;
                 self.navigation_lock = true;
-            } else if is_key_down(fc, KeyCode::Down)
-                && self.snake.dir != up
-                && !self.navigation_lock
+            } else if fc.is_key_down(KeyCode::Down) && self.snake.dir != up && !self.navigation_lock
             {
                 self.snake.dir = down;
                 self.navigation_lock = true;
@@ -197,7 +192,7 @@ impl frogquad::App for SnakeApp {
                 Color::DARKGRAY,
             );
 
-            if is_key_down(fc, KeyCode::Enter) {
+            if fc.is_key_down(KeyCode::Enter) {
                 self.snake = Snake {
                     head: (0, 0),
                     dir: (1, 0),

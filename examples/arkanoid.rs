@@ -3,7 +3,6 @@ use {
         Color, FrogCx,
         camera::{Camera2D, set_camera},
         conf::Conf,
-        input::is_key_down,
         shapes::{draw_circle, draw_rectangle},
         text::{TextParams, camera_font_scale, draw_text_ex},
         time::get_frame_time,
@@ -68,10 +67,10 @@ impl frogquad::App for ArkanoidApp {
 
         let delta = get_frame_time(fc);
 
-        if is_key_down(fc, KeyCode::Right) && self.platform_x < SCR_W - platform_width / 2. {
+        if fc.is_key_down(KeyCode::Right) && self.platform_x < SCR_W - platform_width / 2. {
             self.platform_x += 3.0 * delta;
         }
-        if is_key_down(fc, KeyCode::Left) && self.platform_x > platform_width / 2. {
+        if fc.is_key_down(KeyCode::Left) && self.platform_x > platform_width / 2. {
             self.platform_x -= 3.0 * delta;
         }
 
@@ -97,7 +96,7 @@ impl frogquad::App for ArkanoidApp {
             self.ball_x = self.platform_x;
             self.ball_y = SCR_H - 0.5;
 
-            self.stick = !is_key_down(fc, KeyCode::Space);
+            self.stick = !fc.is_key_down(KeyCode::Space);
         }
 
         if self.ball_x <= 0. || self.ball_x > SCR_W {

@@ -85,7 +85,6 @@ pub use ::log as logging;
 pub use miniquad;
 use miniquad::{EventHandler, KeyCode, KeyMods, MouseButton, TouchPhase, date};
 
-use crate::input::mouse_position_local;
 use crate::quad_gl::MagicSnapshotter;
 use crate::text::Font;
 use crate::texture::TextureHandle;
@@ -329,7 +328,7 @@ impl FrogCx {
         self.keys_released.clear();
         self.mouse_pressed.clear();
         self.mouse_released.clear();
-        self.last_mouse_position = Some(mouse_position_local(self));
+        self.last_mouse_position = Some(self.mouse_position_local());
 
         self.quit_requested = false;
 

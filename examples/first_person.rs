@@ -2,7 +2,7 @@ use {
     frogquad::{
         Color, FrogCx,
         camera::{Camera3D, set_camera, set_default_camera},
-        input::{is_key_down, is_key_pressed, mouse_position, set_cursor_grab, show_mouse},
+        input::show_mouse,
         models::{draw_cube_wires, draw_grid, draw_line_3d},
         text::draw_text,
         time::get_frame_time,
@@ -60,10 +60,10 @@ impl FirstPersonApp {
         let up = right.cross(front).normalize();
 
         let position = vec3(0.0, 1.0, 0.0);
-        let last_mouse_position: Vec2 = mouse_position(fc).into();
+        let last_mouse_position: Vec2 = fc.mouse_position().into();
 
         let grabbed = true;
-        set_cursor_grab(fc, grabbed);
+        fc.set_cursor_grab(grabbed);
         show_mouse(false);
         Self {
             x,
@@ -86,30 +86,30 @@ impl frogquad::App for FirstPersonApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
         let delta = get_frame_time(fc);
 
-        if is_key_pressed(fc, KeyCode::Escape) {
+        if fc.is_key_pressed(KeyCode::Escape) {
             fc.request_quit();
             return;
         }
-        if is_key_pressed(fc, KeyCode::Tab) {
+        if fc.is_key_pressed(KeyCode::Tab) {
             self.grabbed = !self.grabbed;
-            set_cursor_grab(fc, self.grabbed);
+            fc.set_cursor_grab(self.grabbed);
             show_mouse(!self.grabbed);
         }
 
-        if is_key_down(fc, KeyCode::Up) {
+        if fc.is_key_down(KeyCode::Up) {
             self.position += self.front * MOVE_SPEED;
         }
-        if is_key_down(fc, KeyCode::Down) {
+        if fc.is_key_down(KeyCode::Down) {
             self.position -= self.front * MOVE_SPEED;
         }
-        if is_key_down(fc, KeyCode::Left) {
+        if fc.is_key_down(KeyCode::Left) {
             self.position -= self.right * MOVE_SPEED;
         }
-        if is_key_down(fc, KeyCode::Right) {
+        if fc.is_key_down(KeyCode::Right) {
             self.position += self.right * MOVE_SPEED;
         }
 
-        let mouse_position: Vec2 = mouse_position(fc).into();
+        let mouse_position: Vec2 = fc.mouse_position().into();
         let mouse_delta = mouse_position - self.last_mouse_position;
 
         self.last_mouse_position = mouse_position;

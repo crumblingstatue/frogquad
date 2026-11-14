@@ -3,7 +3,6 @@ use {
         Color, FrogCx,
         camera::{Camera2D, set_camera, set_default_camera},
         conf::Conf,
-        input::{is_key_down, mouse_wheel},
         shapes::{draw_circle, draw_line, draw_rectangle},
         text::draw_text,
     },
@@ -50,36 +49,36 @@ impl CamTfApp {
 
 impl frogquad::App for CamTfApp {
     fn update(&mut self, fc: &mut FrogCx) {
-        if is_key_down(fc, KeyCode::W) {
+        if fc.is_key_down(KeyCode::W) {
             self.target.1 -= 0.1;
         }
-        if is_key_down(fc, KeyCode::S) {
+        if fc.is_key_down(KeyCode::S) {
             self.target.1 += 0.1;
         }
-        if is_key_down(fc, KeyCode::A) {
+        if fc.is_key_down(KeyCode::A) {
             self.target.0 += 0.1;
         }
-        if is_key_down(fc, KeyCode::D) {
+        if fc.is_key_down(KeyCode::D) {
             self.target.0 -= 0.1;
         }
-        if is_key_down(fc, KeyCode::Left) {
+        if fc.is_key_down(KeyCode::Left) {
             self.offset.0 -= 0.1;
         }
-        if is_key_down(fc, KeyCode::Right) {
+        if fc.is_key_down(KeyCode::Right) {
             self.offset.0 += 0.1;
         }
-        if is_key_down(fc, KeyCode::Up) {
+        if fc.is_key_down(KeyCode::Up) {
             self.offset.1 += 0.1;
         }
-        if is_key_down(fc, KeyCode::Down) {
+        if fc.is_key_down(KeyCode::Down) {
             self.offset.1 -= 0.1;
         }
         #[cfg(not(target_arch = "wasm32"))]
-        if is_key_down(fc, KeyCode::Q) | is_key_down(fc, KeyCode::Escape) {
+        if fc.is_key_down(KeyCode::Q) | fc.is_key_down(KeyCode::Escape) {
             fc.request_quit();
         }
 
-        match mouse_wheel(fc) {
+        match fc.mouse_wheel() {
             (_x, y) if y != 0.0 => {
                 // Normalize mouse wheel values is browser (chromium: 53, firefox: 3)
                 #[cfg(target_arch = "wasm32")]
@@ -90,7 +89,7 @@ impl frogquad::App for CamTfApp {
                 } else {
                     0.0
                 };
-                if is_key_down(fc, KeyCode::LeftControl) {
+                if fc.is_key_down(KeyCode::LeftControl) {
                     self.zoom *= 1.1f32.powf(y);
                 } else {
                     self.rotation += 10.0 * y;

@@ -3,7 +3,6 @@ use {
         Color,
         camera::{Camera2D, set_camera, set_default_camera},
         conf::Conf,
-        input::mouse_position,
         math::Rect,
         shapes::draw_circle,
         text::draw_text,
@@ -47,8 +46,9 @@ impl frogquad::App for LetterboxApp {
 
         // Mouse position in the virtual screen
         let virtual_mouse_pos = Vec2 {
-            x: (mouse_position(fc).0 - (fc.screen_width() - (VIRTUAL_WIDTH * scale)) * 0.5) / scale,
-            y: (mouse_position(fc).1 - (fc.screen_height() - (VIRTUAL_HEIGHT * scale)) * 0.5)
+            x: (fc.mouse_position().0 - (fc.screen_width() - (VIRTUAL_WIDTH * scale)) * 0.5)
+                / scale,
+            y: (fc.mouse_position().1 - (fc.screen_height() - (VIRTUAL_HEIGHT * scale)) * 0.5)
                 / scale,
         };
 

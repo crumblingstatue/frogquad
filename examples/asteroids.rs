@@ -2,7 +2,6 @@ use {
     frogquad::{
         Color, FrogCx,
         conf::Conf,
-        input::is_key_down,
         rand,
         shapes::{draw_circle, draw_poly_lines, draw_triangle_lines},
         text::{draw_text, measure_text},
@@ -104,7 +103,7 @@ impl frogquad::App for AsteroidsApp {
                 font_size,
                 Color::DARKGRAY,
             );
-            if is_key_down(fc, KeyCode::Enter) {
+            if fc.is_key_down(KeyCode::Enter) {
                 self.ship = Ship {
                     pos: Vec2::new(fc.screen_width() / 2., fc.screen_height() / 2.),
                     rot: 0.,
@@ -138,12 +137,12 @@ impl frogquad::App for AsteroidsApp {
         let mut acc = -self.ship.vel / 100.; // Friction
 
         // Forward
-        if is_key_down(fc, KeyCode::Up) {
+        if fc.is_key_down(KeyCode::Up) {
             acc = Vec2::new(rotation.sin(), -rotation.cos()) / 3.;
         }
 
         // Shot
-        if is_key_down(fc, KeyCode::Space) && frame_t - self.last_shot > 0.5 {
+        if fc.is_key_down(KeyCode::Space) && frame_t - self.last_shot > 0.5 {
             let rot_vec = Vec2::new(rotation.sin(), -rotation.cos());
             self.bullets.push(Bullet {
                 pos: self.ship.pos + rot_vec * SHIP_HEIGHT / 2.,
@@ -155,9 +154,9 @@ impl frogquad::App for AsteroidsApp {
         }
 
         // Steer
-        if is_key_down(fc, KeyCode::Right) {
+        if fc.is_key_down(KeyCode::Right) {
             self.ship.rot += 5.;
-        } else if is_key_down(fc, KeyCode::Left) {
+        } else if fc.is_key_down(KeyCode::Left) {
             self.ship.rot -= 5.;
         }
 

@@ -1,7 +1,6 @@
 use frogquad::{
     Color,
     conf::Conf,
-    input::mouse_position,
     shapes::{draw_line, draw_rectangle_lines},
     text::{draw_multiline_text, measure_multiline_text, wrap_text},
 };
@@ -19,7 +18,7 @@ impl frogquad::App for TextWrapApp {
 
         fc.clear_background(Color::BLACK);
 
-        let maximum_line_length = f32::max(20.0, mouse_position(fc).0 - 20.0);
+        let maximum_line_length = f32::max(20.0, fc.mouse_position().0 - 20.0);
         let text = wrap_text(
             LOREM,
             fc.default_font(),
