@@ -623,7 +623,7 @@ pub fn get_screen_data(fc: &mut FrogCx) -> Image {
 /// Texture, data stored in GPU memory
 #[derive(Clone, Debug, PartialEq)]
 pub struct Texture2D {
-    pub texture: TextureHandle,
+    pub(crate) texture: TextureHandle,
 }
 
 impl Texture2D {
