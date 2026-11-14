@@ -646,13 +646,10 @@ impl Texture2D {
     /// Creates an empty Texture2D.
     ///
     /// # Example
-    /// ```
+    /// ```no_run
     /// # use frogquad::prelude::*;
-    /// # fn main() { frogquad::start(Conf::from_title("test"), main_()); }
-    /// # async fn main_() {
-    /// let fc = frogquad::get_context();
+    /// # let fc: &mut frogquad::FrogCx = unimplemented!();
     /// let texture = Texture2D::empty(fc);
-    /// # }
     /// ```
     pub fn empty(fc: &mut FrogCx) -> Texture2D {
         Texture2D::unmanaged(fc.gl.white_texture)
@@ -664,17 +661,14 @@ impl Texture2D {
     /// [ImageFormat][image::ImageFormat].
     ///
     /// # Example
-    /// ```
+    /// ```no_run
     /// # use frogquad::prelude::*;
-    /// # fn main() { frogquad::start(Conf::from_title("test"), main_()); }
-    /// # async fn main_() {
-    /// let fc = frogquad::get_context();
+    /// # let fc: &mut frogquad::FrogCx = unimplemented!();
     /// let texture = Texture2D::from_file_with_format(
     ///     fc,
     ///     include_bytes!("../examples/rust.png"),
     ///     None,
     ///     );
-    /// # }
     /// ```
     pub fn from_file_with_format(
         fc: &mut FrogCx,
@@ -715,15 +709,12 @@ impl Texture2D {
     ///
     /// # Example
     ///
-    /// ```
+    /// ```no_run
     /// # use frogquad::prelude::*;
-    /// # fn main() { frogquad::start(Conf::from_title("test"), main_()); }
-    /// # async fn main_() {
-    /// let fc = frogquad::get_context();
+    /// # let fc: &mut frogquad::FrogCx = unimplemented!();
     /// // Create a 2x2 texture from a byte slice with 4 rgba pixels
     /// let bytes: Vec<u8> = vec![255, 0, 0, 192, 0, 255, 0, 192, 0, 0, 255, 192, 255, 255, 255, 192];
     /// let texture = Texture2D::from_rgba8(fc, 2, 2, &bytes);
-    /// # }
     /// ```
     pub fn from_rgba8(fc: &mut FrogCx, width: u16, height: u16, bytes: &[u8]) -> Texture2D {
         let texture = fc.quad_context.new_texture_from_rgba8(width, height, bytes);
@@ -819,14 +810,11 @@ impl Texture2D {
     /// Use Nearest if you need integer-ratio scaling for pixel art, for example.
     ///
     /// # Example
-    /// ```
+    /// ```no_run
     /// # use frogquad::prelude::*;
-    /// # fn main() { frogquad::start(Conf::from_title("test"), main_()); }
-    /// # async fn main_() {
-    /// let fc = frogquad::get_context();
+    /// # let fc: &mut frogquad::FrogCx = unimplemented!();
     /// let texture = Texture2D::empty(fc);
     /// texture.set_filter(fc, FilterMode::Linear);
-    /// # }
     /// ```
     pub fn set_filter(&self, fc: &mut FrogCx, filter_mode: FilterMode) {
         let ctx = &mut fc.quad_context;

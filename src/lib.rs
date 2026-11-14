@@ -21,19 +21,21 @@
 //! ```no_run
 //! use frogquad::prelude::*;
 //!
-//! fn main() { frogquad::start(Conf::from_title("BasicShapes"), main_()); }
-//! async fn main_() {
-//!     let fc = frogquad::get_context();
-//!     loop {
+//! struct ExampleApp;
+//!
+//! impl frogquad::App for ExampleApp {
+//!     fn update(&mut self, fc: &mut frogquad::FrogCx) {
 //!         clear_background(fc, RED);
 //!
 //!         draw_line(fc, 40.0, 40.0, 100.0, 200.0, 15.0, BLUE);
 //!         draw_rectangle(fc, screen_width(fc) / 2.0 - 60.0, 100.0, 120.0, 60.0, GREEN);
 //!         draw_circle(fc, screen_width(fc) - 30.0, screen_height(fc) - 30.0, 15.0, YELLOW);
 //!         draw_text(fc, "HELLO", 20.0, 20.0, 20.0, DARKGRAY);
-//!
-//!         next_frame().await
 //!     }
+//! }
+//!
+//! fn main() {
+//!     frogquad::start(Conf::from_title("BasicShapes"), |_fc| { Box::new(ExampleApp)});
 //! }
 //!```
 

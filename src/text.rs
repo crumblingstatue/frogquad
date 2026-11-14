@@ -185,14 +185,11 @@ impl Font {
     /// Use Nearest if you need integer-ratio scaling for pixel art, for example.
     ///
     /// # Example
-    /// ```
+    /// ```no_run
     /// # use frogquad::prelude::*;
-    /// # fn main() { frogquad::start(Conf::from_title("test"), main_()); }
-    /// # async fn main_() {
-    /// let fc = frogquad::get_context();
+    /// # let fc: &mut frogquad::FrogCx = unimplemented!();
     /// let mut font = get_default_font(fc);
     /// font.set_filter(FilterMode::Linear, &mut *fc.quad_context);
-    /// # }
     /// ```
     pub fn set_filter(
         &mut self,
