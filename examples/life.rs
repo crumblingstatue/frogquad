@@ -3,7 +3,6 @@ use frogquad::{
     conf::Conf,
     rand,
     texture::{Image, Texture2D, draw_texture},
-    window::{clear_background, screen_height, screen_width},
 };
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
@@ -21,8 +20,8 @@ struct LifeApp {
 
 impl LifeApp {
     fn new(fc: &mut FrogCx) -> Self {
-        let w = screen_width(fc) as usize;
-        let h = screen_height(fc) as usize;
+        let w = fc.screen_width() as usize;
+        let h = fc.screen_height() as usize;
 
         let mut cells = vec![CellState::Dead; w * h];
         let buffer = vec![CellState::Dead; w * h];
@@ -46,7 +45,7 @@ impl LifeApp {
 
 impl frogquad::App for LifeApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
-        clear_background(fc, Color::WHITE);
+        fc.clear_background(Color::WHITE);
 
         let w = self.image.width();
         let h = self.image.height();

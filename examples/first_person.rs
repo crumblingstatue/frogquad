@@ -6,7 +6,6 @@ use {
         models::{draw_cube_wires, draw_grid, draw_line_3d},
         text::draw_text,
         time::get_frame_time,
-        window::clear_background,
     },
     glam::{Vec2, Vec3, vec3},
     miniquad::KeyCode,
@@ -138,7 +137,7 @@ impl frogquad::App for FirstPersonApp {
             }
         }
 
-        clear_background(fc, Color::LIGHTGRAY);
+        fc.clear_background(Color::LIGHTGRAY);
 
         // Going 3d!
 

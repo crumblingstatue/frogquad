@@ -4,7 +4,6 @@ use crate::{
     FrogCx,
     math::Rect,
     texture::{RenderPass, RenderTarget},
-    window::{screen_height, screen_width},
 };
 use glam::{Mat4, Vec2, Vec3, vec2, vec3};
 
@@ -126,15 +125,15 @@ impl Camera2D {
             .viewport()
             .map(|(vx, vy, vw, vh)| Rect {
                 x: vx as f32,
-                y: screen_height(fc) - (vy + vh) as f32,
+                y: fc.screen_height() - (vy + vh) as f32,
                 w: vw as f32,
                 h: vh as f32,
             })
             .unwrap_or(Rect {
                 x: 0.0,
                 y: 0.0,
-                w: screen_width(fc),
-                h: screen_height(fc),
+                w: fc.screen_width(),
+                h: fc.screen_height(),
             });
 
         let mat = self.matrix(fc);
@@ -154,15 +153,15 @@ impl Camera2D {
             .viewport()
             .map(|(vx, vy, vw, vh)| Rect {
                 x: vx as f32,
-                y: screen_height(fc) - (vy + vh) as f32,
+                y: fc.screen_height() - (vy + vh) as f32,
                 w: vw as f32,
                 h: vh as f32,
             })
             .unwrap_or(Rect {
                 x: 0.0,
                 y: 0.0,
-                w: screen_width(fc),
-                h: screen_height(fc),
+                w: fc.screen_width(),
+                h: fc.screen_height(),
             });
 
         let point = vec2(
@@ -242,7 +241,7 @@ impl Camera for Camera3D {
         let (width, height) = if let Some(rt) = &self.render_target {
             (rt.texture.width(fc), rt.texture.height(fc))
         } else {
-            (screen_width(fc), screen_height(fc))
+            (fc.screen_width(), fc.screen_height())
         };
         let aspect = self.aspect.unwrap_or(width / height);
 

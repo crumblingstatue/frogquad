@@ -3,7 +3,6 @@ use {
         Color, FrogCx,
         conf::Conf,
         texture::{Texture2D, draw_texture, load_texture},
-        window::clear_background,
     },
     pollster::FutureExt,
 };
@@ -22,7 +21,7 @@ impl TextureApp {
 
 impl frogquad::App for TextureApp {
     fn update(&mut self, fc: &mut FrogCx) {
-        clear_background(fc, Color::LIGHTGRAY);
+        fc.clear_background(Color::LIGHTGRAY);
         draw_texture(fc, &self.texture, 0., 0., Color::WHITE);
     }
 }

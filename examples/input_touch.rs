@@ -4,14 +4,13 @@ use frogquad::{
     input::{TouchPhase, touches},
     shapes::draw_circle,
     text::draw_text,
-    window::clear_background,
 };
 
 struct InputTouchApp {}
 
 impl frogquad::App for InputTouchApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
-        clear_background(fc, Color::LIGHTGRAY);
+        fc.clear_background(Color::LIGHTGRAY);
 
         for touch in touches(fc) {
             let (fill_color, size) = match touch.phase {

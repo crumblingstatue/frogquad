@@ -1,12 +1,6 @@
 use frogquad::{
-    Color, FrogCx,
-    conf::Conf,
-    input::is_key_pressed,
-    shapes::draw_circle,
-    text::draw_text,
-    texture::load_texture,
-    time::get_time,
-    window::{clear_background, screen_height, screen_width},
+    Color, FrogCx, conf::Conf, input::is_key_pressed, shapes::draw_circle, text::draw_text,
+    texture::load_texture, time::get_time,
 };
 use frogquad_particles::{self as particles, AtlasConfig, BlendMode, Emitter, EmitterConfig};
 use glam::vec2;
@@ -101,7 +95,7 @@ impl ParticlesApp {
 
 impl frogquad::App for ParticlesApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
-        clear_background(fc, Color::BLACK);
+        fc.clear_background(Color::BLACK);
 
         draw_text(fc, "Local coord emitter", 20.0, 30.0, 30.0, Color::RED);
 
@@ -123,8 +117,8 @@ impl frogquad::App for ParticlesApp {
         }
 
         let local_emitter_pos = vec2(
-            (get_time(fc) * 0.3).sin() as f32 * screen_width(fc) / 2.5 + screen_width(fc) / 2.0,
-            (get_time(fc) * 0.5).cos() as f32 * screen_height(fc) / 2.5 + screen_height(fc) / 2.0,
+            (get_time(fc) * 0.3).sin() as f32 * fc.screen_width() / 2.5 + fc.screen_width() / 2.0,
+            (get_time(fc) * 0.5).cos() as f32 * fc.screen_height() / 2.5 + fc.screen_height() / 2.0,
         );
         self.flying_emitter_local.draw(fc, local_emitter_pos);
         draw_circle(
@@ -136,10 +130,10 @@ impl frogquad::App for ParticlesApp {
         );
 
         let world_emitter_pos = vec2(
-            (get_time(fc) * 0.6 + 1.0).sin() as f32 * screen_width(fc) / 2.5
-                + screen_width(fc) / 2.0,
-            (get_time(fc) * 0.4 + 1.0).cos() as f32 * screen_height(fc) / 2.5
-                + screen_height(fc) / 2.0,
+            (get_time(fc) * 0.6 + 1.0).sin() as f32 * fc.screen_width() / 2.5
+                + fc.screen_width() / 2.0,
+            (get_time(fc) * 0.4 + 1.0).cos() as f32 * fc.screen_height() / 2.5
+                + fc.screen_height() / 2.0,
         );
 
         self.flying_emitter_world.draw(fc, world_emitter_pos);

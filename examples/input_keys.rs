@@ -1,11 +1,6 @@
 use {
     frogquad::{
-        Color, FrogCx,
-        conf::Conf,
-        input::is_key_down,
-        shapes::draw_circle,
-        text::draw_text,
-        window::{clear_background, screen_height, screen_width},
+        Color, FrogCx, conf::Conf, input::is_key_down, shapes::draw_circle, text::draw_text,
     },
     miniquad::KeyCode,
 };
@@ -18,15 +13,15 @@ struct InputKeysApp {
 impl InputKeysApp {
     fn new(fc: &mut FrogCx) -> Self {
         Self {
-            x: screen_width(fc) / 2.0,
-            y: screen_height(fc) / 2.0,
+            x: fc.screen_width() / 2.0,
+            y: fc.screen_height() / 2.0,
         }
     }
 }
 
 impl frogquad::App for InputKeysApp {
     fn update(&mut self, fc: &mut FrogCx) {
-        clear_background(fc, Color::LIGHTGRAY);
+        fc.clear_background(Color::LIGHTGRAY);
 
         if is_key_down(fc, KeyCode::Right) {
             self.x += 1.0;

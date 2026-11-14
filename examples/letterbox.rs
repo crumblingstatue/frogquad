@@ -8,7 +8,6 @@ use {
         shapes::draw_circle,
         text::draw_text,
         texture::{DrawTextureParams, RenderTarget, draw_texture_ex, render_target},
-        window::{clear_background, screen_height, screen_width},
     },
     glam::{Vec2, vec2},
     miniquad::FilterMode,
@@ -42,14 +41,14 @@ impl frogquad::App for LetterboxApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
         // Get required scaling value
         let scale: f32 = f32::min(
-            screen_width(fc) / VIRTUAL_WIDTH,
-            screen_height(fc) / VIRTUAL_HEIGHT,
+            fc.screen_width() / VIRTUAL_WIDTH,
+            fc.screen_height() / VIRTUAL_HEIGHT,
         );
 
         // Mouse position in the virtual screen
         let virtual_mouse_pos = Vec2 {
-            x: (mouse_position(fc).0 - (screen_width(fc) - (VIRTUAL_WIDTH * scale)) * 0.5) / scale,
-            y: (mouse_position(fc).1 - (screen_height(fc) - (VIRTUAL_HEIGHT * scale)) * 0.5)
+            x: (mouse_position(fc).0 - (fc.screen_width() - (VIRTUAL_WIDTH * scale)) * 0.5) / scale,
+            y: (mouse_position(fc).1 - (fc.screen_height() - (VIRTUAL_HEIGHT * scale)) * 0.5)
                 / scale,
         };
 
@@ -58,7 +57,7 @@ impl frogquad::App for LetterboxApp {
         // ------------------------------------------------------------------------
         set_camera(fc, &self.render_target_cam);
 
-        clear_background(fc, Color::LIGHTGRAY);
+        fc.clear_background(Color::LIGHTGRAY);
 
         draw_text(fc, "Hello Letterbox", 20.0, 20.0, 30.0, Color::DARKGRAY);
         draw_circle(
@@ -96,14 +95,14 @@ impl frogquad::App for LetterboxApp {
         // ------------------------------------------------------------------------
         set_default_camera(fc);
 
-        clear_background(fc, Color::BLACK); // Will be the letterbox color
+        fc.clear_background(Color::BLACK); // Will be the letterbox color
 
         // Draw 'render_target' to window screen, porperly scaled and letterboxed
         draw_texture_ex(
             fc,
             &self.render_target.texture,
-            (screen_width(fc) - (VIRTUAL_WIDTH * scale)) * 0.5,
-            (screen_height(fc) - (VIRTUAL_HEIGHT * scale)) * 0.5,
+            (fc.screen_width() - (VIRTUAL_WIDTH * scale)) * 0.5,
+            (fc.screen_height() - (VIRTUAL_HEIGHT * scale)) * 0.5,
             Color::WHITE,
             DrawTextureParams {
                 dest_size: Some(vec2(VIRTUAL_WIDTH * scale, VIRTUAL_HEIGHT * scale)),

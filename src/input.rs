@@ -5,8 +5,6 @@ use std::collections::HashSet;
 use crate::DroppedFile;
 use crate::FrogCx;
 use crate::Vec2;
-use crate::window::screen_height;
-use crate::window::screen_width;
 
 pub use miniquad::{KeyCode, MouseButton};
 
@@ -174,8 +172,8 @@ pub fn is_mouse_button_released(fc: &mut FrogCx, btn: MouseButton) -> bool {
 /// Convert a position in pixels to a position in the range [-1; 1].
 fn convert_to_local(pixel_pos: Vec2, fc: &FrogCx) -> Vec2 {
     Vec2::new(
-        pixel_pos.x / screen_width(fc),
-        pixel_pos.y / screen_height(fc),
+        pixel_pos.x / fc.screen_width(),
+        pixel_pos.y / fc.screen_height(),
     ) * 2.0
         - Vec2::new(1.0, 1.0)
 }

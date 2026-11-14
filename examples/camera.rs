@@ -5,7 +5,6 @@ use {
         conf::Conf,
         shapes::{draw_circle, draw_line, draw_rectangle},
         text::draw_text,
-        window::{clear_background, screen_height, screen_width},
     },
     glam::vec2,
 };
@@ -14,14 +13,14 @@ struct CameraApp {}
 
 impl frogquad::App for CameraApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
-        clear_background(fc, Color::LIGHTGRAY);
+        fc.clear_background(Color::LIGHTGRAY);
 
         // Render some primitives in camera space
 
         set_camera(
             fc,
             &Camera2D {
-                zoom: vec2(1., screen_width(fc) / screen_height(fc)),
+                zoom: vec2(1., fc.screen_width() / fc.screen_height()),
                 ..Default::default()
             },
         );

@@ -3,7 +3,6 @@ use {
         Color,
         conf::Conf,
         text::{TextParams, draw_text, draw_text_ex, load_ttf_font, set_default_font},
-        window::clear_background,
     },
     pollster::FutureExt,
 };
@@ -12,7 +11,7 @@ struct DefaultFontApp {}
 
 impl frogquad::App for DefaultFontApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
-        clear_background(fc, Color::WHITE);
+        fc.clear_background(Color::WHITE);
 
         draw_text(
             fc,

@@ -3,7 +3,6 @@ use frogquad::{
     camera::{Camera2D, set_camera},
     conf::Conf,
     math::Rect,
-    window::clear_background,
 };
 
 use frogquad_particles::{BlendMode, Curve, Emitter, EmitterConfig};
@@ -39,7 +38,7 @@ impl ParticlesSingleApp {
 
 impl frogquad::App for ParticlesSingleApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
-        clear_background(fc, Color::BLACK);
+        fc.clear_background(Color::BLACK);
 
         let camera = Camera2D::from_display_rect(Rect::new(0.0, 0.0, 100.0, 100.0));
 

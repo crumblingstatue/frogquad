@@ -850,12 +850,9 @@ impl QuadGl {
     }
 
     pub fn get_viewport(&self, fc: &FrogCx) -> (i32, i32, i32, i32) {
-        self.state.viewport.unwrap_or((
-            0,
-            0,
-            crate::window::screen_width(fc) as _,
-            crate::window::screen_height(fc) as _,
-        ))
+        self.state
+            .viewport
+            .unwrap_or((0, 0, fc.screen_width() as _, fc.screen_height() as _))
     }
 
     pub fn push_model_matrix(&mut self, matrix: glam::Mat4) {

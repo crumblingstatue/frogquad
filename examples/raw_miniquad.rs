@@ -6,10 +6,7 @@ use {
         shapes::{draw_circle, draw_line, draw_rectangle},
         text::draw_text,
         time::get_time,
-        window::{
-            InternalGlContext, clear_background, flush_internal_gl, get_internal_gl, screen_height,
-            screen_width,
-        },
+        window::InternalGlContext,
     },
     glam::vec2,
 };
@@ -24,7 +21,7 @@ impl RawMqApp {
             stage: {
                 let InternalGlContext {
                     quad_context: ctx, ..
-                } = get_internal_gl(fc);
+                } = fc.get_internal_gl();
 
                 raw_miniquad::Stage::new(ctx)
             },
@@ -34,14 +31,14 @@ impl RawMqApp {
 
 impl frogquad::App for RawMqApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
-        clear_background(fc, Color::LIGHTGRAY);
+        fc.clear_background(Color::LIGHTGRAY);
 
         // Render some primitives in camera space
 
         set_camera(
             fc,
             &Camera2D {
-                zoom: vec2(1., screen_width(fc) / screen_height(fc)),
+                zoom: vec2(1., fc.screen_width() / fc.screen_height()),
                 ..Default::default()
             },
         );
@@ -51,10 +48,10 @@ impl frogquad::App for RawMqApp {
 
         {
             // Ensure that frogquad's shapes are not going to be lost
-            flush_internal_gl(fc);
+            fc.flush_internal_gl();
 
             let t = get_time(fc);
-            let gl = get_internal_gl(fc);
+            let gl = fc.get_internal_gl();
             gl.quad_context.apply_pipeline(&self.stage.pipeline);
 
             gl.quad_context

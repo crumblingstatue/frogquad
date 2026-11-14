@@ -8,7 +8,6 @@ use {
         math::Rect,
         texture::load_texture,
         time::get_frame_time,
-        window::clear_background,
     },
     glam::{Vec2, vec2},
     miniquad::{FilterMode, KeyCode},
@@ -80,7 +79,7 @@ impl PlatformerApp {
 
 impl frogquad::App for PlatformerApp {
     fn update(&mut self, fc: &mut FrogCx) {
-        clear_background(fc, Color::BLACK);
+        fc.clear_background(Color::BLACK);
 
         set_camera(fc, &self.camera);
 

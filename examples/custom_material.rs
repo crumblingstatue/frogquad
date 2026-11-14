@@ -4,7 +4,7 @@ use frogquad::{Color, FrogCx};
 use frogquad::material::{
     Material, MaterialParams, gl_use_default_material, gl_use_material, load_material,
 };
-use frogquad::window::clear_background;
+
 use glam::{Vec4, vec4};
 use miniquad::{
     Backend, BlendFactor, BlendState, BlendValue, Equation, PipelineParams, ShaderSource,
@@ -219,7 +219,7 @@ impl CustomMatApp {
 
 impl frogquad::App for CustomMatApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
-        clear_background(fc, Color::GRAY);
+        fc.clear_background(Color::GRAY);
 
         gl_use_material(&mut fc.gl, &self.mat);
 

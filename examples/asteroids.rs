@@ -7,7 +7,6 @@ use {
         shapes::{draw_circle, draw_poly_lines, draw_triangle_lines},
         text::{draw_text, measure_text},
         time::get_time,
-        window::{clear_background, screen_height, screen_width},
     },
     glam::Vec2,
     miniquad::KeyCode,
@@ -40,17 +39,17 @@ struct Asteroid {
 
 fn wrap_around(v: &Vec2, fc: &FrogCx) -> Vec2 {
     let mut vr = Vec2::new(v.x, v.y);
-    if vr.x > screen_width(fc) {
+    if vr.x > fc.screen_width() {
         vr.x = 0.;
     }
     if vr.x < 0. {
-        vr.x = screen_width(fc)
+        vr.x = fc.screen_width()
     }
-    if vr.y > screen_height(fc) {
+    if vr.y > fc.screen_height() {
         vr.y = 0.;
     }
     if vr.y < 0. {
-        vr.y = screen_height(fc)
+        vr.y = fc.screen_height()
     }
     vr
 }
@@ -66,7 +65,7 @@ struct AsteroidsApp {
 impl AsteroidsApp {
     fn new(fc: &mut FrogCx) -> Self {
         let ship = Ship {
-            pos: Vec2::new(screen_width(fc) / 2., screen_height(fc) / 2.),
+            pos: Vec2::new(fc.screen_width() / 2., fc.screen_height() / 2.),
             rot: 0.,
             vel: Vec2::new(0., 0.),
         };
@@ -89,7 +88,7 @@ impl AsteroidsApp {
 impl frogquad::App for AsteroidsApp {
     fn update(&mut self, fc: &mut FrogCx) {
         if self.gameover {
-            clear_background(fc, Color::LIGHTGRAY);
+            fc.clear_background(Color::LIGHTGRAY);
             let mut text = "You Win!. Press [enter] to play again.";
             let font_size = 30.;
 
@@ -100,32 +99,32 @@ impl frogquad::App for AsteroidsApp {
             draw_text(
                 fc,
                 text,
-                screen_width(fc) / 2. - text_size.width / 2.,
-                screen_height(fc) / 2. - text_size.height / 2.,
+                fc.screen_width() / 2. - text_size.width / 2.,
+                fc.screen_height() / 2. - text_size.height / 2.,
                 font_size,
                 Color::DARKGRAY,
             );
             if is_key_down(fc, KeyCode::Enter) {
                 self.ship = Ship {
-                    pos: Vec2::new(screen_width(fc) / 2., screen_height(fc) / 2.),
+                    pos: Vec2::new(fc.screen_width() / 2., fc.screen_height() / 2.),
                     rot: 0.,
                     vel: Vec2::new(0., 0.),
                 };
                 self.bullets = Vec::new();
                 self.asteroids = Vec::new();
                 self.gameover = false;
-                let screen_center = Vec2::new(screen_width(fc) / 2., screen_height(fc) / 2.);
+                let screen_center = Vec2::new(fc.screen_width() / 2., fc.screen_height() / 2.);
                 for _ in 0..10 {
                     self.asteroids.push(Asteroid {
                         pos: screen_center
                             + Vec2::new(rand::gen_range(-1., 1.), rand::gen_range(-1., 1.))
                                 .normalize()
-                                * screen_width(fc).min(screen_height(fc))
+                                * fc.screen_width().min(fc.screen_height())
                                 / 2.,
                         vel: Vec2::new(rand::gen_range(-1., 1.), rand::gen_range(-1., 1.)),
                         rot: 0.,
                         rot_speed: rand::gen_range(-2., 2.),
-                        size: screen_width(fc).min(screen_height(fc)) / 10.,
+                        size: fc.screen_width().min(fc.screen_height()) / 10.,
                         sides: rand::gen_range(3, 8),
                         collided: false,
                     })
@@ -242,7 +241,7 @@ impl frogquad::App for AsteroidsApp {
             return;
         }
 
-        clear_background(fc, Color::LIGHTGRAY);
+        fc.clear_background(Color::LIGHTGRAY);
 
         for bullet in self.bullets.iter() {
             draw_circle(fc, bullet.pos.x, bullet.pos.y, 2., Color::BLACK);

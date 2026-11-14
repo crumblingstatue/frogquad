@@ -6,7 +6,6 @@ use {
         input::{is_key_down, mouse_wheel},
         shapes::{draw_circle, draw_line, draw_rectangle},
         text::draw_text,
-        window::{clear_background, screen_height, screen_width},
     },
     glam::vec2,
     miniquad::KeyCode,
@@ -107,7 +106,7 @@ impl frogquad::App for CamTfApp {
 
         self.smooth_rotation = angle_lerp(self.smooth_rotation, self.rotation, 0.1);
 
-        clear_background(fc, Color::LIGHTGRAY);
+        fc.clear_background(Color::LIGHTGRAY);
 
         set_camera(
             fc,
@@ -133,7 +132,10 @@ impl frogquad::App for CamTfApp {
             &Camera2D {
                 target: vec2(self.target.0, self.target.1),
                 rotation: self.smooth_rotation,
-                zoom: vec2(self.zoom, self.zoom * screen_width(fc) / screen_height(fc)),
+                zoom: vec2(
+                    self.zoom,
+                    self.zoom * fc.screen_width() / fc.screen_height(),
+                ),
                 ..Default::default()
             },
         );
@@ -144,7 +146,10 @@ impl frogquad::App for CamTfApp {
             &Camera2D {
                 target: vec2(self.target.0, self.target.1),
                 rotation: self.smooth_rotation,
-                zoom: vec2(self.zoom, self.zoom * screen_width(fc) / screen_height(fc)),
+                zoom: vec2(
+                    self.zoom,
+                    self.zoom * fc.screen_width() / fc.screen_height(),
+                ),
                 offset: vec2(self.offset.0, self.offset.1),
                 ..Default::default()
             },

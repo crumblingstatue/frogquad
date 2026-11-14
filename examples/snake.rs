@@ -7,7 +7,6 @@ use {
         shapes::{draw_line, draw_rectangle},
         text::{draw_text, measure_text},
         time::get_time,
-        window::{clear_background, screen_height, screen_width},
     },
     miniquad::KeyCode,
 };
@@ -106,12 +105,12 @@ impl frogquad::App for SnakeApp {
             }
         }
         if !self.game_over {
-            clear_background(fc, Color::LIGHTGRAY);
+            fc.clear_background(Color::LIGHTGRAY);
 
-            let game_size = screen_width(fc).min(screen_height(fc));
-            let offset_x = (screen_width(fc) - game_size) / 2. + 10.;
-            let offset_y = (screen_height(fc) - game_size) / 2. + 10.;
-            let sq_size = (screen_height(fc) - offset_y * 2.) / SQUARES as f32;
+            let game_size = fc.screen_width().min(fc.screen_height());
+            let offset_x = (fc.screen_width() - game_size) / 2. + 10.;
+            let offset_y = (fc.screen_height() - game_size) / 2. + 10.;
+            let sq_size = (fc.screen_height() - offset_y * 2.) / SQUARES as f32;
 
             draw_rectangle(
                 fc,
@@ -127,7 +126,7 @@ impl frogquad::App for SnakeApp {
                     fc,
                     offset_x,
                     offset_y + sq_size * i as f32,
-                    screen_width(fc) - offset_x,
+                    fc.screen_width() - offset_x,
                     offset_y + sq_size * i as f32,
                     2.,
                     Color::LIGHTGRAY,
@@ -140,7 +139,7 @@ impl frogquad::App for SnakeApp {
                     offset_x + sq_size * i as f32,
                     offset_y,
                     offset_x + sq_size * i as f32,
-                    screen_height(fc) - offset_y,
+                    fc.screen_height() - offset_y,
                     2.,
                     Color::LIGHTGRAY,
                 );
@@ -184,7 +183,7 @@ impl frogquad::App for SnakeApp {
                 Color::DARKGRAY,
             );
         } else {
-            clear_background(fc, Color::WHITE);
+            fc.clear_background(Color::WHITE);
             let text = "Game Over. Press [enter] to play again.";
             let font_size = 30.;
             let text_size = measure_text(text, fc.default_font(), font_size as _, 1.0);
@@ -192,8 +191,8 @@ impl frogquad::App for SnakeApp {
             draw_text(
                 fc,
                 text,
-                screen_width(fc) / 2. - text_size.width / 2.,
-                screen_height(fc) / 2. + text_size.height / 2.,
+                fc.screen_width() / 2. - text_size.width / 2.,
+                fc.screen_height() / 2. + text_size.height / 2.,
                 font_size,
                 Color::DARKGRAY,
             );

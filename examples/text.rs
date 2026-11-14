@@ -4,7 +4,6 @@ use {
         conf::Conf,
         text::{Font, TextParams, draw_text_ex, get_text_center, load_ttf_font},
         time::get_time,
-        window::{clear_background, screen_height, screen_width},
     },
     pollster::FutureExt,
 };
@@ -26,7 +25,7 @@ impl TextApp {
 
 impl frogquad::App for TextApp {
     fn update(&mut self, fc: &mut FrogCx) {
-        clear_background(fc, Color::BLACK);
+        fc.clear_background(Color::BLACK);
 
         draw_text_ex(fc, "Custom font size:", 20.0, 20.0, TextParams::default());
         let mut y = 20.0;
@@ -90,8 +89,8 @@ impl frogquad::App for TextApp {
         draw_text_ex(
             fc,
             "abcd",
-            screen_width(fc) / 4.0 * 2.0,
-            screen_height(fc) / 3.0 * 2.0,
+            fc.screen_width() / 4.0 * 2.0,
+            fc.screen_height() / 3.0 * 2.0,
             TextParams {
                 font_size: 70,
                 font: Some(&self.font),
@@ -104,8 +103,8 @@ impl frogquad::App for TextApp {
         draw_text_ex(
             fc,
             "abcd",
-            screen_width(fc) / 4.0 * 3.0 - center.x,
-            screen_height(fc) / 3.0 * 2.0 - center.y,
+            fc.screen_width() / 4.0 * 3.0 - center.x,
+            fc.screen_height() / 3.0 * 2.0 - center.y,
             TextParams {
                 font_size: 70,
                 rotation: self.angle * 2.0,

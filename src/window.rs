@@ -4,43 +4,44 @@ use crate::FrogCx;
 
 use crate::color::Color;
 
-/// Fill window background with solid color.
-/// Note: even when "clear_background" is not called explicitly,
-/// the screen will be cleared at the beginning of the frame.
-pub fn clear_background(fc: &mut FrogCx, color: Color) {
-    fc.gl.clear(&mut *fc.quad_context, color);
-}
-
-#[doc(hidden)]
-pub fn gl_set_drawcall_buffer_capacity(fc: &mut FrogCx, max_vertices: usize, max_indices: usize) {
-    fc.gl
-        .update_drawcall_capacity(&mut *fc.quad_context, max_vertices, max_indices);
-}
-
 pub struct InternalGlContext<'a> {
     pub quad_context: &'a mut dyn miniquad::RenderingBackend,
     pub quad_gl: &'a mut crate::quad_gl::QuadGl,
 }
 
-/// Draw all the batched stuff and reset the internal state cache.
-/// May be helpful for combining frogquad's drawing with raw miniquad/opengl calls.
-pub fn flush_internal_gl(fc: &mut FrogCx) {
-    fc.perform_render_passes();
-}
-
-pub fn get_internal_gl<'a>(fc: &'a mut FrogCx) -> InternalGlContext<'a> {
-    InternalGlContext {
-        quad_context: &mut *fc.quad_context,
-        quad_gl: &mut fc.gl,
+impl FrogCx {
+    /// Fill window background with solid color.
+    /// Note: even when "clear_background" is not called explicitly,
+    /// the screen will be cleared at the beginning of the frame.
+    pub fn clear_background(&mut self, color: Color) {
+        self.gl.clear(&mut *self.quad_context, color);
     }
-}
 
-pub fn screen_width(fc: &FrogCx) -> f32 {
-    fc.screen_width / miniquad::window::dpi_scale()
-}
+    #[doc(hidden)]
+    pub fn gl_set_drawcall_buffer_capacity(&mut self, max_vertices: usize, max_indices: usize) {
+        self.gl
+            .update_drawcall_capacity(&mut *self.quad_context, max_vertices, max_indices);
+    }
+    /// Draw all the batched stuff and reset the internal state cache.
+    /// May be helpful for combining frogquad's drawing with raw miniquad/opengl calls.
+    pub fn flush_internal_gl(&mut self) {
+        self.perform_render_passes();
+    }
 
-pub fn screen_height(fc: &FrogCx) -> f32 {
-    fc.screen_height / miniquad::window::dpi_scale()
+    pub fn get_internal_gl(&mut self) -> InternalGlContext<'_> {
+        InternalGlContext {
+            quad_context: &mut *self.quad_context,
+            quad_gl: &mut self.gl,
+        }
+    }
+
+    pub fn screen_width(&self) -> f32 {
+        self.screen_width / miniquad::window::dpi_scale()
+    }
+
+    pub fn screen_height(&self) -> f32 {
+        self.screen_height / miniquad::window::dpi_scale()
+    }
 }
 
 pub fn screen_dpi_scale() -> f32 {

@@ -4,7 +4,6 @@ use {
         conf::Conf,
         shapes::draw_rectangle,
         text::{Font, TextParams, draw_text, draw_text_ex, load_ttf_font, measure_text},
-        window::clear_background,
     },
     pollster::FutureExt,
 };
@@ -125,7 +124,7 @@ impl TextMeasApp {
 
 impl frogquad::App for TextMeasApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
-        clear_background(fc, Color::BLACK);
+        fc.clear_background(Color::BLACK);
 
         let text = "abcdIj";
 

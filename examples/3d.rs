@@ -6,7 +6,6 @@ use {
         models::{draw_cube, draw_cube_wires, draw_grid, draw_plane, draw_sphere},
         text::draw_text,
         texture::{Texture2D, load_texture},
-        window::clear_background,
     },
     glam::{vec2, vec3},
     pollster::FutureExt,
@@ -28,7 +27,7 @@ impl App3d {
 
 impl frogquad::App for App3d {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
-        clear_background(fc, Color::LIGHTGRAY);
+        fc.clear_background(Color::LIGHTGRAY);
 
         // Going 3d!
 

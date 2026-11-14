@@ -7,7 +7,6 @@ use {
         shapes::{draw_circle, draw_rectangle},
         text::{TextParams, camera_font_scale, draw_text_ex},
         time::get_frame_time,
-        window::clear_background,
     },
     glam::vec2,
     miniquad::KeyCode,
@@ -65,7 +64,7 @@ impl frogquad::App for ArkanoidApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
         let platform_width = 5.;
         let platform_height = 0.2;
-        clear_background(fc, Color::SKYBLUE);
+        fc.clear_background(Color::SKYBLUE);
 
         let delta = get_frame_time(fc);
 

@@ -8,7 +8,6 @@ use {
         },
         shapes::draw_circle,
         texture::{DrawTextureParams, Texture2D, draw_texture_ex, load_texture},
-        window::{clear_background, screen_height, screen_width},
     },
     glam::vec2,
     miniquad::{ShaderSource, UniformDesc, UniformType},
@@ -45,7 +44,7 @@ impl ScreenTexExample {
 
 impl frogquad::App for ScreenTexExample {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
-        clear_background(fc, Color::WHITE);
+        fc.clear_background(Color::WHITE);
         draw_texture_ex(
             fc,
             &self.texture,
@@ -53,7 +52,7 @@ impl frogquad::App for ScreenTexExample {
             0.0,
             Color::WHITE,
             DrawTextureParams {
-                dest_size: Some(vec2(screen_width(fc), screen_height(fc))),
+                dest_size: Some(vec2(fc.screen_width(), fc.screen_height())),
                 ..Default::default()
             },
         );
