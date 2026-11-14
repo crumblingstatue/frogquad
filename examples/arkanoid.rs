@@ -1,8 +1,7 @@
 use {
     frogquad::{
-        FrogCx,
+        Color, FrogCx,
         camera::{Camera2D, set_camera},
-        color,
         conf::Conf,
         input::is_key_down,
         shapes::{draw_circle, draw_rectangle},
@@ -66,7 +65,7 @@ impl frogquad::App for ArkanoidApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
         let platform_width = 5.;
         let platform_height = 0.2;
-        clear_background(fc, color::SKYBLUE);
+        clear_background(fc, Color::SKYBLUE);
 
         let delta = get_frame_time(fc);
 
@@ -132,7 +131,7 @@ impl frogquad::App for ArkanoidApp {
                         block_y,
                         block_w - 0.1,
                         block_h - 0.1,
-                        color::DARKBLUE,
+                        Color::DARKBLUE,
                     );
                     if self.ball_x >= block_x
                         && self.ball_x < block_x + block_w
@@ -146,14 +145,14 @@ impl frogquad::App for ArkanoidApp {
             }
         }
 
-        draw_circle(fc, self.ball_x, self.ball_y, 0.2, color::RED);
+        draw_circle(fc, self.ball_x, self.ball_y, 0.2, Color::RED);
         draw_rectangle(
             fc,
             self.platform_x - platform_width / 2.,
             SCR_H - platform_height,
             platform_width,
             platform_height,
-            color::DARKPURPLE,
+            Color::DARKPURPLE,
         );
     }
 }

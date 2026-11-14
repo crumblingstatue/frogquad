@@ -1,6 +1,6 @@
 use {
     frogquad::{
-        color,
+        Color,
         conf::Conf,
         text::{TextParams, draw_text, draw_text_ex, load_ttf_font, set_default_font},
         window::clear_background,
@@ -12,7 +12,7 @@ struct DefaultFontApp {}
 
 impl frogquad::App for DefaultFontApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
-        clear_background(fc, color::WHITE);
+        clear_background(fc, Color::WHITE);
 
         draw_text(
             fc,
@@ -20,7 +20,7 @@ impl frogquad::App for DefaultFontApp {
             100.0,
             100.0,
             40.0,
-            color::BLACK,
+            Color::BLACK,
         );
 
         draw_text_ex(
@@ -30,7 +30,7 @@ impl frogquad::App for DefaultFontApp {
             230.0,
             TextParams {
                 font_size: 45,
-                color: color::RED,
+                color: Color::RED,
                 rotation: 0.27,
                 ..Default::default()
             },

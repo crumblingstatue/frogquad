@@ -1,8 +1,7 @@
 use {
     frogquad::{
-        FrogCx,
+        Color, FrogCx,
         camera::{Camera2D, set_camera},
-        color,
         conf::Conf,
         file::load_string,
         input::{is_key_down, is_key_pressed},
@@ -81,7 +80,7 @@ impl PlatformerApp {
 
 impl frogquad::App for PlatformerApp {
     fn update(&mut self, fc: &mut FrogCx) {
-        clear_background(fc, color::BLACK);
+        clear_background(fc, Color::BLACK);
 
         set_camera(fc, &self.camera);
 

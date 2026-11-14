@@ -1,7 +1,7 @@
 use {
     frogquad::{
+        Color,
         camera::{Camera2D, set_camera, set_default_camera},
-        color,
         conf::Conf,
         shapes::{draw_circle, draw_line, draw_rectangle},
         text::draw_text,
@@ -14,7 +14,7 @@ struct CameraApp {}
 
 impl frogquad::App for CameraApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
-        clear_background(fc, color::LIGHTGRAY);
+        clear_background(fc, Color::LIGHTGRAY);
 
         // Render some primitives in camera space
 
@@ -25,14 +25,14 @@ impl frogquad::App for CameraApp {
                 ..Default::default()
             },
         );
-        draw_line(fc, -0.4, 0.4, -0.8, 0.9, 0.05, color::BLUE);
-        draw_rectangle(fc, -0.3, 0.3, 0.2, 0.2, color::GREEN);
-        draw_circle(fc, 0., 0., 0.1, color::YELLOW);
+        draw_line(fc, -0.4, 0.4, -0.8, 0.9, 0.05, Color::BLUE);
+        draw_rectangle(fc, -0.3, 0.3, 0.2, 0.2, Color::GREEN);
+        draw_circle(fc, 0., 0., 0.1, Color::YELLOW);
 
         // Back to screen space, render some text
 
         set_default_camera(fc);
-        draw_text(fc, "HELLO", 30.0, 200.0, 30.0, color::BLACK);
+        draw_text(fc, "HELLO", 30.0, 200.0, 30.0, Color::BLACK);
     }
 }
 

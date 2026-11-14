@@ -1,5 +1,5 @@
 use frogquad::{
-    FrogCx, color,
+    Color, FrogCx,
     conf::Conf,
     rand,
     texture::{Image, Texture2D, draw_texture},
@@ -27,7 +27,7 @@ impl LifeApp {
         let mut cells = vec![CellState::Dead; w * h];
         let buffer = vec![CellState::Dead; w * h];
 
-        let image = Image::gen_image_color(w as u16, h as u16, color::WHITE);
+        let image = Image::gen_image_color(w as u16, h as u16, Color::WHITE);
 
         for cell in cells.iter_mut() {
             if rand::gen_range(0, 5) == 0 {
@@ -46,7 +46,7 @@ impl LifeApp {
 
 impl frogquad::App for LifeApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
-        clear_background(fc, color::WHITE);
+        clear_background(fc, Color::WHITE);
 
         let w = self.image.width();
         let h = self.image.height();
@@ -100,15 +100,15 @@ impl frogquad::App for LifeApp {
                 (i % w) as u32,
                 (i / w) as u32,
                 match self.buffer[i] {
-                    CellState::Alive => color::BLACK,
-                    CellState::Dead => color::WHITE,
+                    CellState::Alive => Color::BLACK,
+                    CellState::Dead => Color::WHITE,
                 },
             );
         }
 
         self.texture.update(fc, &self.image);
 
-        draw_texture(fc, &self.texture, 0., 0., color::WHITE);
+        draw_texture(fc, &self.texture, 0., 0., Color::WHITE);
     }
 }
 

@@ -1,7 +1,6 @@
 use frogquad::{
-    FrogCx,
+    Color, FrogCx,
     camera::{Camera2D, set_camera},
-    color,
     conf::Conf,
     math::Rect,
     window::clear_background,
@@ -40,7 +39,7 @@ impl ParticlesSingleApp {
 
 impl frogquad::App for ParticlesSingleApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
-        clear_background(fc, color::BLACK);
+        clear_background(fc, Color::BLACK);
 
         let camera = Camera2D::from_display_rect(Rect::new(0.0, 0.0, 100.0, 100.0));
 

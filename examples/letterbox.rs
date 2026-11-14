@@ -1,7 +1,7 @@
 use {
     frogquad::{
+        Color,
         camera::{Camera2D, set_camera, set_default_camera},
-        color,
         conf::Conf,
         input::mouse_position,
         math::Rect,
@@ -58,29 +58,29 @@ impl frogquad::App for LetterboxApp {
         // ------------------------------------------------------------------------
         set_camera(fc, &self.render_target_cam);
 
-        clear_background(fc, color::LIGHTGRAY);
+        clear_background(fc, Color::LIGHTGRAY);
 
-        draw_text(fc, "Hello Letterbox", 20.0, 20.0, 30.0, color::DARKGRAY);
+        draw_text(fc, "Hello Letterbox", 20.0, 20.0, 30.0, Color::DARKGRAY);
         draw_circle(
             fc,
             VIRTUAL_WIDTH / 2.0 - 65.0,
             VIRTUAL_HEIGHT / 2.0,
             35.0,
-            color::RED,
+            Color::RED,
         );
         draw_circle(
             fc,
             VIRTUAL_WIDTH / 2.0 + 65.0,
             VIRTUAL_HEIGHT / 2.0,
             35.0,
-            color::BLUE,
+            Color::BLUE,
         );
         draw_circle(
             fc,
             VIRTUAL_WIDTH / 2.0,
             VIRTUAL_HEIGHT / 2.0 - 65.0,
             35.0,
-            color::YELLOW,
+            Color::YELLOW,
         );
 
         draw_circle(
@@ -88,7 +88,7 @@ impl frogquad::App for LetterboxApp {
             virtual_mouse_pos.x,
             virtual_mouse_pos.y,
             15.0,
-            color::BLACK,
+            Color::BLACK,
         );
 
         // ------------------------------------------------------------------------
@@ -96,7 +96,7 @@ impl frogquad::App for LetterboxApp {
         // ------------------------------------------------------------------------
         set_default_camera(fc);
 
-        clear_background(fc, color::BLACK); // Will be the letterbox color
+        clear_background(fc, Color::BLACK); // Will be the letterbox color
 
         // Draw 'render_target' to window screen, porperly scaled and letterboxed
         draw_texture_ex(
@@ -104,7 +104,7 @@ impl frogquad::App for LetterboxApp {
             &self.render_target.texture,
             (screen_width(fc) - (VIRTUAL_WIDTH * scale)) * 0.5,
             (screen_height(fc) - (VIRTUAL_HEIGHT * scale)) * 0.5,
-            color::WHITE,
+            Color::WHITE,
             DrawTextureParams {
                 dest_size: Some(vec2(VIRTUAL_WIDTH * scale, VIRTUAL_HEIGHT * scale)),
                 flip_y: true, // Must flip y otherwise 'render_target' will be upside down

@@ -20,18 +20,18 @@
 //! # Example
 //! ```no_run
 //!
-//! use frogquad::color;
+//! use frogquad::Color;
 //!
 //! struct ExampleApp;
 //!
 //! impl frogquad::App for ExampleApp {
 //!     fn update(&mut self, fc: &mut frogquad::FrogCx) {
-//!         frogquad::window::clear_background(fc, color::RED);
+//!         frogquad::window::clear_background(fc, Color::RED);
 //!
-//!         frogquad::shapes::draw_line(fc, 40.0, 40.0, 100.0, 200.0, 15.0, color::BLUE);
-//!         frogquad::shapes::draw_rectangle(fc, frogquad::window::screen_width(fc) / 2.0 - 60.0, 100.0, 120.0, 60.0, color::GREEN);
-//!         frogquad::shapes::draw_circle(fc, frogquad::window::screen_width(fc) - 30.0, frogquad::window::screen_height(fc) - 30.0, 15.0, color::YELLOW);
-//!         frogquad::text::draw_text(fc, "HELLO", 20.0, 20.0, 20.0, color::DARKGRAY);
+//!         frogquad::shapes::draw_line(fc, 40.0, 40.0, 100.0, 200.0, 15.0, Color::BLUE);
+//!         frogquad::shapes::draw_rectangle(fc, frogquad::window::screen_width(fc) / 2.0 - 60.0, 100.0, 120.0, 60.0, Color::GREEN);
+//!         frogquad::shapes::draw_circle(fc, frogquad::window::screen_width(fc) - 30.0, frogquad::window::screen_height(fc) - 30.0, 15.0, Color::YELLOW);
+//!         frogquad::text::draw_text(fc, "HELLO", 20.0, 20.0, 20.0, Color::DARKGRAY);
 //!     }
 //! }
 //!
@@ -49,7 +49,7 @@ mod quad_gl;
 mod tobytes;
 
 pub mod camera;
-pub mod color;
+mod color;
 pub mod file;
 pub mod input;
 pub mod material;
@@ -63,6 +63,7 @@ pub mod window;
 
 mod error;
 
+pub use color::Color;
 pub use error::Error;
 pub use quad_gl::QuadGl;
 // Re-export glam library
@@ -87,11 +88,8 @@ use miniquad::{EventHandler, KeyCode, KeyMods, MouseButton, TouchPhase, date};
 use crate::input::mouse_position_local;
 use crate::quad_gl::MagicSnapshotter;
 use crate::text::Font;
+use crate::texture::TextureHandle;
 use crate::texture::{Texture2D, TexturesContext};
-use crate::{
-    color::{Color, colors::*},
-    texture::TextureHandle,
-};
 
 use glam::{Mat4, Vec2, vec2};
 
@@ -217,7 +215,7 @@ impl MiniquadInputEvent {
 }
 
 impl FrogCx {
-    const DEFAULT_BG_COLOR: Color = BLACK;
+    const DEFAULT_BG_COLOR: Color = Color::BLACK;
 
     pub fn new(
         update_on: conf::UpdateTrigger,

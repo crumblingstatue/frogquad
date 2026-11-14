@@ -1,4 +1,4 @@
-use frogquad::color::{self, Color};
+use frogquad::Color;
 use frogquad::math::{Vec2, Vec4, vec2, vec3, vec4};
 use frogquad::texture::Texture2D;
 use frogquad::time::get_frame_time;
@@ -151,9 +151,9 @@ pub struct ColorCurve {
 impl Default for ColorCurve {
     fn default() -> ColorCurve {
         ColorCurve {
-            start: color::WHITE,
-            mid: color::WHITE,
-            end: color::WHITE,
+            start: Color::WHITE,
+            mid: Color::WHITE,
+            end: Color::WHITE,
         }
     }
 }

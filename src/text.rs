@@ -9,7 +9,6 @@ use crate::{
     texture::{Image, TextureHandle, TexturesContext},
 };
 
-use crate::color::WHITE;
 use glam::vec2;
 use miniquad::RenderingBackend;
 
@@ -226,7 +225,7 @@ impl<'a> Default for TextParams<'a> {
             font_size: 20,
             font_scale: 1.0,
             font_scale_aspect: 1.0,
-            color: WHITE,
+            color: Color::WHITE,
             rotation: 0.0,
         }
     }

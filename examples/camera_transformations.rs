@@ -1,8 +1,7 @@
 use {
     frogquad::{
-        FrogCx,
+        Color, FrogCx,
         camera::{Camera2D, set_camera, set_default_camera},
-        color::{self, Color},
         conf::Conf,
         input::{is_key_down, mouse_wheel},
         shapes::{draw_circle, draw_line, draw_rectangle},
@@ -108,7 +107,7 @@ impl frogquad::App for CamTfApp {
 
         self.smooth_rotation = angle_lerp(self.smooth_rotation, self.rotation, 0.1);
 
-        clear_background(fc, color::LIGHTGRAY);
+        clear_background(fc, Color::LIGHTGRAY);
 
         set_camera(
             fc,
@@ -117,7 +116,7 @@ impl frogquad::App for CamTfApp {
                 ..Default::default()
             },
         );
-        draw_cross(fc, 0., 0., color::RED);
+        draw_cross(fc, 0., 0., Color::RED);
 
         set_camera(
             fc,
@@ -127,7 +126,7 @@ impl frogquad::App for CamTfApp {
                 ..Default::default()
             },
         );
-        draw_cross(fc, 0., 0., color::GREEN);
+        draw_cross(fc, 0., 0., Color::GREEN);
 
         set_camera(
             fc,
@@ -138,7 +137,7 @@ impl frogquad::App for CamTfApp {
                 ..Default::default()
             },
         );
-        draw_cross(fc, 0., 0., color::BLUE);
+        draw_cross(fc, 0., 0., Color::BLUE);
 
         set_camera(
             fc,
@@ -152,9 +151,9 @@ impl frogquad::App for CamTfApp {
         );
 
         // Render some primitives in camera space
-        draw_line(fc, -0.4, 0.4, -0.8, 0.9, 0.05, color::BLUE);
-        draw_rectangle(fc, -0.3, 0.3, 0.2, 0.2, color::GREEN);
-        draw_circle(fc, 0., 0., 0.1, color::YELLOW);
+        draw_line(fc, -0.4, 0.4, -0.8, 0.9, 0.05, Color::BLUE);
+        draw_rectangle(fc, -0.3, 0.3, 0.2, 0.2, Color::GREEN);
+        draw_circle(fc, 0., 0., 0.1, Color::YELLOW);
 
         // Back to screen space, render some text
         set_default_camera(fc);
@@ -168,7 +167,7 @@ impl frogquad::App for CamTfApp {
             10.0,
             10.0,
             15.0,
-            color::BLACK,
+            Color::BLACK,
         );
         draw_text(
             fc,
@@ -176,7 +175,7 @@ impl frogquad::App for CamTfApp {
             10.0,
             25.0,
             15.0,
-            color::BLACK,
+            Color::BLACK,
         );
         draw_text(
             fc,
@@ -184,7 +183,7 @@ impl frogquad::App for CamTfApp {
             10.0,
             40.0,
             15.0,
-            color::BLACK,
+            Color::BLACK,
         );
         draw_text(
             fc,
@@ -196,9 +195,9 @@ impl frogquad::App for CamTfApp {
             10.0,
             55.0,
             15.0,
-            color::BLACK,
+            Color::BLACK,
         );
-        draw_text(fc, "HELLO", 30.0, 200.0, 30.0, color::BLACK);
+        draw_text(fc, "HELLO", 30.0, 200.0, 30.0, Color::BLACK);
     }
 }
 

@@ -2,13 +2,13 @@
 //! They will use browser console, android console or just stdout depending on the platform.
 //! Those macros are the recommended way to output debug traces and logs.
 
-use frogquad::{color, conf::Conf, window::clear_background};
+use frogquad::{Color, conf::Conf, window::clear_background};
 
 struct LogsApp {}
 
 impl frogquad::App for LogsApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
-        clear_background(fc, color::LIGHTGRAY);
+        clear_background(fc, Color::LIGHTGRAY);
 
         miniquad::debug!("Still alive!");
     }

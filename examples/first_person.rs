@@ -1,8 +1,7 @@
 use {
     frogquad::{
-        FrogCx,
+        Color, FrogCx,
         camera::{Camera3D, set_camera, set_default_camera},
-        color::{self, Color},
         input::{is_key_down, is_key_pressed, mouse_position, set_cursor_grab, show_mouse},
         models::{draw_cube_wires, draw_grid, draw_line_3d},
         text::draw_text,
@@ -139,7 +138,7 @@ impl frogquad::App for FirstPersonApp {
             }
         }
 
-        clear_background(fc, color::LIGHTGRAY);
+        clear_background(fc, Color::LIGHTGRAY);
 
         // Going 3d!
 
@@ -153,7 +152,7 @@ impl frogquad::App for FirstPersonApp {
             },
         );
 
-        draw_grid(fc, 20, 1., color::BLACK, color::GRAY);
+        draw_grid(fc, 20, 1., Color::BLACK, Color::GRAY);
 
         draw_line_3d(
             fc,
@@ -162,14 +161,14 @@ impl frogquad::App for FirstPersonApp {
             Color::new(1.0, 1.0, 0.0, 1.0),
         );
 
-        draw_cube_wires(fc, vec3(0., 1., -6.), vec3(2., 2., 2.), color::GREEN);
-        draw_cube_wires(fc, vec3(0., 1., 6.), vec3(2., 2., 2.), color::BLUE);
-        draw_cube_wires(fc, vec3(2., 1., 2.), vec3(2., 2., 2.), color::RED);
+        draw_cube_wires(fc, vec3(0., 1., -6.), vec3(2., 2., 2.), Color::GREEN);
+        draw_cube_wires(fc, vec3(0., 1., 6.), vec3(2., 2., 2.), Color::BLUE);
+        draw_cube_wires(fc, vec3(2., 1., 2.), vec3(2., 2., 2.), Color::RED);
 
         // Back to screen space, render some text
 
         set_default_camera(fc);
-        draw_text(fc, "First Person Camera", 10.0, 20.0, 30.0, color::BLACK);
+        draw_text(fc, "First Person Camera", 10.0, 20.0, 30.0, Color::BLACK);
 
         draw_text(
             fc,
@@ -177,7 +176,7 @@ impl frogquad::App for FirstPersonApp {
             10.0,
             48.0 + 18.0,
             30.0,
-            color::BLACK,
+            Color::BLACK,
         );
         draw_text(
             fc,
@@ -185,7 +184,7 @@ impl frogquad::App for FirstPersonApp {
             10.0,
             48.0 + 42.0,
             30.0,
-            color::BLACK,
+            Color::BLACK,
         );
     }
 }

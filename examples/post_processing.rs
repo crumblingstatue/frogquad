@@ -1,8 +1,7 @@
 use {
     frogquad::{
-        FrogCx,
+        Color, FrogCx,
         camera::{Camera2D, set_camera, set_default_camera},
-        color,
         conf::Conf,
         material::{Material, gl_use_default_material, gl_use_material, load_material},
         shapes::{draw_circle, draw_line},
@@ -54,23 +53,23 @@ impl frogquad::App for PostProcessExample {
             },
         );
 
-        clear_background(fc, color::LIGHTGRAY);
-        draw_line(fc, -30.0, 45.0, 30.0, 45.0, 3.0, color::BLUE);
-        draw_circle(fc, -45.0, -35.0, 20.0, color::YELLOW);
-        draw_circle(fc, 45.0, -35.0, 20.0, color::GREEN);
+        clear_background(fc, Color::LIGHTGRAY);
+        draw_line(fc, -30.0, 45.0, 30.0, 45.0, 3.0, Color::BLUE);
+        draw_circle(fc, -45.0, -35.0, 20.0, Color::YELLOW);
+        draw_circle(fc, 45.0, -35.0, 20.0, Color::GREEN);
 
         // drawing to the screen
 
         set_default_camera(fc);
 
-        clear_background(fc, color::WHITE);
+        clear_background(fc, Color::WHITE);
         gl_use_material(&mut fc.gl, &self.material);
         draw_texture_ex(
             fc,
             &self.render_target.texture,
             0.,
             0.,
-            color::WHITE,
+            Color::WHITE,
             DrawTextureParams {
                 dest_size: Some(vec2(screen_width(fc), screen_height(fc))),
                 ..Default::default()

@@ -1,6 +1,6 @@
 use {
     frogquad::{
-        FrogCx, color,
+        Color, FrogCx,
         conf::Conf,
         input::is_key_down,
         rand,
@@ -89,7 +89,7 @@ impl AsteroidsApp {
 impl frogquad::App for AsteroidsApp {
     fn update(&mut self, fc: &mut FrogCx) {
         if self.gameover {
-            clear_background(fc, color::LIGHTGRAY);
+            clear_background(fc, Color::LIGHTGRAY);
             let mut text = "You Win!. Press [enter] to play again.";
             let font_size = 30.;
 
@@ -103,7 +103,7 @@ impl frogquad::App for AsteroidsApp {
                 screen_width(fc) / 2. - text_size.width / 2.,
                 screen_height(fc) / 2. - text_size.height / 2.,
                 font_size,
-                color::DARKGRAY,
+                Color::DARKGRAY,
             );
             if is_key_down(fc, KeyCode::Enter) {
                 self.ship = Ship {
@@ -242,10 +242,10 @@ impl frogquad::App for AsteroidsApp {
             return;
         }
 
-        clear_background(fc, color::LIGHTGRAY);
+        clear_background(fc, Color::LIGHTGRAY);
 
         for bullet in self.bullets.iter() {
-            draw_circle(fc, bullet.pos.x, bullet.pos.y, 2., color::BLACK);
+            draw_circle(fc, bullet.pos.x, bullet.pos.y, 2., Color::BLACK);
         }
 
         for asteroid in self.asteroids.iter() {
@@ -257,7 +257,7 @@ impl frogquad::App for AsteroidsApp {
                 asteroid.size,
                 asteroid.rot,
                 2.,
-                color::BLACK,
+                Color::BLACK,
             )
         }
 
@@ -273,7 +273,7 @@ impl frogquad::App for AsteroidsApp {
             self.ship.pos.x + rotation.cos() * SHIP_BASE / 2. - rotation.sin() * SHIP_HEIGHT / 2.,
             self.ship.pos.y + rotation.sin() * SHIP_BASE / 2. + rotation.cos() * SHIP_HEIGHT / 2.,
         );
-        draw_triangle_lines(fc, v1, v2, v3, 2., color::BLACK);
+        draw_triangle_lines(fc, v1, v2, v3, 2., Color::BLACK);
     }
 }
 

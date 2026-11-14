@@ -1,6 +1,6 @@
 use {
     frogquad::{
-        FrogCx, color,
+        Color, FrogCx,
         conf::Conf,
         texture::{Texture2D, draw_texture, load_texture},
         window::clear_background,
@@ -22,8 +22,8 @@ impl TextureApp {
 
 impl frogquad::App for TextureApp {
     fn update(&mut self, fc: &mut FrogCx) {
-        clear_background(fc, color::LIGHTGRAY);
-        draw_texture(fc, &self.texture, 0., 0., color::WHITE);
+        clear_background(fc, Color::LIGHTGRAY);
+        draw_texture(fc, &self.texture, 0., 0., Color::WHITE);
     }
 }
 

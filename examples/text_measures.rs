@@ -1,6 +1,6 @@
 use {
     frogquad::{
-        color,
+        Color,
         conf::Conf,
         shapes::draw_rectangle,
         text::{Font, TextParams, draw_text, draw_text_ex, load_ttf_font, measure_text},
@@ -25,21 +25,21 @@ fn draw_text_annotated(
         baseline - size.offset_y,
         size.width,
         size.height,
-        color::BLUE,
+        Color::BLUE,
     );
 
     // Base line
-    draw_rectangle(fc, x, baseline - 2.0, size.width, 4.0, color::RED);
+    draw_rectangle(fc, x, baseline - 2.0, size.width, 4.0, Color::RED);
 
     // Base line annotation
-    draw_rectangle(fc, x + size.width, baseline - 1.0, 120.0, 1.0, color::GRAY);
+    draw_rectangle(fc, x + size.width, baseline - 1.0, 120.0, 1.0, Color::GRAY);
     draw_text(
         fc,
         "baseline",
         x + size.width + 10.0,
         baseline - 5.0,
         30.0,
-        color::WHITE,
+        Color::WHITE,
     );
 
     // Top line
@@ -49,7 +49,7 @@ fn draw_text_annotated(
         baseline - 2.0 - size.offset_y,
         size.width,
         4.0,
-        color::RED,
+        Color::RED,
     );
 
     // Top line annotation
@@ -59,7 +59,7 @@ fn draw_text_annotated(
         baseline - size.offset_y - 1.0,
         120.0,
         1.0,
-        color::GRAY,
+        Color::GRAY,
     );
     draw_text(
         fc,
@@ -67,7 +67,7 @@ fn draw_text_annotated(
         x + size.width + 10.0,
         baseline - size.offset_y - 5.0,
         30.0,
-        color::WHITE,
+        Color::WHITE,
     );
 
     // Bottom line
@@ -77,7 +77,7 @@ fn draw_text_annotated(
         baseline - 2.0 - size.offset_y + size.height,
         size.width,
         4.0,
-        color::RED,
+        Color::RED,
     );
 
     // Bottom line annotation
@@ -87,7 +87,7 @@ fn draw_text_annotated(
         baseline - size.offset_y + size.height - 1.0,
         120.0,
         1.0,
-        color::GRAY,
+        Color::GRAY,
     );
     draw_text(
         fc,
@@ -95,7 +95,7 @@ fn draw_text_annotated(
         x + size.width + 10.0,
         baseline - size.offset_y + size.height - 5.0,
         30.0,
-        color::WHITE,
+        Color::WHITE,
     );
 
     draw_text_ex(
@@ -125,7 +125,7 @@ impl TextMeasApp {
 
 impl frogquad::App for TextMeasApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
-        clear_background(fc, color::BLACK);
+        clear_background(fc, Color::BLACK);
 
         let text = "abcdIj";
 

@@ -1,7 +1,5 @@
 //! Color types and helpers.
 
-pub use colors::*;
-
 /// A color represented by 4 floats: red, green, blue and alpha.
 #[repr(C)]
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
@@ -16,33 +14,19 @@ pub struct Color {
     pub a: f32,
 }
 
-/// Build a color from 4 components of 0..255 values.
-/// This was a temporary solution because [Color::from_rgba] was not a const fn due to
-/// [this issue](https://github.com/rust-lang/rust/issues/57241) waiting to be resolved.
-/// It is not needed anymore.
-#[doc(hidden)]
-#[macro_export]
-macro_rules! color_u8 {
-    ($r:expr, $g:expr, $b:expr, $a:expr) => {
-        Color::new(
-            $r as f32 / 255.,
-            $g as f32 / 255.,
-            $b as f32 / 255.,
-            $a as f32 / 255.,
-        )
-    };
-}
-
 #[test]
 fn color_from_bytes() {
-    assert_eq!(Color::new(1.0, 0.0, 0.0, 1.0), color_u8!(255, 0, 0, 255));
     assert_eq!(
-        Color::new(1.0, 0.5, 0.0, 1.0),
-        color_u8!(255, 127.5, 0, 255)
+        Color::new(1.0, 0.0, 0.0, 1.0),
+        Color::from_rgba(255, 0, 0, 255)
     );
     assert_eq!(
-        Color::new(0.0, 1.0, 0.5, 1.0),
-        color_u8!(0, 255, 127.5, 255)
+        Color::new(1.0, 0.5019608, 0.0, 1.0),
+        Color::from_rgba(255, 128, 0, 255)
+    );
+    assert_eq!(
+        Color::new(0.0, 1.0, 0.5019608, 1.0),
+        Color::from_rgba(0, 255, 128, 255)
     );
 }
 
@@ -87,7 +71,7 @@ impl Color {
     /// # Example
     ///
     /// ```
-    /// let pink = frogquad::color::Color::new(1.00, 0.43, 0.76, 1.00);
+    /// let pink = frogquad::Color::new(1.00, 0.43, 0.76, 1.00);
     /// assert_eq!(pink.r, 1.00);
     /// assert_eq!(pink.g, 0.43);
     /// assert_eq!(pink.b, 0.76);
@@ -115,7 +99,7 @@ impl Color {
     /// # Example
     ///
     /// ```
-    /// let light_blue = frogquad::color::Color::from_hex(0x3CA7D5);
+    /// let light_blue = frogquad::Color::from_hex(0x3CA7D5);
     /// assert_eq!(light_blue.r, 0.23529412);
     /// assert_eq!(light_blue.g, 0.654902);
     /// assert_eq!(light_blue.b, 0.8352941);
@@ -141,13 +125,100 @@ impl Color {
     pub const fn with_alpha(&self, alpha: f32) -> Color {
         Color::new(self.r, self.g, self.b, alpha)
     }
+
+    pub fn from_hsl(h: f32, s: f32, l: f32) -> Self {
+        let (r, g, b) = if s == 0.0 {
+            (l, l, l)
+        } else {
+            fn hue_to_rgb(p: f32, q: f32, mut t: f32) -> f32 {
+                if t < 0.0 {
+                    t += 1.0
+                }
+                if t > 1.0 {
+                    t -= 1.0
+                }
+                if t < 1.0 / 6.0 {
+                    return p + (q - p) * 6.0 * t;
+                }
+                if t < 1.0 / 2.0 {
+                    return q;
+                }
+                if t < 2.0 / 3.0 {
+                    return p + (q - p) * (2.0 / 3.0 - t) * 6.0;
+                }
+                p
+            }
+
+            let q = if l < 0.5 {
+                l * (1.0 + s)
+            } else {
+                l + s - l * s
+            };
+            let p = 2.0 * l - q;
+            (
+                hue_to_rgb(p, q, h + 1.0 / 3.0),
+                hue_to_rgb(p, q, h),
+                hue_to_rgb(p, q, h - 1.0 / 3.0),
+            )
+        };
+
+        Color::new(r, g, b, 1.0)
+    }
+
+    pub fn to_hsl(self) -> (f32, f32, f32) {
+        fn max(a: f32, b: f32) -> f32 {
+            if a > b { a } else { b }
+        }
+        fn min(a: f32, b: f32) -> f32 {
+            if a < b { a } else { b }
+        }
+
+        let Color { r, g, b, .. } = self;
+
+        let max = max(max(r, g), b);
+        let min = min(min(r, g), b);
+
+        // Luminosity is the average of the max and min rgb color intensities.
+        let l = (max + min) / 2.0;
+
+        // Saturation
+        let delta: f32 = max - min;
+        if delta == 0.0 {
+            // it's gray
+            return (0.0, 0.0, l);
+        }
+
+        // it's not gray
+        let s = if l < 0.5 {
+            delta / (max + min)
+        } else {
+            delta / (2.0 - max - min)
+        };
+
+        // Hue
+        let r2 = (((max - r) / 6.0) + (delta / 2.0)) / delta;
+        let g2 = (((max - g) / 6.0) + (delta / 2.0)) / delta;
+        let b2 = (((max - b) / 6.0) + (delta / 2.0)) / delta;
+
+        let mut h = match max {
+            x if x == r => b2 - g2,
+            x if x == g => (1.0 / 3.0) + r2 - b2,
+            _ => (2.0 / 3.0) + g2 - r2,
+        };
+
+        // Fix wraparounds
+        if h < 0 as f32 {
+            h += 1.0;
+        } else if h > 1_f32 {
+            h -= 1.0;
+        }
+
+        (h, s, l)
+    }
 }
 
-pub mod colors {
-    //! Constants for some common colors.
-
-    use super::Color;
-
+/// Color constants
+impl Color {
     pub const LIGHTGRAY: Color = Color::new(0.78, 0.78, 0.78, 1.00);
     pub const GRAY: Color = Color::new(0.51, 0.51, 0.51, 1.00);
     pub const DARKGRAY: Color = Color::new(0.31, 0.31, 0.31, 1.00);
@@ -173,94 +244,4 @@ pub mod colors {
     pub const BLACK: Color = Color::new(0.00, 0.00, 0.00, 1.00);
     pub const BLANK: Color = Color::new(0.00, 0.00, 0.00, 0.00);
     pub const MAGENTA: Color = Color::new(1.00, 0.00, 1.00, 1.00);
-}
-
-pub fn hsl_to_rgb(h: f32, s: f32, l: f32) -> Color {
-    let (r, g, b) = if s == 0.0 {
-        (l, l, l)
-    } else {
-        fn hue_to_rgb(p: f32, q: f32, mut t: f32) -> f32 {
-            if t < 0.0 {
-                t += 1.0
-            }
-            if t > 1.0 {
-                t -= 1.0
-            }
-            if t < 1.0 / 6.0 {
-                return p + (q - p) * 6.0 * t;
-            }
-            if t < 1.0 / 2.0 {
-                return q;
-            }
-            if t < 2.0 / 3.0 {
-                return p + (q - p) * (2.0 / 3.0 - t) * 6.0;
-            }
-            p
-        }
-
-        let q = if l < 0.5 {
-            l * (1.0 + s)
-        } else {
-            l + s - l * s
-        };
-        let p = 2.0 * l - q;
-        (
-            hue_to_rgb(p, q, h + 1.0 / 3.0),
-            hue_to_rgb(p, q, h),
-            hue_to_rgb(p, q, h - 1.0 / 3.0),
-        )
-    };
-
-    Color::new(r, g, b, 1.0)
-}
-
-pub fn rgb_to_hsl(color: Color) -> (f32, f32, f32) {
-    fn max(a: f32, b: f32) -> f32 {
-        if a > b { a } else { b }
-    }
-    fn min(a: f32, b: f32) -> f32 {
-        if a < b { a } else { b }
-    }
-
-    let Color { r, g, b, .. } = color;
-
-    let max = max(max(r, g), b);
-    let min = min(min(r, g), b);
-
-    // Luminosity is the average of the max and min rgb color intensities.
-    let l = (max + min) / 2.0;
-
-    // Saturation
-    let delta: f32 = max - min;
-    if delta == 0.0 {
-        // it's gray
-        return (0.0, 0.0, l);
-    }
-
-    // it's not gray
-    let s = if l < 0.5 {
-        delta / (max + min)
-    } else {
-        delta / (2.0 - max - min)
-    };
-
-    // Hue
-    let r2 = (((max - r) / 6.0) + (delta / 2.0)) / delta;
-    let g2 = (((max - g) / 6.0) + (delta / 2.0)) / delta;
-    let b2 = (((max - b) / 6.0) + (delta / 2.0)) / delta;
-
-    let mut h = match max {
-        x if x == r => b2 - g2,
-        x if x == g => (1.0 / 3.0) + r2 - b2,
-        _ => (2.0 / 3.0) + g2 - r2,
-    };
-
-    // Fix wraparounds
-    if h < 0 as f32 {
-        h += 1.0;
-    } else if h > 1_f32 {
-        h -= 1.0;
-    }
-
-    (h, s, l)
 }

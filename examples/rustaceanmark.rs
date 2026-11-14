@@ -1,8 +1,7 @@
 use pollster::FutureExt;
 use {
     frogquad::{
-        FrogCx,
-        color::{self, Color},
+        Color, FrogCx,
         conf::Conf,
         rand,
         text::draw_text,
@@ -91,7 +90,7 @@ impl frogquad::App for RustaceanMarkApp {
             0.,
             32.,
             32.,
-            color::WHITE,
+            Color::WHITE,
         );
     }
 }

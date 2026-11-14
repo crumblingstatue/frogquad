@@ -1,6 +1,6 @@
 use {
     frogquad::{
-        FrogCx, color,
+        Color, FrogCx,
         conf::Conf,
         input::is_key_down,
         rand,
@@ -106,7 +106,7 @@ impl frogquad::App for SnakeApp {
             }
         }
         if !self.game_over {
-            clear_background(fc, color::LIGHTGRAY);
+            clear_background(fc, Color::LIGHTGRAY);
 
             let game_size = screen_width(fc).min(screen_height(fc));
             let offset_x = (screen_width(fc) - game_size) / 2. + 10.;
@@ -119,7 +119,7 @@ impl frogquad::App for SnakeApp {
                 offset_y,
                 game_size - 20.,
                 game_size - 20.,
-                color::WHITE,
+                Color::WHITE,
             );
 
             for i in 1..SQUARES {
@@ -130,7 +130,7 @@ impl frogquad::App for SnakeApp {
                     screen_width(fc) - offset_x,
                     offset_y + sq_size * i as f32,
                     2.,
-                    color::LIGHTGRAY,
+                    Color::LIGHTGRAY,
                 );
             }
 
@@ -142,7 +142,7 @@ impl frogquad::App for SnakeApp {
                     offset_x + sq_size * i as f32,
                     screen_height(fc) - offset_y,
                     2.,
-                    color::LIGHTGRAY,
+                    Color::LIGHTGRAY,
                 );
             }
 
@@ -152,7 +152,7 @@ impl frogquad::App for SnakeApp {
                 offset_y + self.snake.head.1 as f32 * sq_size,
                 sq_size,
                 sq_size,
-                color::DARKGREEN,
+                Color::DARKGREEN,
             );
 
             for (x, y) in &self.snake.body {
@@ -162,7 +162,7 @@ impl frogquad::App for SnakeApp {
                     offset_y + *y as f32 * sq_size,
                     sq_size,
                     sq_size,
-                    color::LIME,
+                    Color::LIME,
                 );
             }
 
@@ -172,7 +172,7 @@ impl frogquad::App for SnakeApp {
                 offset_y + self.fruit.1 as f32 * sq_size,
                 sq_size,
                 sq_size,
-                color::GOLD,
+                Color::GOLD,
             );
 
             draw_text(
@@ -181,10 +181,10 @@ impl frogquad::App for SnakeApp {
                 10.,
                 20.,
                 20.,
-                color::DARKGRAY,
+                Color::DARKGRAY,
             );
         } else {
-            clear_background(fc, color::WHITE);
+            clear_background(fc, Color::WHITE);
             let text = "Game Over. Press [enter] to play again.";
             let font_size = 30.;
             let text_size = measure_text(text, fc.default_font(), font_size as _, 1.0);
@@ -195,7 +195,7 @@ impl frogquad::App for SnakeApp {
                 screen_width(fc) / 2. - text_size.width / 2.,
                 screen_height(fc) / 2. + text_size.height / 2.,
                 font_size,
-                color::DARKGRAY,
+                Color::DARKGRAY,
             );
 
             if is_key_down(fc, KeyCode::Enter) {

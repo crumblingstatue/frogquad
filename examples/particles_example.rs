@@ -1,5 +1,5 @@
 use frogquad::{
-    FrogCx, color,
+    Color, FrogCx,
     conf::Conf,
     input::is_key_pressed,
     shapes::draw_circle,
@@ -101,11 +101,11 @@ impl ParticlesApp {
 
 impl frogquad::App for ParticlesApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
-        clear_background(fc, color::BLACK);
+        clear_background(fc, Color::BLACK);
 
-        draw_text(fc, "Local coord emitter", 20.0, 30.0, 30.0, color::RED);
+        draw_text(fc, "Local coord emitter", 20.0, 30.0, 30.0, Color::RED);
 
-        draw_text(fc, "World coord emitter", 20.0, 60.0, 30.0, color::GREEN);
+        draw_text(fc, "World coord emitter", 20.0, 60.0, 30.0, Color::GREEN);
 
         draw_text(
             fc,
@@ -113,10 +113,10 @@ impl frogquad::App for ParticlesApp {
             20.0,
             90.0,
             30.0,
-            color::YELLOW,
+            Color::YELLOW,
         );
         self.one_shot_emitter.draw(fc, vec2(650.0, 82.0));
-        draw_circle(fc, 650.0, 82.0, 15.0, color::YELLOW);
+        draw_circle(fc, 650.0, 82.0, 15.0, Color::YELLOW);
 
         if is_key_pressed(fc, KeyCode::Space) {
             self.one_shot_emitter.config.emitting = true;
@@ -132,7 +132,7 @@ impl frogquad::App for ParticlesApp {
             local_emitter_pos.x,
             local_emitter_pos.y,
             15.0,
-            color::RED,
+            Color::RED,
         );
 
         let world_emitter_pos = vec2(
@@ -148,7 +148,7 @@ impl frogquad::App for ParticlesApp {
             world_emitter_pos.x,
             world_emitter_pos.y,
             15.0,
-            color::GREEN,
+            Color::GREEN,
         );
     }
 }

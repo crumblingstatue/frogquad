@@ -1,6 +1,6 @@
 use {
     frogquad::{
-        FrogCx, color,
+        Color, FrogCx,
         conf::Conf,
         input::mouse_position,
         material::{
@@ -45,13 +45,13 @@ impl ScreenTexExample {
 
 impl frogquad::App for ScreenTexExample {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
-        clear_background(fc, color::WHITE);
+        clear_background(fc, Color::WHITE);
         draw_texture_ex(
             fc,
             &self.texture,
             0.0,
             0.0,
-            color::WHITE,
+            Color::WHITE,
             DrawTextureParams {
                 dest_size: Some(vec2(screen_width(fc), screen_height(fc))),
                 ..Default::default()
@@ -64,7 +64,7 @@ impl frogquad::App for ScreenTexExample {
             .set_uniform(&mut fc.gl, "Center", lens_center);
 
         gl_use_material(&mut fc.gl, &self.lens_material);
-        draw_circle(fc, lens_center.0, lens_center.1, 250.0, color::RED);
+        draw_circle(fc, lens_center.0, lens_center.1, 250.0, Color::RED);
         gl_use_default_material(&mut fc.gl);
     }
 }

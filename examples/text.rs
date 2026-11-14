@@ -1,6 +1,6 @@
 use {
     frogquad::{
-        FrogCx, color,
+        Color, FrogCx,
         conf::Conf,
         text::{Font, TextParams, draw_text_ex, get_text_center, load_ttf_font},
         time::get_time,
@@ -26,7 +26,7 @@ impl TextApp {
 
 impl frogquad::App for TextApp {
     fn update(&mut self, fc: &mut FrogCx) {
-        clear_background(fc, color::BLACK);
+        clear_background(fc, Color::BLACK);
 
         draw_text_ex(fc, "Custom font size:", 20.0, 20.0, TextParams::default());
         let mut y = 20.0;

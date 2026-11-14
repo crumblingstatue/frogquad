@@ -160,7 +160,7 @@ pub fn draw_plane(
 ///
 /// # let fc: &mut frogquad::FrogCx = unimplemented!();
 /// use glam::Vec3;
-/// frogquad::models::draw_affine_parallelogram(fc, Vec3::ZERO, 3. * Vec3::X, 5. * Vec3::Z, None, frogquad::color::RED);
+/// frogquad::models::draw_affine_parallelogram(fc, Vec3::ZERO, 3. * Vec3::X, 5. * Vec3::Z, None, frogquad::Color::RED);
 /// ```
 pub fn draw_affine_parallelogram(
     fc: &mut FrogCx,
@@ -207,7 +207,7 @@ pub fn draw_affine_parallelogram(
 ///
 /// # let fc: &mut frogquad::FrogCx = unimplemented!();
 /// use glam::Vec3;
-/// frogquad::models::draw_affine_parallelepiped(fc, Vec3::ZERO, 3. * Vec3::X, 2. * Vec3::Y, 5. * Vec3::Z, None, frogquad::color::RED);
+/// frogquad::models::draw_affine_parallelepiped(fc, Vec3::ZERO, 3. * Vec3::X, 2. * Vec3::Y, 5. * Vec3::Z, None, frogquad::Color::RED);
 /// ```
 pub fn draw_affine_parallelepiped(
     fc: &mut FrogCx,

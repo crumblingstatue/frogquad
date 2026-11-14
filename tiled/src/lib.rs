@@ -1,5 +1,5 @@
 use frogquad::{
-    color::{self, Color},
+    Color,
     math::{Rect, vec2},
     texture::{DrawTextureParams, Texture2D, draw_texture_ex},
 };
@@ -141,7 +141,7 @@ impl Map {
             &tileset.texture,
             dest.x,
             dest.y,
-            color::WHITE,
+            Color::WHITE,
             DrawTextureParams {
                 dest_size: Some(vec2(dest.w, dest.h)),
                 source: Some(Rect::new(
@@ -166,7 +166,7 @@ impl Map {
             &tileset.texture,
             dest.x,
             dest.y,
-            color::WHITE,
+            Color::WHITE,
             DrawTextureParams {
                 dest_size: Some(vec2(dest.w, dest.h)),
                 source: Some(source),

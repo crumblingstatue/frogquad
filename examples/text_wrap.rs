@@ -1,5 +1,5 @@
 use frogquad::{
-    color,
+    Color,
     conf::Conf,
     input::mouse_position,
     shapes::{draw_line, draw_rectangle_lines},
@@ -18,7 +18,7 @@ impl frogquad::App for TextWrapApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
         let font_size = 24;
 
-        clear_background(fc, color::BLACK);
+        clear_background(fc, Color::BLACK);
 
         let maximum_line_length = f32::max(20.0, mouse_position(fc).0 - 20.0);
         let text = wrap_text(
@@ -38,7 +38,7 @@ impl frogquad::App for TextWrapApp {
             20.0 + dimensions.offset_y,
             font_size as f32,
             Some(1.0),
-            color::WHITE,
+            Color::WHITE,
         );
         draw_rectangle_lines(
             fc,
@@ -47,7 +47,7 @@ impl frogquad::App for TextWrapApp {
             dimensions.width,
             dimensions.height,
             2.0,
-            color::BLUE,
+            Color::BLUE,
         );
         draw_line(
             fc,
@@ -56,7 +56,7 @@ impl frogquad::App for TextWrapApp {
             20.0 + maximum_line_length,
             screen_height(fc),
             1.0,
-            color::RED,
+            Color::RED,
         );
     }
 }

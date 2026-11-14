@@ -1,5 +1,5 @@
 use frogquad::{
-    color,
+    Color,
     conf::Conf,
     input::{TouchPhase, touches},
     shapes::draw_circle,
@@ -11,20 +11,20 @@ struct InputTouchApp {}
 
 impl frogquad::App for InputTouchApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
-        clear_background(fc, color::LIGHTGRAY);
+        clear_background(fc, Color::LIGHTGRAY);
 
         for touch in touches(fc) {
             let (fill_color, size) = match touch.phase {
-                TouchPhase::Started => (color::GREEN, 80.0),
-                TouchPhase::Stationary => (color::WHITE, 60.0),
-                TouchPhase::Moved => (color::YELLOW, 60.0),
-                TouchPhase::Ended => (color::BLUE, 80.0),
-                TouchPhase::Cancelled => (color::BLACK, 80.0),
+                TouchPhase::Started => (Color::GREEN, 80.0),
+                TouchPhase::Stationary => (Color::WHITE, 60.0),
+                TouchPhase::Moved => (Color::YELLOW, 60.0),
+                TouchPhase::Ended => (Color::BLUE, 80.0),
+                TouchPhase::Cancelled => (Color::BLACK, 80.0),
             };
             draw_circle(fc, touch.position.x, touch.position.y, size, fill_color);
         }
 
-        draw_text(fc, "touch the screen!", 20.0, 20.0, 20.0, color::DARKGRAY);
+        draw_text(fc, "touch the screen!", 20.0, 20.0, 20.0, Color::DARKGRAY);
     }
 }
 
