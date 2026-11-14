@@ -12,11 +12,16 @@ fn window_conf() -> miniquad::conf::Conf {
     }
 }
 
-fn main() {
-    frogquad::start(window_conf(), main_());
-}
-async fn main_() {
-    loop {
-        clear_background(fc, WHITE);
+struct WindowConfApp {}
+
+impl frogquad::App for WindowConfApp {
+    fn update(&mut self, fc: &mut frogquad::FrogCx) {
+        loop {
+            clear_background(fc, WHITE);
+        }
     }
+}
+
+fn main() {
+    frogquad::start(window_conf().into(), |_fc| Box::new(WindowConfApp {}));
 }
