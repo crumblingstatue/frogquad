@@ -1,4 +1,4 @@
-use frogquad::prelude::*;
+use {frogquad::prelude::*, pollster::FutureExt};
 
 fn draw_text_annotated(
     fc: &mut frogquad::FrogCx,
@@ -95,20 +95,31 @@ fn draw_text_annotated(
     );
 }
 
-fn main() {
-    frogquad::start(Conf::from_title("Text"), main_());
+struct TextMeasApp {
+    font: Font,
 }
-async fn main_() {
-    let font = load_ttf_font("./examples/DancingScriptRegular.ttf")
-        .await
-        .unwrap();
+impl TextMeasApp {
+    fn new(fc: &mut frogquad::FrogCx) -> Self {
+        let font = load_ttf_font(fc, "./examples/DancingScriptRegular.ttf")
+            .block_on()
+            .unwrap();
+        Self { font }
+    }
+}
 
-    loop {
+impl frogquad::App for TextMeasApp {
+    fn update(&mut self, fc: &mut frogquad::FrogCx) {
         clear_background(fc, BLACK);
 
         let text = "abcdIj";
 
         draw_text_annotated(fc, text, None, 40.0, 200.0);
-        draw_text_annotated(fc, text, Some(&font), 400.0, 400.0);
+        draw_text_annotated(fc, text, Some(&self.font), 400.0, 400.0);
     }
+}
+
+fn main() {
+    frogquad::start(Conf::from_title("Text"), |fc| {
+        Box::new(TextMeasApp::new(fc))
+    });
 }
