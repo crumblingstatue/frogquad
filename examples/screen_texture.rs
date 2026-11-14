@@ -1,29 +1,42 @@
-use frogquad::prelude::*;
+use {
+    frogquad::{FrogCx, prelude::*},
+    pollster::FutureExt,
+};
 
-fn main() {
-    frogquad::start(Conf::from_title("Texture"), main_());
+struct ScreenTexExample {
+    lens_material: Material,
+    texture: Texture2D,
 }
-async fn main_() {
-    let texture: Texture2D = load_texture(fc, "examples/chess.png").await.unwrap();
 
-    let lens_material = load_material(
-        fc,
-        ShaderSource::Glsl {
-            vertex: LENS_VERTEX_SHADER,
-            fragment: LENS_FRAGMENT_SHADER,
-        },
-        MaterialParams {
-            uniforms: vec![UniformDesc::new("Center", UniformType::Float2)],
-            ..Default::default()
-        },
-    )
-    .unwrap();
+impl ScreenTexExample {
+    fn new(fc: &mut FrogCx) -> Self {
+        let texture: Texture2D = load_texture(fc, "examples/chess.png").block_on().unwrap();
 
-    loop {
+        let lens_material = load_material(
+            fc,
+            ShaderSource::Glsl {
+                vertex: LENS_VERTEX_SHADER,
+                fragment: LENS_FRAGMENT_SHADER,
+            },
+            MaterialParams {
+                uniforms: vec![UniformDesc::new("Center", UniformType::Float2)],
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        Self {
+            texture,
+            lens_material,
+        }
+    }
+}
+
+impl frogquad::App for ScreenTexExample {
+    fn update(&mut self, fc: &mut frogquad::FrogCx) {
         clear_background(fc, WHITE);
         draw_texture_ex(
             fc,
-            &texture,
+            &self.texture,
             0.0,
             0.0,
             WHITE,
@@ -35,15 +48,22 @@ async fn main_() {
 
         let lens_center = mouse_position(fc);
 
-        lens_material.set_uniform(&mut fc.gl, "Center", lens_center);
+        self.lens_material
+            .set_uniform(&mut fc.gl, "Center", lens_center);
 
-        gl_use_material(&mut fc.gl, &lens_material);
+        gl_use_material(&mut fc.gl, &self.lens_material);
         draw_circle(fc, lens_center.0, lens_center.1, 250.0, RED);
         gl_use_default_material(&mut fc.gl);
     }
 }
 
-const LENS_FRAGMENT_SHADER: &'static str = r#"#version 100
+fn main() {
+    frogquad::start(Conf::from_title("Texture"), |fc| {
+        Box::new(ScreenTexExample::new(fc))
+    });
+}
+
+const LENS_FRAGMENT_SHADER: &str = r#"#version 100
 precision lowp float;
 
 varying vec2 uv;
@@ -60,7 +80,7 @@ void main() {
 }
 "#;
 
-const LENS_VERTEX_SHADER: &'static str = "#version 100
+const LENS_VERTEX_SHADER: &str = "#version 100
 attribute vec3 position;
 attribute vec2 texcoord;
 
