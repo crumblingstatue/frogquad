@@ -29,6 +29,7 @@ pub struct StaticTiledLayer {
     tag: u8,
 }
 
+#[derive(Default)]
 pub struct World {
     static_tiled_layers: Vec<StaticTiledLayer>,
     solids: Vec<(Solid, Collider)>,
@@ -67,14 +68,6 @@ pub struct Actor(usize);
 pub struct Solid(usize);
 
 impl World {
-    pub fn new() -> World {
-        World {
-            static_tiled_layers: vec![],
-            actors: vec![],
-            solids: vec![],
-        }
-    }
-
     pub fn add_static_tiled_layer(
         &mut self,
         static_colliders: Vec<Tile>,

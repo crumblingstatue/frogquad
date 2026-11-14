@@ -40,7 +40,7 @@ impl PlatformerApp {
             });
         }
 
-        let mut world = World::new();
+        let mut world = World::default();
         world.add_static_tiled_layer(static_colliders, 8., 8., 40, 1);
 
         let player = Player {
