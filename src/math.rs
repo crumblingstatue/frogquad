@@ -1,6 +1,4 @@
 //! Math types and helpers.
-//!
-//! Consists of re-exported `glam` types with some additions.
 
 mod circle;
 mod rect;
