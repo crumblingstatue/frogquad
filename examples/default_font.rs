@@ -1,5 +1,5 @@
 use {
-    frogquad::{Color, text::TextParams},
+    frogquad::{Color, TextParams},
     pollster::FutureExt,
 };
 

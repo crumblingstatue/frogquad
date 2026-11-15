@@ -56,7 +56,7 @@ pub mod material;
 pub mod math;
 pub mod models;
 pub mod shapes;
-pub mod text;
+mod text;
 pub mod texture;
 mod time;
 pub mod window;
@@ -67,6 +67,7 @@ pub use color::Color;
 pub use conf::{Config, UpdateTrigger};
 pub use error::Error;
 pub use quad_gl::QuadGl;
+pub use text::{Font, TextParams};
 // Re-export glam library
 pub use glam;
 
@@ -87,7 +88,6 @@ pub use miniquad;
 use miniquad::{EventHandler, KeyCode, KeyMods, MouseButton, TouchPhase, date};
 
 use crate::quad_gl::MagicSnapshotter;
-use crate::text::Font;
 use crate::texture::TextureHandle;
 use crate::texture::{Texture2D, TexturesContext};
 

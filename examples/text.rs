@@ -1,8 +1,5 @@
 use {
-    frogquad::{
-        Color, FrogCx,
-        text::{Font, TextParams},
-    },
+    frogquad::{Color, Font, FrogCx, TextParams},
     pollster::FutureExt,
 };
 
