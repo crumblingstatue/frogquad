@@ -1,11 +1,9 @@
-//! 2D and 3D camera.
-
 use crate::{
     FrogCx,
     math::Rect,
     texture::{RenderPass, RenderTarget},
 };
-use glam::{Mat4, Vec2, Vec3, vec2, vec3};
+use glam::{Mat4, Vec2, vec2, vec3};
 
 pub trait Camera {
     fn matrix(&self, fc: &mut FrogCx) -> Mat4;
@@ -175,106 +173,8 @@ impl Camera2D {
     }
 }
 
-#[derive(Debug, Clone, Copy)]
-pub enum Projection {
-    Perspective,
-    Orthographics,
-}
-
-#[derive(Debug)]
-pub struct Camera3D {
-    /// Camera position.
-    pub position: Vec3,
-    /// Camera target it looks-at.
-    pub target: Vec3,
-    /// Camera up vector (rotation over its axis).
-    pub up: Vec3,
-    /// Camera field-of-view aperture in Y (radians)
-    /// in perspective, used as near plane width in orthographic.
-    pub fovy: f32,
-    /// Screen aspect ratio.
-    ///
-    /// By default aspect is calculated with screen_width() / screen_height() on each frame.
-    pub aspect: Option<f32>,
-    /// Camera projection type, perspective or orthographics.
-    pub projection: Projection,
-
-    /// If "render_target" is set - camera will render to texture.
-    ///
-    /// Otherwise to the screen.
-    pub render_target: Option<RenderTarget>,
-
-    /// Part of the screen to render to.
-    ///
-    /// None means the whole screen.
-    ///
-    /// Viewport do not affect camera space, just the render position on the screen.
-    ///
-    /// Useful for things like splitscreen.
-    pub viewport: Option<(i32, i32, i32, i32)>,
-
-    /// Camera near plane
-    pub z_near: f32,
-    /// Camera far plane
-    pub z_far: f32,
-}
-
-impl Default for Camera3D {
-    fn default() -> Camera3D {
-        Camera3D {
-            position: vec3(0., -10., 0.),
-            target: vec3(0., 0., 0.),
-            aspect: None,
-            up: vec3(0., 0., 1.),
-            fovy: 45.0_f32.to_radians(),
-            projection: Projection::Perspective,
-            render_target: None,
-            viewport: None,
-            z_near: 0.01,
-            z_far: 10000.0,
-        }
-    }
-}
-
-impl Camera for Camera3D {
-    fn matrix(&self, fc: &mut FrogCx) -> Mat4 {
-        let (width, height) = if let Some(rt) = &self.render_target {
-            (rt.texture.width(fc), rt.texture.height(fc))
-        } else {
-            (fc.screen_width(), fc.screen_height())
-        };
-        let aspect = self.aspect.unwrap_or(width / height);
-
-        match self.projection {
-            Projection::Perspective => {
-                Mat4::perspective_rh_gl(self.fovy, aspect, self.z_near, self.z_far)
-                    * Mat4::look_at_rh(self.position, self.target, self.up)
-            }
-            Projection::Orthographics => {
-                let top = self.fovy / 2.0;
-                let right = top * aspect;
-
-                Mat4::orthographic_rh_gl(-right, right, -top, top, self.z_near, self.z_far)
-                    * Mat4::look_at_rh(self.position, self.target, self.up)
-            }
-        }
-    }
-
-    fn depth_enabled(&self) -> bool {
-        true
-    }
-
-    fn render_pass(&self) -> Option<RenderPass> {
-        self.render_target.as_ref().map(|rt| rt.render_pass.clone())
-    }
-
-    fn viewport(&self) -> Option<(i32, i32, i32, i32)> {
-        self.viewport
-    }
-}
-
 impl FrogCx {
-    /// Set active 2D or 3D camera.
+    /// Set active camera.
     pub fn set_camera(&mut self, camera: &dyn Camera) {
         // flush previous camera draw calls
         self.perform_render_passes();
@@ -287,7 +187,7 @@ impl FrogCx {
         self.camera_matrix = Some(camera.matrix(self));
     }
 
-    /// Reset default 2D camera mode.
+    /// Reset default camera mode.
     pub fn set_default_camera(&mut self) {
         // flush previous camera draw calls
         self.perform_render_passes();

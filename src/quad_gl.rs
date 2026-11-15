@@ -14,7 +14,7 @@ use crate::{
 
 use std::collections::BTreeMap;
 
-pub(crate) use crate::models::Vertex;
+pub(crate) use crate::vertex::Vertex;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum DrawMode {

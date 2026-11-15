@@ -54,16 +54,16 @@ pub mod file;
 pub mod input;
 pub mod material;
 pub mod math;
-pub mod models;
 pub mod shapes;
 mod text;
 pub mod texture;
 mod time;
+mod vertex;
 pub mod window;
 
 mod error;
 
-pub use camera::{Camera, Camera2D, Camera3D};
+pub use camera::{Camera, Camera2D};
 pub use color::Color;
 pub use conf::{Config, UpdateTrigger};
 pub use error::Error;
