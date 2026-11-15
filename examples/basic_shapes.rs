@@ -1,6 +1,6 @@
 use frogquad::Color;
 
-struct BasicShapesApp {}
+struct BasicShapesApp;
 
 impl frogquad::App for BasicShapesApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
@@ -26,5 +26,5 @@ impl frogquad::App for BasicShapesApp {
 }
 
 fn main() {
-    frogquad::start("BasicShapes", |_fc| BasicShapesApp {});
+    frogquad::start("BasicShapes", |_fc| BasicShapesApp);
 }
