@@ -4,11 +4,6 @@ use crate::FrogCx;
 
 use crate::color::Color;
 
-pub struct InternalGlContext<'a> {
-    pub quad_context: &'a mut dyn miniquad::RenderingBackend,
-    pub quad_gl: &'a mut crate::quad_gl::QuadGl,
-}
-
 impl FrogCx {
     /// Fill window background with solid color.
     /// Note: even when "clear_background" is not called explicitly,
