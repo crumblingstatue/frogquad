@@ -4,7 +4,7 @@ mod circle;
 mod rect;
 
 pub use circle::Circle;
-pub use rect::{Rect, RectOffset};
+pub use rect::Rect;
 
 use glam::{Vec2, vec2};
 
