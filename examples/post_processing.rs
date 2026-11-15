@@ -1,7 +1,7 @@
 use {
     frogquad::{
         Camera2D, Color, FrogCx,
-        material::{Material, load_material},
+        material::Material,
         texture::{DrawTextureParams, RenderTarget},
     },
     glam::vec2,
@@ -18,15 +18,15 @@ impl PostProcessExample {
         let render_target = fc.render_target(320, 150);
         render_target.texture.set_filter(fc, FilterMode::Nearest);
 
-        let material = load_material(
-            fc,
-            ShaderSource::Glsl {
-                vertex: CRT_VERTEX_SHADER,
-                fragment: CRT_FRAGMENT_SHADER,
-            },
-            Default::default(),
-        )
-        .unwrap();
+        let material = fc
+            .load_material(
+                ShaderSource::Glsl {
+                    vertex: CRT_VERTEX_SHADER,
+                    fragment: CRT_FRAGMENT_SHADER,
+                },
+                Default::default(),
+            )
+            .unwrap();
         Self {
             render_target,
             material,

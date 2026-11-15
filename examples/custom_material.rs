@@ -1,6 +1,6 @@
 use frogquad::{Color, FrogCx};
 
-use frogquad::material::{Material, MaterialParams, load_material};
+use frogquad::material::{Material, MaterialParams};
 
 use glam::{Vec4, vec4};
 use miniquad::{
@@ -169,44 +169,44 @@ impl CustomMatApp {
             ..Default::default()
         };
 
-        let mat = load_material(
-            fc,
-            match fc.quad_context.info().backend {
-                Backend::OpenGl => ShaderSource::Glsl {
-                    vertex: VERTEX,
-                    fragment: FRAGMENT,
+        let mat = fc
+            .load_material(
+                match fc.quad_context.info().backend {
+                    Backend::OpenGl => ShaderSource::Glsl {
+                        vertex: VERTEX,
+                        fragment: FRAGMENT,
+                    },
+                    Backend::Metal => ShaderSource::Msl { program: METAL },
                 },
-                Backend::Metal => ShaderSource::Msl { program: METAL },
-            },
-            MaterialParams {
-                uniforms: vec![UniformDesc::new("test_color", UniformType::Float4)],
-                pipeline_params,
-                ..Default::default()
-            },
-        )
-        .unwrap();
+                MaterialParams {
+                    uniforms: vec![UniformDesc::new("test_color", UniformType::Float4)],
+                    pipeline_params,
+                    ..Default::default()
+                },
+            )
+            .unwrap();
 
-        let mat_with_array = load_material(
-            fc,
-            match fc.quad_context.info().backend {
-                Backend::OpenGl => ShaderSource::Glsl {
-                    vertex: VERTEX,
-                    fragment: FRAGMENT_WITH_ARRAY,
+        let mat_with_array = fc
+            .load_material(
+                match fc.quad_context.info().backend {
+                    Backend::OpenGl => ShaderSource::Glsl {
+                        vertex: VERTEX,
+                        fragment: FRAGMENT_WITH_ARRAY,
+                    },
+                    Backend::Metal => ShaderSource::Msl {
+                        program: METAL_WITH_ARRAY,
+                    },
                 },
-                Backend::Metal => ShaderSource::Msl {
-                    program: METAL_WITH_ARRAY,
+                MaterialParams {
+                    uniforms: vec![UniformDesc::array(
+                        UniformDesc::new("test_color", UniformType::Float4),
+                        10,
+                    )],
+                    pipeline_params,
+                    ..Default::default()
                 },
-            },
-            MaterialParams {
-                uniforms: vec![UniformDesc::array(
-                    UniformDesc::new("test_color", UniformType::Float4),
-                    10,
-                )],
-                pipeline_params,
-                ..Default::default()
-            },
-        )
-        .unwrap();
+            )
+            .unwrap();
         Self {
             mat,
             mat_with_array,

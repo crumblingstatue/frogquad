@@ -1,7 +1,7 @@
 use {
     frogquad::{
         Color, FrogCx,
-        material::{Material, MaterialParams, load_material},
+        material::{Material, MaterialParams},
         texture::{DrawTextureParams, Texture2D},
     },
     glam::vec2,
@@ -18,18 +18,18 @@ impl ScreenTexExample {
     fn new(fc: &mut FrogCx) -> Self {
         let texture: Texture2D = fc.load_texture("examples/chess.png").block_on().unwrap();
 
-        let lens_material = load_material(
-            fc,
-            ShaderSource::Glsl {
-                vertex: LENS_VERTEX_SHADER,
-                fragment: LENS_FRAGMENT_SHADER,
-            },
-            MaterialParams {
-                uniforms: vec![UniformDesc::new("Center", UniformType::Float2)],
-                ..Default::default()
-            },
-        )
-        .unwrap();
+        let lens_material = fc
+            .load_material(
+                ShaderSource::Glsl {
+                    vertex: LENS_VERTEX_SHADER,
+                    fragment: LENS_FRAGMENT_SHADER,
+                },
+                MaterialParams {
+                    uniforms: vec![UniformDesc::new("Center", UniformType::Float2)],
+                    ..Default::default()
+                },
+            )
+            .unwrap();
         Self {
             texture,
             lens_material,
