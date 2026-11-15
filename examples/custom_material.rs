@@ -1,8 +1,6 @@
 use frogquad::{Color, FrogCx};
 
-use frogquad::material::{
-    Material, MaterialParams, gl_use_default_material, gl_use_material, load_material,
-};
+use frogquad::material::{Material, MaterialParams, load_material};
 
 use glam::{Vec4, vec4};
 use miniquad::{
@@ -220,7 +218,7 @@ impl frogquad::App for CustomMatApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
         fc.clear_background(Color::GRAY);
 
-        gl_use_material(&mut fc.gl, &self.mat);
+        fc.gl.use_material(&self.mat);
 
         self.mat
             .set_uniform(&mut fc.gl, "test_color", vec4(1., 0., 0., 1.));
@@ -235,14 +233,14 @@ impl frogquad::App for CustomMatApp {
             .set_uniform(&mut fc.gl, "test_color", vec4(0., 0., 1., 1.));
         fc.draw_rectangle(270.0, 50.0, 100., 100., Color::WHITE);
 
-        gl_use_material(&mut fc.gl, &self.mat_with_array);
+        fc.gl.use_material(&self.mat_with_array);
         let mut colors: [Vec4; 10] = [vec4(0.0, 1.0, 0.0, 0.0); 10];
         colors[5] = vec4(0.0, 1.0, 1.0, 1.0);
         self.mat_with_array
             .set_uniform_array(&mut fc.gl, "test_color", &colors[..]);
         fc.draw_rectangle(50.0, 160.0, 100., 100., Color::WHITE);
 
-        gl_use_default_material(&mut fc.gl);
+        fc.gl.use_default_material();
 
         fc.draw_rectangle(380.0, 50.0, 100., 100., Color::YELLOW);
     }

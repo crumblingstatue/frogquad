@@ -2,9 +2,7 @@ use {
     frogquad::{
         Color, FrogCx,
         conf::Conf,
-        material::{
-            Material, MaterialParams, gl_use_default_material, gl_use_material, load_material,
-        },
+        material::{Material, MaterialParams, load_material},
         texture::{DrawTextureParams, Texture2D},
     },
     glam::vec2,
@@ -59,9 +57,9 @@ impl frogquad::App for ScreenTexExample {
         self.lens_material
             .set_uniform(&mut fc.gl, "Center", lens_center);
 
-        gl_use_material(&mut fc.gl, &self.lens_material);
+        fc.gl.use_material(&self.lens_material);
         fc.draw_circle(lens_center.0, lens_center.1, 250.0, Color::RED);
-        gl_use_default_material(&mut fc.gl);
+        fc.gl.use_default_material();
     }
 }
 

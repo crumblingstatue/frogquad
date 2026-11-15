@@ -3,7 +3,7 @@ use {
         Color, FrogCx,
         camera::Camera2D,
         conf::Conf,
-        material::{Material, gl_use_default_material, gl_use_material, load_material},
+        material::{Material, load_material},
         texture::{DrawTextureParams, RenderTarget},
     },
     glam::vec2,
@@ -58,7 +58,7 @@ impl frogquad::App for PostProcessExample {
         fc.set_default_camera();
 
         fc.clear_background(Color::WHITE);
-        gl_use_material(&mut fc.gl, &self.material);
+        fc.gl.use_material(&self.material);
         fc.draw_texture_ex(
             &self.render_target.texture,
             0.,
@@ -69,7 +69,7 @@ impl frogquad::App for PostProcessExample {
                 ..Default::default()
             },
         );
-        gl_use_default_material(&mut fc.gl);
+        fc.gl.use_default_material();
     }
 }
 

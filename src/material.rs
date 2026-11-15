@@ -135,14 +135,16 @@ pub fn load_material(
     })
 }
 
-/// All following frogquad rendering calls will use the given material.
-pub fn gl_use_material(gl: &mut QuadGl, material: &Material) {
-    gl.pipeline(Some(material.pipeline.0));
-}
+impl QuadGl {
+    /// All following frogquad rendering calls will use the given material.
+    pub fn use_material(&mut self, material: &Material) {
+        self.pipeline(Some(material.pipeline.0));
+    }
 
-/// Use default frogquad material.
-pub fn gl_use_default_material(gl: &mut QuadGl) {
-    gl.pipeline(None);
+    /// Use default frogquad material.
+    pub fn use_default_material(&mut self) {
+        self.pipeline(None);
+    }
 }
 
 #[doc(hidden)]
