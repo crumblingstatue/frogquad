@@ -1004,43 +1004,6 @@ impl QuadGl {
             .entry(name.to_owned())
             .or_insert(quad_texture) = quad_texture;
     }
-
-    pub(crate) fn update_drawcall_capacity(
-        &mut self,
-        ctx: &mut dyn miniquad::RenderingBackend,
-        max_vertices: usize,
-        max_indices: usize,
-    ) {
-        self.max_vertices = max_vertices;
-        self.max_indices = max_indices;
-        self.draw_calls_count = 0;
-
-        for draw_call in &mut self.draw_calls {
-            draw_call.indices_start = 0;
-            draw_call.vertices_start = 0;
-        }
-        for binding in &mut self.draw_calls_bindings {
-            ctx.delete_buffer(binding.index_buffer);
-            for vertex_buffer in &binding.vertex_buffers {
-                ctx.delete_buffer(*vertex_buffer);
-            }
-            let vertex_buffer = ctx.new_buffer(
-                BufferType::VertexBuffer,
-                BufferUsage::Stream,
-                BufferSource::empty::<Vertex>(self.max_vertices),
-            );
-            let index_buffer = ctx.new_buffer(
-                BufferType::IndexBuffer,
-                BufferUsage::Stream,
-                BufferSource::empty::<u16>(self.max_indices),
-            );
-            *binding = Bindings {
-                vertex_buffers: vec![vertex_buffer],
-                index_buffer,
-                images: vec![self.white_texture, self.white_texture],
-            };
-        }
-    }
 }
 
 mod shader {

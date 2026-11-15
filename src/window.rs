@@ -17,12 +17,6 @@ impl FrogCx {
         self.gl.clear(&mut *self.quad_context, color);
     }
 
-    #[doc(hidden)]
-    pub fn gl_set_drawcall_buffer_capacity(&mut self, max_vertices: usize, max_indices: usize) {
-        self.gl
-            .update_drawcall_capacity(&mut *self.quad_context, max_vertices, max_indices);
-    }
-
     pub fn screen_width(&self) -> f32 {
         self.screen_width / miniquad::window::dpi_scale()
     }
