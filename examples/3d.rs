@@ -1,7 +1,6 @@
 use {
     frogquad::{
-        Color, FrogCx,
-        camera::Camera3D,
+        Camera3D, Color, FrogCx,
         models::{draw_cube, draw_cube_wires, draw_grid, draw_plane, draw_sphere},
         texture::Texture2D,
     },

@@ -1,5 +1,5 @@
 use {
-    frogquad::{Color, FrogCx, camera::Camera2D, file::load_string, math::Rect},
+    frogquad::{Camera2D, Color, FrogCx, file::load_string, math::Rect},
     glam::{Vec2, vec2},
     miniquad::{FilterMode, KeyCode},
 };

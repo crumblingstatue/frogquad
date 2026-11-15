@@ -1,4 +1,4 @@
-use frogquad::{Color, FrogCx, camera::Camera2D, math::Rect};
+use frogquad::{Camera2D, Color, FrogCx, math::Rect};
 
 use frogquad_particles::{BlendMode, Curve, Emitter, EmitterConfig};
 use glam::vec2;

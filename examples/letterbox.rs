@@ -1,7 +1,6 @@
 use {
     frogquad::{
-        Color,
-        camera::Camera2D,
+        Camera2D, Color,
         math::Rect,
         texture::{DrawTextureParams, RenderTarget},
     },

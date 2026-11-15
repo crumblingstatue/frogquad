@@ -48,7 +48,7 @@ mod exec;
 mod quad_gl;
 mod tobytes;
 
-pub mod camera;
+mod camera;
 mod color;
 pub mod file;
 pub mod input;
@@ -63,6 +63,7 @@ pub mod window;
 
 mod error;
 
+pub use camera::{Camera, Camera2D, Camera3D};
 pub use color::Color;
 pub use conf::{Config, UpdateTrigger};
 pub use error::Error;

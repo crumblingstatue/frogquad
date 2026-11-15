@@ -1,5 +1,5 @@
 use {
-    frogquad::{Color, FrogCx, TextParams, camera::Camera2D},
+    frogquad::{Camera2D, Color, FrogCx, TextParams},
     glam::vec2,
     miniquad::KeyCode,
 };

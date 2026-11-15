@@ -1,5 +1,5 @@
 use {
-    frogquad::{Color, camera::Camera2D},
+    frogquad::{Camera2D, Color},
     glam::vec2,
 };
 

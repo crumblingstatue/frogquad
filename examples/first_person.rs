@@ -1,7 +1,6 @@
 use {
     frogquad::{
-        Color, FrogCx,
-        camera::Camera3D,
+        Camera3D, Color, FrogCx,
         input::show_mouse,
         models::{draw_cube_wires, draw_grid, draw_line_3d},
     },
