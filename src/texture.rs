@@ -968,16 +968,6 @@ impl FrogCx {
         }
     }
 
-    #[doc(hidden)]
-    /// frogquad do not have track of all loaded fonts.
-    /// Fonts store their characters as ID's in the atlas.
-    /// There fore resetting the atlas will render all fonts unusable.
-    pub unsafe fn reset_textures_atlas(&mut self) {
-        self.fonts_storage =
-            crate::text::FontsStorage::new(&mut *self.quad_context, &self.textures);
-        self.texture_batcher = Batcher::new(&mut *self.quad_context, &self.textures);
-    }
-
     pub fn set_default_filter_mode(&mut self, filter: FilterMode) {
         self.default_filter_mode = filter;
         self.texture_batcher
