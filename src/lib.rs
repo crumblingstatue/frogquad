@@ -356,8 +356,7 @@ impl FrogCx {
         let (width, height) = miniquad::window::screen_size();
 
         let dpi = miniquad::window::dpi_scale();
-
-        glam::Mat4::orthographic_rh_gl(0., width / dpi, height / dpi, 0., -1., 1.)
+        glam::camera::rh::proj::opengl::orthographic(0., width / dpi, height / dpi, 0., -1., 1.)
     }
 
     pub fn projection_matrix(&self) -> glam::Mat4 {
