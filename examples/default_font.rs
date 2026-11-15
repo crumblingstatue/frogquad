@@ -1,5 +1,5 @@
 use {
-    frogquad::{Color, conf::Conf, text::TextParams},
+    frogquad::{Color, text::TextParams},
     pollster::FutureExt,
 };
 
@@ -32,7 +32,7 @@ impl frogquad::App for DefaultFontApp {
 }
 
 fn main() {
-    frogquad::start(Conf::from_title("DefaultFont"), |fc| {
+    frogquad::start("DefaultFont", |fc| {
         let font = fc
             .load_ttf_font("./examples/DancingScriptRegular.ttf")
             .block_on()

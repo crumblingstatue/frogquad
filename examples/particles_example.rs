@@ -1,4 +1,4 @@
-use frogquad::{Color, FrogCx, conf::Conf};
+use frogquad::{Color, FrogCx};
 use frogquad_particles::{self as particles, AtlasConfig, BlendMode, Emitter, EmitterConfig};
 use glam::vec2;
 use miniquad::KeyCode;
@@ -133,7 +133,5 @@ impl frogquad::App for ParticlesApp {
 }
 
 fn main() {
-    frogquad::start(Conf::from_title("Fountain"), |fc| {
-        Box::new(ParticlesApp::new(fc))
-    });
+    frogquad::start("Fountain", |fc| Box::new(ParticlesApp::new(fc)));
 }

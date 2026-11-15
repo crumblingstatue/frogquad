@@ -1,5 +1,5 @@
 use {
-    frogquad::{Color, camera::Camera2D, conf::Conf},
+    frogquad::{Color, camera::Camera2D},
     glam::vec2,
 };
 
@@ -27,5 +27,5 @@ impl frogquad::App for CameraApp {
 }
 
 fn main() {
-    frogquad::start(Conf::from_title("Camera"), |_fc| Box::new(CameraApp {}));
+    frogquad::start("Camera", |_fc| Box::new(CameraApp {}));
 }

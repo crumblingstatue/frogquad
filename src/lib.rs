@@ -36,7 +36,7 @@
 //! }
 //!
 //! fn main() {
-//!     frogquad::start(frogquad::conf::Conf::from_title("BasicShapes"), |_fc| { Box::new(ExampleApp)});
+//!     frogquad::start("BasicShapes", |_fc| { Box::new(ExampleApp)});
 //! }
 //!```
 
@@ -64,6 +64,7 @@ pub mod window;
 mod error;
 
 pub use color::Color;
+pub use conf::{Config, UpdateTrigger};
 pub use error::Error;
 pub use quad_gl::QuadGl;
 // Re-export glam library
@@ -663,7 +664,7 @@ impl EventHandler for Stage {
     }
 }
 
-pub mod conf {
+mod conf {
     #[derive(Default, Debug, Clone)]
     pub struct UpdateTrigger {
         pub key_down: bool,
@@ -676,7 +677,7 @@ pub mod conf {
     }
 
     #[derive(Debug)]
-    pub struct Conf {
+    pub struct Config {
         pub miniquad_conf: miniquad::conf::Conf,
         /// With miniquad_conf.platform.blocking_event_loop = true,
         /// next_frame().await will never finish and will wait forever with
@@ -698,7 +699,7 @@ pub mod conf {
         pub draw_call_index_capacity: usize,
     }
 
-    impl Default for Conf {
+    impl Default for Config {
         fn default() -> Self {
             Self {
                 miniquad_conf: miniquad::conf::Conf::default(),
@@ -710,8 +711,9 @@ pub mod conf {
         }
     }
 
-    impl Conf {
-        pub fn from_title(title: &str) -> Self {
+    /// Default configuration with a title
+    impl From<&str> for Config {
+        fn from(title: &str) -> Self {
             Self {
                 miniquad_conf: miniquad::conf::Conf {
                     window_title: title.to_string(),
@@ -723,9 +725,9 @@ pub mod conf {
     }
 }
 
-impl From<miniquad::conf::Conf> for conf::Conf {
-    fn from(conf: miniquad::conf::Conf) -> conf::Conf {
-        conf::Conf {
+impl From<miniquad::conf::Conf> for conf::Config {
+    fn from(conf: miniquad::conf::Conf) -> conf::Config {
+        conf::Config {
             miniquad_conf: conf,
             update_on: None,
             default_filter_mode: miniquad::FilterMode::Linear,
@@ -739,7 +741,11 @@ pub trait App {
     fn update(&mut self, fc: &mut FrogCx);
 }
 
-pub fn start(config: conf::Conf, app_init: impl FnOnce(&mut FrogCx) -> Box<dyn App> + 'static) {
+pub fn start(
+    config: impl Into<Config>,
+    app_init: impl FnOnce(&mut FrogCx) -> Box<dyn App> + 'static,
+) {
+    let config = config.into();
     miniquad::start(config.miniquad_conf, move || {
         let mut fc = FrogCx::new(
             config.update_on.as_ref().cloned().unwrap_or_default(),

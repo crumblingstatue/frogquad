@@ -1,4 +1,4 @@
-use frogquad::{Color, conf::Conf};
+use frogquad::Color;
 
 struct BasicShapesApp {}
 
@@ -26,7 +26,5 @@ impl frogquad::App for BasicShapesApp {
 }
 
 fn main() {
-    frogquad::start(Conf::from_title("BasicShapes"), |_fc| {
-        Box::new(BasicShapesApp {})
-    });
+    frogquad::start("BasicShapes", |_fc| Box::new(BasicShapesApp {}));
 }

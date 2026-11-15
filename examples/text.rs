@@ -1,7 +1,6 @@
 use {
     frogquad::{
         Color, FrogCx,
-        conf::Conf,
         text::{Font, TextParams, get_text_center},
     },
     pollster::FutureExt,
@@ -106,5 +105,5 @@ impl frogquad::App for TextApp {
 }
 
 fn main() {
-    frogquad::start(Conf::from_title("Text"), |fc| Box::new(TextApp::new(fc)));
+    frogquad::start("Text", |fc| Box::new(TextApp::new(fc)));
 }

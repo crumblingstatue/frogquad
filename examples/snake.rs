@@ -1,5 +1,5 @@
 use {
-    frogquad::{Color, FrogCx, conf::Conf, rand, text::measure_text},
+    frogquad::{Color, FrogCx, rand, text::measure_text},
     miniquad::KeyCode,
 };
 
@@ -200,6 +200,5 @@ struct Snake {
 }
 
 fn main() {
-    let config = Conf::from_title("Snake");
-    frogquad::start(config, |fc| Box::new(SnakeApp::new(fc)));
+    frogquad::start("Snake", |fc| Box::new(SnakeApp::new(fc)));
 }

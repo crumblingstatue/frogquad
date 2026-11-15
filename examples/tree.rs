@@ -1,5 +1,5 @@
 use {
-    frogquad::{Color, FrogCx, camera::Camera2D, conf::Conf},
+    frogquad::{Color, FrogCx, camera::Camera2D},
     glam::vec2,
 };
 
@@ -44,7 +44,7 @@ impl frogquad::App for TreeApp {
 }
 
 fn main() {
-    frogquad::start(Conf::from_title("Tree"), |fc| {
+    frogquad::start("Tree", |fc| {
         let camera = Camera2D {
             zoom: vec2(1., 1.),
             target: vec2(0.0, 0.5),

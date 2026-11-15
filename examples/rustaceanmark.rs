@@ -1,6 +1,6 @@
 use pollster::FutureExt;
 use {
-    frogquad::{Color, FrogCx, conf::Conf, rand, texture::Texture2D},
+    frogquad::{Color, FrogCx, rand, texture::Texture2D},
     glam::Vec2,
     miniquad::{FilterMode, MouseButton},
 };
@@ -87,7 +87,5 @@ impl frogquad::App for RustaceanMarkApp {
 }
 
 fn main() {
-    frogquad::start(Conf::from_title("Rustaceanmark"), |fc| {
-        Box::new(RustaceanMarkApp::new(fc))
-    });
+    frogquad::start("Rustaceanmark", |fc| Box::new(RustaceanMarkApp::new(fc)));
 }

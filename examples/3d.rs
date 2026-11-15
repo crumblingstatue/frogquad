@@ -2,7 +2,6 @@ use {
     frogquad::{
         Color, FrogCx,
         camera::Camera3D,
-        conf::Conf,
         models::{draw_cube, draw_cube_wires, draw_grid, draw_plane, draw_sphere},
         texture::Texture2D,
     },
@@ -83,5 +82,5 @@ impl frogquad::App for App3d {
 }
 
 fn main() {
-    frogquad::start(Conf::from_title("3D"), |fc| Box::new(App3d::new(fc)));
+    frogquad::start("3D", |fc| Box::new(App3d::new(fc)));
 }

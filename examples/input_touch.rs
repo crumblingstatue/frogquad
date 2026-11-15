@@ -1,4 +1,4 @@
-use frogquad::{Color, conf::Conf, input::TouchPhase};
+use frogquad::{Color, input::TouchPhase};
 
 struct InputTouchApp {}
 
@@ -22,7 +22,5 @@ impl frogquad::App for InputTouchApp {
 }
 
 fn main() {
-    frogquad::start(Conf::from_title("InputTouch"), |_fc| {
-        Box::new(InputTouchApp {})
-    });
+    frogquad::start("InputTouch", |_fc| Box::new(InputTouchApp {}));
 }

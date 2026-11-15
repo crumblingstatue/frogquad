@@ -1,4 +1,4 @@
-use frogquad::{Color, FrogCx, camera::Camera2D, conf::Conf, math::Rect};
+use frogquad::{Color, FrogCx, camera::Camera2D, math::Rect};
 
 use frogquad_particles::{BlendMode, Curve, Emitter, EmitterConfig};
 use glam::vec2;
@@ -44,7 +44,5 @@ impl frogquad::App for ParticlesSingleApp {
 }
 
 fn main() {
-    frogquad::start(Conf::from_title("Fountain"), |fc| {
-        Box::new(ParticlesSingleApp::new(fc))
-    });
+    frogquad::start("Fountain", |fc| Box::new(ParticlesSingleApp::new(fc)));
 }

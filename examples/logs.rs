@@ -2,7 +2,7 @@
 //! They will use browser console, android console or just stdout depending on the platform.
 //! Those macros are the recommended way to output debug traces and logs.
 
-use frogquad::{Color, conf::Conf};
+use frogquad::Color;
 
 struct LogsApp {}
 
@@ -15,7 +15,7 @@ impl frogquad::App for LogsApp {
 }
 
 fn main() {
-    frogquad::start(Conf::from_title("Logs"), |_fc| {
+    frogquad::start("Logs", |_fc| {
         miniquad::debug!("This is a debug message");
         miniquad::info!("and info message");
         miniquad::error!("and errors, the red ones!");

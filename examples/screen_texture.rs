@@ -1,7 +1,6 @@
 use {
     frogquad::{
         Color, FrogCx,
-        conf::Conf,
         material::{Material, MaterialParams, load_material},
         texture::{DrawTextureParams, Texture2D},
     },
@@ -64,9 +63,7 @@ impl frogquad::App for ScreenTexExample {
 }
 
 fn main() {
-    frogquad::start(Conf::from_title("Texture"), |fc| {
-        Box::new(ScreenTexExample::new(fc))
-    });
+    frogquad::start("Texture", |fc| Box::new(ScreenTexExample::new(fc)));
 }
 
 const LENS_FRAGMENT_SHADER: &str = r#"#version 100

@@ -1,7 +1,5 @@
 use frogquad::{
-    Color, FrogCx,
-    conf::Conf,
-    rand,
+    Color, FrogCx, rand,
     texture::{Image, Texture2D},
 };
 
@@ -112,5 +110,5 @@ impl frogquad::App for LifeApp {
 }
 
 fn main() {
-    frogquad::start(Conf::from_title("Life"), |fc| Box::new(LifeApp::new(fc)));
+    frogquad::start("Life", |fc| Box::new(LifeApp::new(fc)));
 }

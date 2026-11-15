@@ -1,5 +1,5 @@
 use {
-    frogquad::{Color, FrogCx, conf::Conf},
+    frogquad::{Color, FrogCx},
     miniquad::KeyCode,
 };
 
@@ -46,7 +46,5 @@ impl frogquad::App for InputKeysApp {
 }
 
 fn main() {
-    frogquad::start(Conf::from_title("InputKeys"), |cx| {
-        Box::new(InputKeysApp::new(cx))
-    });
+    frogquad::start("InputKeys", |cx| Box::new(InputKeysApp::new(cx)));
 }

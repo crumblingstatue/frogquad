@@ -1,6 +1,5 @@
 use frogquad::{
     Color,
-    conf::Conf,
     text::{measure_multiline_text, wrap_text},
 };
 
@@ -56,7 +55,5 @@ impl frogquad::App for TextWrapApp {
 }
 
 fn main() {
-    frogquad::start(Conf::from_title("Text Wrap"), |_fc| {
-        Box::new(TextWrapApp {})
-    });
+    frogquad::start("Text Wrap", |_fc| Box::new(TextWrapApp {}));
 }

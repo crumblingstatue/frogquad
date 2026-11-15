@@ -1,5 +1,5 @@
 use {
-    frogquad::{Color, FrogCx, camera::Camera2D, conf::Conf, text::TextParams},
+    frogquad::{Color, FrogCx, camera::Camera2D, text::TextParams},
     glam::vec2,
     miniquad::KeyCode,
 };
@@ -143,7 +143,5 @@ impl frogquad::App for ArkanoidApp {
 }
 
 fn main() {
-    frogquad::start(Conf::from_title("Arkanoid"), |fc| {
-        Box::new(ArkanoidApp::new(fc))
-    });
+    frogquad::start("Arkanoid", |fc| Box::new(ArkanoidApp::new(fc)));
 }

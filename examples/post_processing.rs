@@ -2,7 +2,6 @@ use {
     frogquad::{
         Color, FrogCx,
         camera::Camera2D,
-        conf::Conf,
         material::{Material, load_material},
         texture::{DrawTextureParams, RenderTarget},
     },
@@ -74,7 +73,7 @@ impl frogquad::App for PostProcessExample {
 }
 
 fn main() {
-    frogquad::start(Conf::from_title("Post processing"), |fc| {
+    frogquad::start("Post processing", |fc| {
         Box::new(PostProcessExample::new(fc))
     });
 }

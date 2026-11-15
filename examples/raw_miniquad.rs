@@ -1,5 +1,5 @@
 use {
-    frogquad::{Color, FrogCx, camera::Camera2D, conf::Conf},
+    frogquad::{Color, FrogCx, camera::Camera2D},
     glam::vec2,
 };
 
@@ -62,9 +62,7 @@ impl frogquad::App for RawMqApp {
 }
 
 fn main() {
-    frogquad::start(Conf::from_title("Raw miniquad"), |fc| {
-        Box::new(RawMqApp::new(fc))
-    });
+    frogquad::start("Raw miniquad", |fc| Box::new(RawMqApp::new(fc)));
 }
 
 mod raw_miniquad {

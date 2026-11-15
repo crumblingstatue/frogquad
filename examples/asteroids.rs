@@ -1,5 +1,5 @@
 use {
-    frogquad::{Color, FrogCx, conf::Conf, rand, text::measure_text},
+    frogquad::{Color, FrogCx, rand, text::measure_text},
     glam::Vec2,
     miniquad::KeyCode,
 };
@@ -267,7 +267,5 @@ impl frogquad::App for AsteroidsApp {
 }
 
 fn main() {
-    frogquad::start(Conf::from_title("Asteroids"), |fc| {
-        Box::new(AsteroidsApp::new(fc))
-    });
+    frogquad::start("Asteroids", |fc| Box::new(AsteroidsApp::new(fc)));
 }

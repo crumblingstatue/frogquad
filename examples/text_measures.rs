@@ -1,7 +1,6 @@
 use {
     frogquad::{
         Color,
-        conf::Conf,
         text::{Font, TextParams, measure_text},
     },
     pollster::FutureExt,
@@ -125,7 +124,5 @@ impl frogquad::App for TextMeasApp {
 }
 
 fn main() {
-    frogquad::start(Conf::from_title("Text"), |fc| {
-        Box::new(TextMeasApp::new(fc))
-    });
+    frogquad::start("Text", |fc| Box::new(TextMeasApp::new(fc)));
 }

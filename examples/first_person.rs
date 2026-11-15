@@ -182,5 +182,5 @@ impl frogquad::App for FirstPersonApp {
 }
 
 fn main() {
-    frogquad::start(conf().into(), |fc| Box::new(FirstPersonApp::new(fc)));
+    frogquad::start(conf(), |fc| Box::new(FirstPersonApp::new(fc)));
 }

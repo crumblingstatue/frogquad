@@ -1,5 +1,5 @@
 use {
-    frogquad::{Color, FrogCx, camera::Camera2D, conf::Conf, file::load_string, math::Rect},
+    frogquad::{Color, FrogCx, camera::Camera2D, file::load_string, math::Rect},
     glam::{Vec2, vec2},
     miniquad::{FilterMode, KeyCode},
 };
@@ -159,7 +159,5 @@ impl frogquad::App for PlatformerApp {
 }
 
 fn main() {
-    frogquad::start(Conf::from_title("Platformer"), |fc| {
-        Box::new(PlatformerApp::new(fc))
-    });
+    frogquad::start("Platformer", |fc| Box::new(PlatformerApp::new(fc)));
 }

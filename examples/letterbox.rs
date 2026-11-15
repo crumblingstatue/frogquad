@@ -2,7 +2,6 @@ use {
     frogquad::{
         Color,
         camera::Camera2D,
-        conf::Conf,
         math::Rect,
         texture::{DrawTextureParams, RenderTarget},
     },
@@ -102,7 +101,5 @@ impl frogquad::App for LetterboxApp {
 }
 
 fn main() {
-    frogquad::start(Conf::from_title("Letterbox"), |fc| {
-        Box::new(LetterboxApp::new(fc))
-    });
+    frogquad::start("Letterbox", |fc| Box::new(LetterboxApp::new(fc)));
 }

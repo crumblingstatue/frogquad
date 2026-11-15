@@ -1,5 +1,5 @@
 use {
-    frogquad::{Color, FrogCx, conf::Conf, texture::Texture2D},
+    frogquad::{Color, FrogCx, texture::Texture2D},
     pollster::FutureExt,
 };
 
@@ -23,7 +23,5 @@ impl frogquad::App for TextureApp {
 }
 
 fn main() {
-    frogquad::start(Conf::from_title("Texture"), |fc| {
-        Box::new(TextureApp::new(fc))
-    });
+    frogquad::start("Texture", |fc| Box::new(TextureApp::new(fc)));
 }
