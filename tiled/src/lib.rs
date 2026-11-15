@@ -1,6 +1,7 @@
 use frogquad::{
     Color,
-    math::{Rect, vec2},
+    glam::vec2,
+    math::Rect,
     texture::{DrawTextureParams, Texture2D},
 };
 use nanoserde::DeJson;

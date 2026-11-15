@@ -1,5 +1,5 @@
 use frogquad::Color;
-use frogquad::math::{Vec2, Vec4, vec2, vec3, vec4};
+use frogquad::glam::{Vec2, Vec4, vec2, vec3, vec4};
 use frogquad::miniquad::{
     self, Bindings, BlendFactor, BlendState, BlendValue, BufferId, BufferLayout, BufferSource,
     BufferType, BufferUsage, Equation, MipmapFilterMode, PassAction, Pipeline, PipelineParams,
@@ -1089,7 +1089,7 @@ impl EmittersCache {
 
 mod shader {
     use frogquad::{
-        math::{Mat4, Vec3},
+        glam::{Mat4, Vec3},
         miniquad::{ShaderMeta, UniformBlockLayout, UniformDesc, UniformType},
     };
 

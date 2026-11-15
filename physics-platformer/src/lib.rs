@@ -1,4 +1,5 @@
-use frogquad::math::{Rect, Vec2, vec2};
+use frogquad::glam::{Vec2, vec2};
+use frogquad::math::Rect;
 
 use std::collections::HashSet;
 

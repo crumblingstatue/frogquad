@@ -5,7 +5,8 @@ use std::collections::HashMap;
 use crate::{
     Error, FrogCx,
     color::Color,
-    math::{Rect, vec3},
+    glam::vec3,
+    math::Rect,
     texture::{Image, TextureHandle, TexturesContext},
 };
 
