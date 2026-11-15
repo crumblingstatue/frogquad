@@ -4,7 +4,6 @@ use {
         camera::{Camera2D, set_camera},
         conf::Conf,
         text::TextParams,
-        time::get_frame_time,
     },
     glam::vec2,
     miniquad::KeyCode,
@@ -64,7 +63,7 @@ impl frogquad::App for ArkanoidApp {
         let platform_height = 0.2;
         fc.clear_background(Color::SKYBLUE);
 
-        let delta = get_frame_time(fc);
+        let delta = fc.get_frame_time();
 
         if fc.is_key_down(KeyCode::Right) && self.platform_x < SCR_W - platform_width / 2. {
             self.platform_x += 3.0 * delta;

@@ -6,7 +6,6 @@ use {
         file::load_string,
         math::Rect,
         texture::load_texture,
-        time::get_frame_time,
     },
     glam::{Vec2, vec2},
     miniquad::{FilterMode, KeyCode},
@@ -127,7 +126,7 @@ impl frogquad::App for PlatformerApp {
                 .collide_check(self.player.collider, pos + vec2(0., 1.));
 
             if !on_ground {
-                self.player.speed.y += 500. * get_frame_time(fc);
+                self.player.speed.y += 500. * fc.get_frame_time();
             }
 
             if fc.is_key_down(KeyCode::Right) {
@@ -144,11 +143,11 @@ impl frogquad::App for PlatformerApp {
 
             self.world.move_h(
                 self.player.collider,
-                self.player.speed.x * get_frame_time(fc),
+                self.player.speed.x * fc.get_frame_time(),
             );
             self.world.move_v(
                 self.player.collider,
-                self.player.speed.y * get_frame_time(fc),
+                self.player.speed.y * fc.get_frame_time(),
             );
         }
 
@@ -156,7 +155,7 @@ impl frogquad::App for PlatformerApp {
         {
             self.world.solid_move(
                 self.platform.collider,
-                self.platform.speed * get_frame_time(fc),
+                self.platform.speed * fc.get_frame_time(),
                 0.0,
             );
             let pos = self.world.solid_pos(self.platform.collider);

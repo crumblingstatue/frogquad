@@ -1,4 +1,4 @@
-use frogquad::{Color, FrogCx, conf::Conf, texture::load_texture, time::get_time};
+use frogquad::{Color, FrogCx, conf::Conf, texture::load_texture};
 use frogquad_particles::{self as particles, AtlasConfig, BlendMode, Emitter, EmitterConfig};
 use glam::vec2;
 use miniquad::KeyCode;
@@ -113,16 +113,17 @@ impl frogquad::App for ParticlesApp {
         }
 
         let local_emitter_pos = vec2(
-            (get_time(fc) * 0.3).sin() as f32 * fc.screen_width() / 2.5 + fc.screen_width() / 2.0,
-            (get_time(fc) * 0.5).cos() as f32 * fc.screen_height() / 2.5 + fc.screen_height() / 2.0,
+            (fc.get_time() * 0.3).sin() as f32 * fc.screen_width() / 2.5 + fc.screen_width() / 2.0,
+            (fc.get_time() * 0.5).cos() as f32 * fc.screen_height() / 2.5
+                + fc.screen_height() / 2.0,
         );
         self.flying_emitter_local.draw(fc, local_emitter_pos);
         fc.draw_circle(local_emitter_pos.x, local_emitter_pos.y, 15.0, Color::RED);
 
         let world_emitter_pos = vec2(
-            (get_time(fc) * 0.6 + 1.0).sin() as f32 * fc.screen_width() / 2.5
+            (fc.get_time() * 0.6 + 1.0).sin() as f32 * fc.screen_width() / 2.5
                 + fc.screen_width() / 2.0,
-            (get_time(fc) * 0.4 + 1.0).cos() as f32 * fc.screen_height() / 2.5
+            (fc.get_time() * 0.4 + 1.0).cos() as f32 * fc.screen_height() / 2.5
                 + fc.screen_height() / 2.0,
         );
 

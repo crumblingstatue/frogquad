@@ -3,7 +3,6 @@ use {
         Color, FrogCx,
         camera::{Camera2D, set_camera, set_default_camera},
         conf::Conf,
-        time::get_time,
         window::InternalGlContext,
     },
     glam::vec2,
@@ -48,7 +47,7 @@ impl frogquad::App for RawMqApp {
             // Ensure that frogquad's shapes are not going to be lost
             fc.flush_internal_gl();
 
-            let t = get_time(fc);
+            let t = fc.get_time();
             let gl = fc.get_internal_gl();
             gl.quad_context.apply_pipeline(&self.stage.pipeline);
 

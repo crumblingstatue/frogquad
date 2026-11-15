@@ -4,7 +4,6 @@ use {
         camera::{Camera3D, set_camera, set_default_camera},
         input::show_mouse,
         models::{draw_cube_wires, draw_grid, draw_line_3d},
-        time::get_frame_time,
     },
     glam::{Vec2, Vec3, vec3},
     miniquad::KeyCode,
@@ -83,7 +82,7 @@ impl FirstPersonApp {
 
 impl frogquad::App for FirstPersonApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
-        let delta = get_frame_time(fc);
+        let delta = fc.get_frame_time();
 
         if fc.is_key_pressed(KeyCode::Escape) {
             fc.request_quit();

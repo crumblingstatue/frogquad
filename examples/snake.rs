@@ -1,5 +1,5 @@
 use {
-    frogquad::{Color, FrogCx, conf::Conf, rand, text::measure_text, time::get_time},
+    frogquad::{Color, FrogCx, conf::Conf, rand, text::measure_text},
     miniquad::KeyCode,
 };
 
@@ -30,7 +30,7 @@ impl SnakeApp {
             fruit: (rand::gen_range(0, SQUARES), rand::gen_range(0, SQUARES)),
             score: 0,
             speed: 0.3,
-            last_update: get_time(fc),
+            last_update: fc.get_time(),
             navigation_lock: false,
             game_over: false,
         }
@@ -63,8 +63,8 @@ impl frogquad::App for SnakeApp {
                 self.navigation_lock = true;
             }
 
-            if get_time(fc) - self.last_update > self.speed {
-                self.last_update = get_time(fc);
+            if fc.get_time() - self.last_update > self.speed {
+                self.last_update = fc.get_time();
                 self.snake.body.push_front(self.snake.head);
                 self.snake.head = (
                     self.snake.head.0 + self.snake.dir.0,
@@ -186,7 +186,7 @@ impl frogquad::App for SnakeApp {
                 self.fruit = (rand::gen_range(0, SQUARES), rand::gen_range(0, SQUARES));
                 self.score = 0;
                 self.speed = 0.3;
-                self.last_update = get_time(fc);
+                self.last_update = fc.get_time();
                 self.game_over = false;
             }
         }

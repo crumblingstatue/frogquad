@@ -3,7 +3,6 @@ use {
         Color, FrogCx,
         conf::Conf,
         text::{Font, TextParams, get_text_center},
-        time::get_time,
     },
     pollster::FutureExt,
 };
@@ -43,7 +42,7 @@ impl frogquad::App for TextApp {
         }
 
         fc.draw_text_ex("Dynamic font scale:", 20.0, 400.0, TextParams::default());
-        let time = get_time(fc);
+        let time = fc.get_time();
         fc.draw_text_ex(
             "abcd",
             20.0,

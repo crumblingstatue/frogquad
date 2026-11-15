@@ -7,7 +7,6 @@ use frogquad::miniquad::{
     VertexStep,
 };
 use frogquad::texture::{FilterMode, Texture2D};
-use frogquad::time::get_frame_time;
 use frogquad::{FrogCx, QuadGl, glam, rand};
 use miniquad::graphics::RenderPass;
 
@@ -1004,7 +1003,7 @@ impl Emitter {
         fc.perform_render_passes();
 
         self.position = pos;
-        let frame_time = get_frame_time(fc);
+        let frame_time = fc.get_frame_time();
         self.update(fc, frame_time);
 
         self.setup_render_pass(&fc.gl, &mut *fc.quad_context);
@@ -1070,7 +1069,7 @@ impl EmittersCache {
         for i in &mut self.active_emitters {
             if let Some((emitter, pos)) = i {
                 emitter.position = *pos;
-                let frame_time = get_frame_time(fc);
+                let frame_time = fc.get_frame_time();
                 emitter.update(fc, frame_time);
 
                 emitter.perform_render_pass(fc.projection_matrix(), &mut *fc.quad_context);

@@ -3,7 +3,6 @@ use {
         Color, FrogCx,
         camera::{Camera2D, set_camera},
         conf::Conf,
-        time::get_time,
     },
     glam::vec2,
 };
@@ -47,7 +46,7 @@ impl frogquad::App for TreeApp {
         fc.clear_background(Color::LIGHTGRAY);
 
         fc.draw_circle(0., 0., 0.03, Color::DARKGRAY);
-        let time = get_time(fc);
+        let time = fc.get_time();
         tree(fc, time, 0, 1., 0.3);
     }
 }

@@ -5,7 +5,6 @@ use {
         conf::Conf,
         rand,
         texture::{Texture2D, draw_texture, load_texture},
-        time::draw_fps,
     },
     glam::Vec2,
     miniquad::{FilterMode, MouseButton},
@@ -81,7 +80,7 @@ impl frogquad::App for RustaceanMarkApp {
             );
         }
 
-        draw_fps(fc);
+        fc.draw_fps();
         fc.draw_text(
             format!("Rustaceanes: {}", self.rustaceanes.len()).as_str(),
             0.,
