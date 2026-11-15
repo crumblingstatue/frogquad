@@ -22,18 +22,6 @@ impl FrogCx {
         self.gl
             .update_drawcall_capacity(&mut *self.quad_context, max_vertices, max_indices);
     }
-    /// Draw all the batched stuff and reset the internal state cache.
-    /// May be helpful for combining frogquad's drawing with raw miniquad/opengl calls.
-    pub fn flush_internal_gl(&mut self) {
-        self.perform_render_passes();
-    }
-
-    pub fn get_internal_gl(&mut self) -> InternalGlContext<'_> {
-        InternalGlContext {
-            quad_context: &mut *self.quad_context,
-            quad_gl: &mut self.gl,
-        }
-    }
 
     pub fn screen_width(&self) -> f32 {
         self.screen_width / miniquad::window::dpi_scale()

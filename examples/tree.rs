@@ -12,27 +12,23 @@ fn tree(fc: &mut FrogCx, time: f64, deep: u32, angle: f32, tall: f32) {
     fc.draw_rectangle(-0.01 / 2., 0., 0.01, tall, Color::DARKGRAY);
 
     // and we can also modify internal frogquad render state with "gl" reference
-    fc.get_internal_gl()
-        .quad_gl
+    fc.gl
         .push_model_matrix(glam::Mat4::from_translation(glam::vec3(0., tall, 0.)));
 
     // right leaf
-    fc.get_internal_gl()
-        .quad_gl
+    fc.gl
         .push_model_matrix(glam::Mat4::from_rotation_z(angle + time.sin() as f32 * 0.1));
     tree(fc, time, deep + 1, angle * 0.7, tall * 0.8);
-    fc.get_internal_gl().quad_gl.pop_model_matrix();
+    fc.gl.pop_model_matrix();
 
     // left leaf
-    fc.get_internal_gl()
-        .quad_gl
-        .push_model_matrix(glam::Mat4::from_rotation_z(
-            -angle - time.cos() as f32 * 0.1,
-        ));
+    fc.gl.push_model_matrix(glam::Mat4::from_rotation_z(
+        -angle - time.cos() as f32 * 0.1,
+    ));
     tree(fc, time, deep + 1, angle * 0.7, tall * 0.8);
-    fc.get_internal_gl().quad_gl.pop_model_matrix();
+    fc.gl.pop_model_matrix();
 
-    fc.get_internal_gl().quad_gl.pop_model_matrix();
+    fc.gl.pop_model_matrix();
 }
 
 struct TreeApp {}

@@ -1,5 +1,5 @@
 use {
-    frogquad::{Color, FrogCx, camera::Camera2D, conf::Conf, window::InternalGlContext},
+    frogquad::{Color, FrogCx, camera::Camera2D, conf::Conf},
     glam::vec2,
 };
 
@@ -10,13 +10,7 @@ struct RawMqApp {
 impl RawMqApp {
     fn new(fc: &mut FrogCx) -> Self {
         Self {
-            stage: {
-                let InternalGlContext {
-                    quad_context: ctx, ..
-                } = fc.get_internal_gl();
-
-                raw_miniquad::Stage::new(ctx)
-            },
+            stage: { raw_miniquad::Stage::new(&mut *fc.quad_context) },
         }
     }
 }
@@ -37,28 +31,27 @@ impl frogquad::App for RawMqApp {
 
         {
             // Ensure that frogquad's shapes are not going to be lost
-            fc.flush_internal_gl();
+            fc.perform_render_passes();
 
             let t = fc.time();
-            let gl = fc.get_internal_gl();
-            gl.quad_context.apply_pipeline(&self.stage.pipeline);
+            fc.quad_context.apply_pipeline(&self.stage.pipeline);
 
-            gl.quad_context
+            fc.quad_context
                 .begin_default_pass(miniquad::PassAction::Nothing);
-            gl.quad_context.apply_bindings(&self.stage.bindings);
+            fc.quad_context.apply_bindings(&self.stage.bindings);
 
             for i in 0..10 {
                 let t = t + i as f64 * 0.3;
 
-                gl.quad_context
+                fc.quad_context
                     .apply_uniforms(miniquad::UniformsSource::table(
                         &raw_miniquad::shader::Uniforms {
                             offset: (t.sin() as f32 * 0.5, (t * 3.).cos() as f32 * 0.5),
                         },
                     ));
-                gl.quad_context.draw(0, 6, 1);
+                fc.quad_context.draw(0, 6, 1);
             }
-            gl.quad_context.end_render_pass();
+            fc.quad_context.end_render_pass();
         }
 
         // Back to screen space, render some text

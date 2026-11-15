@@ -638,7 +638,7 @@ impl FrogCx {
 
     /// Get pixel data from screen buffer and return an Image (screenshot)
     pub fn get_screen_data(&mut self) -> Image {
-        self.flush_internal_gl();
+        self.perform_render_passes();
 
         let texture_id = self
             .quad_context
