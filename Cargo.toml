@@ -38,14 +38,5 @@ frogquad-tiled = { path = "./tiled" }
 frogquad-platformer = { path = "./physics-platformer" }
 pollster = "1"
 
-# workaround to fix the examples
-# this allows to use frogquad-particles in examples without two versions of frogquad
-[patch.crates-io]
-frogquad = { path = './' }
-
-#quad-snd = {path = '../quad-snd'}
-#miniquad = { path = '../miniquad' }
-#quad-gl = {path = './quad-gl'}
-
 [workspace]
 members = ["particles", "physics-platformer", "tiled"]
