@@ -7,7 +7,7 @@ use frogquad::miniquad::{
     VertexStep,
 };
 use frogquad::texture::{FilterMode, Texture2D};
-use frogquad::{FrogCx, QuadGl, glam, rand};
+use frogquad::{FrogCx, QuadGl, glam};
 use miniquad::graphics::RenderPass;
 
 #[cfg(feature = "nanoserde")]
@@ -264,12 +264,12 @@ impl EmissionShape {
         match self {
             EmissionShape::Point => vec2(0., 0.),
             EmissionShape::Rect { width, height } => vec2(
-                rand::gen_range(-width / 2., width / 2.0),
-                rand::gen_range(-height / 2., height / 2.0),
+                quad_rand::gen_range(-width / 2., width / 2.0),
+                quad_rand::gen_range(-height / 2., height / 2.0),
             ),
             EmissionShape::Sphere { radius } => {
-                let ro = rand::gen_range(0., radius * radius).sqrt();
-                let phi = rand::gen_range(0., std::f32::consts::PI * 2.);
+                let ro = quad_rand::gen_range(0., radius * radius).sqrt();
+                let phi = quad_rand::gen_range(0., std::f32::consts::PI * 2.);
 
                 frogquad::math::polar_to_cartesian(ro, phi)
             }
@@ -735,7 +735,7 @@ impl Emitter {
         let offset = offset + self.config.emission_shape.gen_random_point();
 
         fn random_initial_vector(dir: Vec2, spread: f32, velocity: f32) -> Vec2 {
-            let angle = rand::gen_range(-spread / 2.0, spread / 2.0);
+            let angle = quad_rand::gen_range(-spread / 2.0, spread / 2.0);
 
             let quat = glam::Quat::from_rotation_z(angle);
             let dir = quat * vec3(dir.x, dir.y, 0.0);
@@ -744,12 +744,12 @@ impl Emitter {
             vec2(res.x, res.y)
         }
 
-        let r =
-            self.config.size - self.config.size * rand::gen_range(0.0, self.config.size_randomness);
+        let r = self.config.size
+            - self.config.size * quad_rand::gen_range(0.0, self.config.size_randomness);
 
         let rotation = self.config.initial_rotation
             - self.config.initial_rotation
-                * rand::gen_range(0.0, self.config.initial_rotation_randomness);
+                * quad_rand::gen_range(0.0, self.config.initial_rotation_randomness);
 
         let particle = if self.config.local_coords {
             GpuParticle {
@@ -784,14 +784,14 @@ impl Emitter {
                 self.config.initial_direction_spread,
                 self.config.initial_velocity
                     - self.config.initial_velocity
-                        * rand::gen_range(0.0, self.config.initial_velocity_randomness),
+                        * quad_rand::gen_range(0.0, self.config.initial_velocity_randomness),
             ),
             angular_velocity: self.config.initial_angular_velocity
                 - self.config.initial_angular_velocity
-                    * rand::gen_range(0.0, self.config.initial_angular_velocity_randomness),
+                    * quad_rand::gen_range(0.0, self.config.initial_angular_velocity_randomness),
             lived: 0.0,
             lifetime: self.config.lifetime
-                - self.config.lifetime * rand::gen_range(0.0, self.config.lifetime_randomness),
+                - self.config.lifetime * quad_rand::gen_range(0.0, self.config.lifetime_randomness),
             frame: 0,
             initial_size: r,
         });

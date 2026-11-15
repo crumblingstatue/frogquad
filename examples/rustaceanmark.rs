@@ -1,6 +1,6 @@
 use pollster::FutureExt;
 use {
-    frogquad::{Color, FrogCx, rand, texture::Texture2D},
+    frogquad::{Color, FrogCx, texture::Texture2D},
     glam::Vec2,
     miniquad::{FilterMode, MouseButton},
 };
@@ -40,13 +40,13 @@ impl frogquad::App for RustaceanMarkApp {
                 self.rustaceanes.push(Rustaceane {
                     pos: Vec2::from(fc.mouse_position()),
                     speed: Vec2::new(
-                        rand::gen_range(-250., 250.) / 60.,
-                        rand::gen_range(-250., 250.) / 60.,
+                        quad_rand::gen_range(-250., 250.) / 60.,
+                        quad_rand::gen_range(-250., 250.) / 60.,
                     ),
                     color: Color::from_rgba(
-                        rand::gen_range(50, 240),
-                        rand::gen_range(80, 240),
-                        rand::gen_range(100, 240),
+                        quad_rand::gen_range(50, 240),
+                        quad_rand::gen_range(80, 240),
+                        quad_rand::gen_range(100, 240),
                         255,
                     ),
                 })

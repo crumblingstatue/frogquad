@@ -25,7 +25,6 @@ all-features = true
 
 [dependencies]
 miniquad = { version = "=0.4.11", features = ["log-impl"] }
-quad-rand = "0.2.3"
 glam = { version = "0.34.3", features = ["scalar-math"] }
 image = { version = "0.25.10", default-features = false, features = ["png", "tga"] }
 fontdue = "0.9"
@@ -37,6 +36,7 @@ frogquad-particles = { path = "./particles" }
 frogquad-tiled = { path = "./tiled" }
 frogquad-platformer = { path = "./physics-platformer" }
 pollster = "1"
+quad-rand = "0.2.3"
 
 [workspace]
 members = ["particles", "physics-platformer", "tiled"]

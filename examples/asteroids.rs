@@ -1,5 +1,5 @@
 use {
-    frogquad::{Color, FrogCx, rand},
+    frogquad::{Color, FrogCx},
     glam::Vec2,
     miniquad::KeyCode,
 };
@@ -108,15 +108,21 @@ impl frogquad::App for AsteroidsApp {
                 for _ in 0..10 {
                     self.asteroids.push(Asteroid {
                         pos: screen_center
-                            + Vec2::new(rand::gen_range(-1., 1.), rand::gen_range(-1., 1.))
-                                .normalize()
+                            + Vec2::new(
+                                quad_rand::gen_range(-1., 1.),
+                                quad_rand::gen_range(-1., 1.),
+                            )
+                            .normalize()
                                 * fc.screen_width().min(fc.screen_height())
                                 / 2.,
-                        vel: Vec2::new(rand::gen_range(-1., 1.), rand::gen_range(-1., 1.)),
+                        vel: Vec2::new(
+                            quad_rand::gen_range(-1., 1.),
+                            quad_rand::gen_range(-1., 1.),
+                        ),
                         rot: 0.,
-                        rot_speed: rand::gen_range(-2., 2.),
+                        rot_speed: quad_rand::gen_range(-2., 2.),
                         size: fc.screen_width().min(fc.screen_height()) / 10.,
-                        sides: rand::gen_range(3, 8),
+                        sides: quad_rand::gen_range(3, 8),
                         collided: false,
                     })
                 }
@@ -194,9 +200,9 @@ impl frogquad::App for AsteroidsApp {
                         new_asteroids.push(Asteroid {
                             pos: asteroid.pos,
                             vel: Vec2::new(bullet.vel.y, -bullet.vel.x).normalize()
-                                * rand::gen_range(1., 3.),
-                            rot: rand::gen_range(0., 360.),
-                            rot_speed: rand::gen_range(-2., 2.),
+                                * quad_rand::gen_range(1., 3.),
+                            rot: quad_rand::gen_range(0., 360.),
+                            rot_speed: quad_rand::gen_range(-2., 2.),
                             size: asteroid.size * 0.8,
                             sides: asteroid.sides - 1,
                             collided: false,
@@ -204,9 +210,9 @@ impl frogquad::App for AsteroidsApp {
                         new_asteroids.push(Asteroid {
                             pos: asteroid.pos,
                             vel: Vec2::new(-bullet.vel.y, bullet.vel.x).normalize()
-                                * rand::gen_range(1., 3.),
-                            rot: rand::gen_range(0., 360.),
-                            rot_speed: rand::gen_range(-2., 2.),
+                                * quad_rand::gen_range(1., 3.),
+                            rot: quad_rand::gen_range(0., 360.),
+                            rot_speed: quad_rand::gen_range(-2., 2.),
                             size: asteroid.size * 0.8,
                             sides: asteroid.sides - 1,
                             collided: false,

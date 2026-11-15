@@ -1,5 +1,5 @@
 use {
-    frogquad::{Color, FrogCx, rand},
+    frogquad::{Color, FrogCx},
     miniquad::KeyCode,
 };
 
@@ -27,7 +27,10 @@ impl SnakeApp {
                 dir: (1, 0),
                 body: LinkedList::new(),
             },
-            fruit: (rand::gen_range(0, SQUARES), rand::gen_range(0, SQUARES)),
+            fruit: (
+                quad_rand::gen_range(0, SQUARES),
+                quad_rand::gen_range(0, SQUARES),
+            ),
             score: 0,
             speed: 0.3,
             last_update: fc.time(),
@@ -71,7 +74,10 @@ impl frogquad::App for SnakeApp {
                     self.snake.head.1 + self.snake.dir.1,
                 );
                 if self.snake.head == self.fruit {
-                    self.fruit = (rand::gen_range(0, SQUARES), rand::gen_range(0, SQUARES));
+                    self.fruit = (
+                        quad_rand::gen_range(0, SQUARES),
+                        quad_rand::gen_range(0, SQUARES),
+                    );
                     self.score += 100;
                     self.speed *= 0.9;
                 } else {
@@ -183,7 +189,10 @@ impl frogquad::App for SnakeApp {
                     dir: (1, 0),
                     body: LinkedList::new(),
                 };
-                self.fruit = (rand::gen_range(0, SQUARES), rand::gen_range(0, SQUARES));
+                self.fruit = (
+                    quad_rand::gen_range(0, SQUARES),
+                    quad_rand::gen_range(0, SQUARES),
+                );
                 self.score = 0;
                 self.speed = 0.3;
                 self.last_update = fc.time();

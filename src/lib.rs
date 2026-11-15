@@ -72,11 +72,6 @@ pub use text::{Font, TextParams};
 // Re-export glam library
 pub use glam;
 
-/// Cross platform random generator.
-pub mod rand {
-    pub use quad_rand::*;
-}
-
 #[cfg(not(feature = "log-rs"))]
 /// Logging macros, available with miniquad "log-impl" feature.
 pub mod logging {

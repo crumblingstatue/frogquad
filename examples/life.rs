@@ -1,5 +1,5 @@
 use frogquad::{
-    Color, FrogCx, rand,
+    Color, FrogCx,
     texture::{Image, Texture2D},
 };
 
@@ -27,7 +27,7 @@ impl LifeApp {
         let image = Image::gen_image_color(w as u16, h as u16, Color::WHITE);
 
         for cell in cells.iter_mut() {
-            if rand::gen_range(0, 5) == 0 {
+            if quad_rand::gen_range(0, 5) == 0 {
                 *cell = CellState::Alive;
             }
         }
