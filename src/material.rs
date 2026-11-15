@@ -147,7 +147,6 @@ impl QuadGl {
     }
 }
 
-#[doc(hidden)]
 pub mod shaders {
     type IncludeFilename = String;
     type IncludeContent = String;
