@@ -58,7 +58,7 @@ pub mod models;
 pub mod shapes;
 pub mod text;
 pub mod texture;
-pub mod time;
+mod time;
 pub mod window;
 
 mod error;
