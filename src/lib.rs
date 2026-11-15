@@ -54,7 +54,7 @@ pub mod file;
 pub mod input;
 pub mod material;
 pub mod math;
-pub mod shapes;
+mod shapes;
 mod text;
 pub mod texture;
 mod time;
@@ -68,6 +68,7 @@ pub use color::Color;
 pub use conf::{Config, UpdateTrigger};
 pub use error::Error;
 pub use quad_gl::QuadGl;
+pub use shapes::DrawRectangleParams;
 pub use text::{Font, TextParams};
 // Re-export glam library
 pub use glam;
