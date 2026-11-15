@@ -1,7 +1,7 @@
 use {
     frogquad::{
         Color, FrogCx,
-        camera::{Camera3D, set_camera, set_default_camera},
+        camera::Camera3D,
         conf::Conf,
         models::{draw_cube, draw_cube_wires, draw_grid, draw_plane, draw_sphere},
         texture::{Texture2D, load_texture},
@@ -30,15 +30,12 @@ impl frogquad::App for App3d {
 
         // Going 3d!
 
-        set_camera(
-            fc,
-            &Camera3D {
-                position: vec3(-20., 15., 0.),
-                up: vec3(0., 1., 0.),
-                target: vec3(0., 0., 0.),
-                ..Default::default()
-            },
-        );
+        fc.set_camera(&Camera3D {
+            position: vec3(-20., 15., 0.),
+            up: vec3(0., 1., 0.),
+            target: vec3(0., 0., 0.),
+            ..Default::default()
+        });
 
         draw_grid(fc, 20, 1., Color::BLACK, Color::GRAY);
 
@@ -80,7 +77,7 @@ impl frogquad::App for App3d {
 
         // Back to screen space, render some text
 
-        set_default_camera(fc);
+        fc.set_default_camera();
         fc.draw_text("WELCOME TO 3D WORLD", 10.0, 20.0, 30.0, Color::BLACK);
     }
 }

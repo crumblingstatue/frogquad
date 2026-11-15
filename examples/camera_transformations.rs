@@ -1,9 +1,5 @@
 use {
-    frogquad::{
-        Color, FrogCx,
-        camera::{Camera2D, set_camera, set_default_camera},
-        conf::Conf,
-    },
+    frogquad::{Color, FrogCx, camera::Camera2D, conf::Conf},
     glam::vec2,
     miniquad::KeyCode,
 };
@@ -105,52 +101,40 @@ impl frogquad::App for CamTfApp {
 
         fc.clear_background(Color::LIGHTGRAY);
 
-        set_camera(
-            fc,
-            &Camera2D {
-                target: vec2(self.target.0, self.target.1),
-                ..Default::default()
-            },
-        );
+        fc.set_camera(&Camera2D {
+            target: vec2(self.target.0, self.target.1),
+            ..Default::default()
+        });
         draw_cross(fc, 0., 0., Color::RED);
 
-        set_camera(
-            fc,
-            &Camera2D {
-                target: vec2(self.target.0, self.target.1),
-                rotation: self.smooth_rotation,
-                ..Default::default()
-            },
-        );
+        fc.set_camera(&Camera2D {
+            target: vec2(self.target.0, self.target.1),
+            rotation: self.smooth_rotation,
+            ..Default::default()
+        });
         draw_cross(fc, 0., 0., Color::GREEN);
 
-        set_camera(
-            fc,
-            &Camera2D {
-                target: vec2(self.target.0, self.target.1),
-                rotation: self.smooth_rotation,
-                zoom: vec2(
-                    self.zoom,
-                    self.zoom * fc.screen_width() / fc.screen_height(),
-                ),
-                ..Default::default()
-            },
-        );
+        fc.set_camera(&Camera2D {
+            target: vec2(self.target.0, self.target.1),
+            rotation: self.smooth_rotation,
+            zoom: vec2(
+                self.zoom,
+                self.zoom * fc.screen_width() / fc.screen_height(),
+            ),
+            ..Default::default()
+        });
         draw_cross(fc, 0., 0., Color::BLUE);
 
-        set_camera(
-            fc,
-            &Camera2D {
-                target: vec2(self.target.0, self.target.1),
-                rotation: self.smooth_rotation,
-                zoom: vec2(
-                    self.zoom,
-                    self.zoom * fc.screen_width() / fc.screen_height(),
-                ),
-                offset: vec2(self.offset.0, self.offset.1),
-                ..Default::default()
-            },
-        );
+        fc.set_camera(&Camera2D {
+            target: vec2(self.target.0, self.target.1),
+            rotation: self.smooth_rotation,
+            zoom: vec2(
+                self.zoom,
+                self.zoom * fc.screen_width() / fc.screen_height(),
+            ),
+            offset: vec2(self.offset.0, self.offset.1),
+            ..Default::default()
+        });
 
         // Render some primitives in camera space
         fc.draw_line(-0.4, 0.4, -0.8, 0.9, 0.05, Color::BLUE);
@@ -158,7 +142,7 @@ impl frogquad::App for CamTfApp {
         fc.draw_circle(0., 0., 0.1, Color::YELLOW);
 
         // Back to screen space, render some text
-        set_default_camera(fc);
+        fc.set_default_camera();
         fc.draw_text(
             format!(
                 "target (WASD keys) = ({:+.2}, {:+.2})",

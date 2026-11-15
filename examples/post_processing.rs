@@ -1,7 +1,7 @@
 use {
     frogquad::{
         Color, FrogCx,
-        camera::{Camera2D, set_camera, set_default_camera},
+        camera::Camera2D,
         conf::Conf,
         material::{Material, gl_use_default_material, gl_use_material, load_material},
         texture::{DrawTextureParams, RenderTarget, draw_texture_ex, render_target},
@@ -41,15 +41,12 @@ impl frogquad::App for PostProcessExample {
         // drawing to the texture
 
         // 0..100, 0..100 camera
-        set_camera(
-            fc,
-            &Camera2D {
-                zoom: vec2(0.01, 0.01),
-                target: vec2(0.0, 0.0),
-                render_target: Some(self.render_target.clone()),
-                ..Default::default()
-            },
-        );
+        fc.set_camera(&Camera2D {
+            zoom: vec2(0.01, 0.01),
+            target: vec2(0.0, 0.0),
+            render_target: Some(self.render_target.clone()),
+            ..Default::default()
+        });
 
         fc.clear_background(Color::LIGHTGRAY);
         fc.draw_line(-30.0, 45.0, 30.0, 45.0, 3.0, Color::BLUE);
@@ -58,7 +55,7 @@ impl frogquad::App for PostProcessExample {
 
         // drawing to the screen
 
-        set_default_camera(fc);
+        fc.set_default_camera();
 
         fc.clear_background(Color::WHITE);
         gl_use_material(&mut fc.gl, &self.material);

@@ -1,7 +1,7 @@
 use {
     frogquad::{
         Color, FrogCx,
-        camera::{Camera3D, set_camera, set_default_camera},
+        camera::Camera3D,
         input::show_mouse,
         models::{draw_cube_wires, draw_grid, draw_line_3d},
     },
@@ -139,15 +139,12 @@ impl frogquad::App for FirstPersonApp {
 
         // Going 3d!
 
-        set_camera(
-            fc,
-            &Camera3D {
-                position: self.position,
-                up: self.up,
-                target: self.position + self.front,
-                ..Default::default()
-            },
-        );
+        fc.set_camera(&Camera3D {
+            position: self.position,
+            up: self.up,
+            target: self.position + self.front,
+            ..Default::default()
+        });
 
         draw_grid(fc, 20, 1., Color::BLACK, Color::GRAY);
 
@@ -164,7 +161,7 @@ impl frogquad::App for FirstPersonApp {
 
         // Back to screen space, render some text
 
-        set_default_camera(fc);
+        fc.set_default_camera();
         fc.draw_text("First Person Camera", 10.0, 20.0, 30.0, Color::BLACK);
 
         fc.draw_text(

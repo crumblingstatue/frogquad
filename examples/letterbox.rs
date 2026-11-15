@@ -1,7 +1,7 @@
 use {
     frogquad::{
         Color,
-        camera::{Camera2D, set_camera, set_default_camera},
+        camera::Camera2D,
         conf::Conf,
         math::Rect,
         texture::{DrawTextureParams, RenderTarget, draw_texture_ex, render_target},
@@ -53,7 +53,7 @@ impl frogquad::App for LetterboxApp {
         // ------------------------------------------------------------------------
         // Begin drawing the virtual screen to 'render_target'
         // ------------------------------------------------------------------------
-        set_camera(fc, &self.render_target_cam);
+        fc.set_camera(&self.render_target_cam);
 
         fc.clear_background(Color::LIGHTGRAY);
 
@@ -82,7 +82,7 @@ impl frogquad::App for LetterboxApp {
         // ------------------------------------------------------------------------
         // Begin drawing the window screen
         // ------------------------------------------------------------------------
-        set_default_camera(fc);
+        fc.set_default_camera();
 
         fc.clear_background(Color::BLACK); // Will be the letterbox color
 

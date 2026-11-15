@@ -1,9 +1,4 @@
-use frogquad::{
-    Color, FrogCx,
-    camera::{Camera2D, set_camera},
-    conf::Conf,
-    math::Rect,
-};
+use frogquad::{Color, FrogCx, camera::Camera2D, conf::Conf, math::Rect};
 
 use frogquad_particles::{BlendMode, Curve, Emitter, EmitterConfig};
 use glam::vec2;
@@ -42,7 +37,7 @@ impl frogquad::App for ParticlesSingleApp {
 
         let camera = Camera2D::from_display_rect(Rect::new(0.0, 0.0, 100.0, 100.0));
 
-        set_camera(fc, &camera);
+        fc.set_camera(&camera);
 
         self.emitter.draw(fc, vec2(50., 50.));
     }

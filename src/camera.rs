@@ -273,51 +273,52 @@ impl Camera for Camera3D {
     }
 }
 
-/// Set active 2D or 3D camera.
-pub fn set_camera(fc: &mut FrogCx, camera: &dyn Camera) {
-    // flush previous camera draw calls
-    fc.perform_render_passes();
+impl FrogCx {
+    /// Set active 2D or 3D camera.
+    pub fn set_camera(&mut self, camera: &dyn Camera) {
+        // flush previous camera draw calls
+        self.perform_render_passes();
 
-    fc.gl
-        .render_pass(camera.render_pass().map(|rt| rt.raw_miniquad_id()));
+        self.gl
+            .render_pass(camera.render_pass().map(|rt| rt.raw_miniquad_id()));
 
-    fc.gl.viewport(camera.viewport());
-    fc.gl.depth_test(camera.depth_enabled());
-    fc.camera_matrix = Some(camera.matrix(fc));
-}
+        self.gl.viewport(camera.viewport());
+        self.gl.depth_test(camera.depth_enabled());
+        self.camera_matrix = Some(camera.matrix(self));
+    }
 
-/// Reset default 2D camera mode.
-pub fn set_default_camera(fc: &mut FrogCx) {
-    // flush previous camera draw calls
-    fc.perform_render_passes();
+    /// Reset default 2D camera mode.
+    pub fn set_default_camera(&mut self) {
+        // flush previous camera draw calls
+        self.perform_render_passes();
 
-    fc.gl.render_pass(None);
-    fc.gl.viewport(None);
-    fc.gl.depth_test(false);
-    fc.camera_matrix = None;
+        self.gl.render_pass(None);
+        self.gl.viewport(None);
+        self.gl.depth_test(false);
+        self.camera_matrix = None;
+    }
+    pub fn push_camera_state(&mut self) {
+        let camera_state = CameraState {
+            render_pass: self.gl.get_active_render_pass(),
+            depth_test: self.gl.is_depth_test_enabled(),
+            matrix: self.camera_matrix,
+        };
+        self.camera_stack.push(camera_state);
+    }
+
+    pub fn pop_camera_state(&mut self) {
+        if let Some(camera_state) = self.camera_stack.pop() {
+            self.perform_render_passes();
+
+            self.gl.render_pass(camera_state.render_pass);
+            self.gl.depth_test(camera_state.depth_test);
+            self.camera_matrix = camera_state.matrix;
+        }
+    }
 }
 
 pub(crate) struct CameraState {
     render_pass: Option<miniquad::RenderPass>,
     depth_test: bool,
     matrix: Option<Mat4>,
-}
-
-pub fn push_camera_state(fc: &mut FrogCx) {
-    let camera_state = CameraState {
-        render_pass: fc.gl.get_active_render_pass(),
-        depth_test: fc.gl.is_depth_test_enabled(),
-        matrix: fc.camera_matrix,
-    };
-    fc.camera_stack.push(camera_state);
-}
-
-pub fn pop_camera_state(fc: &mut FrogCx) {
-    if let Some(camera_state) = fc.camera_stack.pop() {
-        fc.perform_render_passes();
-
-        fc.gl.render_pass(camera_state.render_pass);
-        fc.gl.depth_test(camera_state.depth_test);
-        fc.camera_matrix = camera_state.matrix;
-    }
 }

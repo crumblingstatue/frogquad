@@ -1,10 +1,6 @@
 use {
     frogquad::{
-        Color, FrogCx,
-        camera::{Camera2D, set_camera},
-        conf::Conf,
-        file::load_string,
-        math::Rect,
+        Color, FrogCx, camera::Camera2D, conf::Conf, file::load_string, math::Rect,
         texture::load_texture,
     },
     glam::{Vec2, vec2},
@@ -79,7 +75,7 @@ impl frogquad::App for PlatformerApp {
     fn update(&mut self, fc: &mut FrogCx) {
         fc.clear_background(Color::BLACK);
 
-        set_camera(fc, &self.camera);
+        fc.set_camera(&self.camera);
 
         self.tiled_map
             .draw_tiles(fc, "main layer", Rect::new(0.0, 0.0, 320.0, 152.0), None);

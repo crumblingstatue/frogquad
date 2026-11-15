@@ -1,9 +1,5 @@
 use {
-    frogquad::{
-        Color, FrogCx,
-        camera::{Camera2D, set_camera},
-        conf::Conf,
-    },
+    frogquad::{Color, FrogCx, camera::Camera2D, conf::Conf},
     glam::vec2,
 };
 
@@ -59,7 +55,7 @@ fn main() {
             ..Default::default()
         };
 
-        set_camera(fc, &camera);
+        fc.set_camera(&camera);
         Box::new(TreeApp {})
     });
 }

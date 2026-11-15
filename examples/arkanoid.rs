@@ -1,10 +1,5 @@
 use {
-    frogquad::{
-        Color, FrogCx,
-        camera::{Camera2D, set_camera},
-        conf::Conf,
-        text::TextParams,
-    },
+    frogquad::{Color, FrogCx, camera::Camera2D, conf::Conf, text::TextParams},
     glam::vec2,
     miniquad::KeyCode,
 };
@@ -32,14 +27,11 @@ impl ArkanoidApp {
         // build camera with following coordinate system:
         // (0., 0)     .... (SCR_W, 0.)
         // (0., SCR_H) .... (SCR_W, SCR_H)
-        set_camera(
-            fc,
-            &Camera2D {
-                zoom: vec2(1. / SCR_W * 2., 1. / SCR_H * 2.),
-                target: vec2(SCR_W / 2., SCR_H / 2.),
-                ..Default::default()
-            },
-        );
+        fc.set_camera(&Camera2D {
+            zoom: vec2(1. / SCR_W * 2., 1. / SCR_H * 2.),
+            target: vec2(SCR_W / 2., SCR_H / 2.),
+            ..Default::default()
+        });
         Self {
             blocks,
             ball_x,
