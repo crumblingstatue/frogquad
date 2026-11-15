@@ -27,5 +27,5 @@ impl frogquad::App for CameraApp {
 }
 
 fn main() {
-    frogquad::start("Camera", |_fc| Box::new(CameraApp {}));
+    frogquad::start("Camera", |_fc| CameraApp {});
 }

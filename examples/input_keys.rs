@@ -46,5 +46,5 @@ impl frogquad::App for InputKeysApp {
 }
 
 fn main() {
-    frogquad::start("InputKeys", |cx| Box::new(InputKeysApp::new(cx)));
+    frogquad::start("InputKeys", InputKeysApp::new);
 }

@@ -247,5 +247,5 @@ impl frogquad::App for CustomMatApp {
 }
 
 fn main() {
-    frogquad::start(window_conf(), |fc| Box::new(CustomMatApp::new(fc)));
+    frogquad::start(window_conf(), CustomMatApp::new);
 }

@@ -105,5 +105,5 @@ impl frogquad::App for TextApp {
 }
 
 fn main() {
-    frogquad::start("Text", |fc| Box::new(TextApp::new(fc)));
+    frogquad::start("Text", TextApp::new);
 }

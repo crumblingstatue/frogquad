@@ -133,5 +133,5 @@ impl frogquad::App for ParticlesApp {
 }
 
 fn main() {
-    frogquad::start("Fountain", |fc| Box::new(ParticlesApp::new(fc)));
+    frogquad::start("Fountain", ParticlesApp::new);
 }

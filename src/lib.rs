@@ -36,7 +36,7 @@
 //! }
 //!
 //! fn main() {
-//!     frogquad::start("BasicShapes", |_fc| { Box::new(ExampleApp)});
+//!     frogquad::start("BasicShapes", |_fc| ExampleApp);
 //! }
 //!```
 
@@ -387,12 +387,12 @@ impl FrogCx {
     }
 }
 
-struct Stage {
-    app: Box<dyn App>,
+struct Stage<T> {
+    app: T,
     fc: FrogCx,
 }
 
-impl EventHandler for Stage {
+impl<T: App> EventHandler for Stage<T> {
     fn resize_event(&mut self, width: f32, height: f32) {
         self.fc.screen_width = width;
         self.fc.screen_height = height;
@@ -741,9 +741,9 @@ pub trait App {
     fn update(&mut self, fc: &mut FrogCx);
 }
 
-pub fn start(
+pub fn start<A: App + 'static>(
     config: impl Into<Config>,
-    app_init: impl FnOnce(&mut FrogCx) -> Box<dyn App> + 'static,
+    app_init: impl FnOnce(&mut FrogCx) -> A + 'static,
 ) {
     let config = config.into();
     miniquad::start(config.miniquad_conf, move || {

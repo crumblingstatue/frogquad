@@ -52,6 +52,6 @@ fn main() {
         };
 
         fc.set_camera(&camera);
-        Box::new(TreeApp {})
+        TreeApp {}
     });
 }

@@ -101,5 +101,5 @@ impl frogquad::App for LetterboxApp {
 }
 
 fn main() {
-    frogquad::start("Letterbox", |fc| Box::new(LetterboxApp::new(fc)));
+    frogquad::start("Letterbox", LetterboxApp::new);
 }

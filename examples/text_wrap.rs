@@ -55,5 +55,5 @@ impl frogquad::App for TextWrapApp {
 }
 
 fn main() {
-    frogquad::start("Text Wrap", |_fc| Box::new(TextWrapApp {}));
+    frogquad::start("Text Wrap", |_fc| TextWrapApp {});
 }

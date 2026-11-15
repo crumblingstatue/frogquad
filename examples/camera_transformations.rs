@@ -184,5 +184,5 @@ impl frogquad::App for CamTfApp {
 }
 
 fn main() {
-    frogquad::start("Camera", |_| Box::new(CamTfApp::new()));
+    frogquad::start("Camera", |_| CamTfApp::new());
 }

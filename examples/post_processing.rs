@@ -73,9 +73,7 @@ impl frogquad::App for PostProcessExample {
 }
 
 fn main() {
-    frogquad::start("Post processing", |fc| {
-        Box::new(PostProcessExample::new(fc))
-    });
+    frogquad::start("Post processing", PostProcessExample::new);
 }
 
 const CRT_FRAGMENT_SHADER: &str = r#"#version 100

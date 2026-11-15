@@ -143,5 +143,5 @@ impl frogquad::App for ArkanoidApp {
 }
 
 fn main() {
-    frogquad::start("Arkanoid", |fc| Box::new(ArkanoidApp::new(fc)));
+    frogquad::start("Arkanoid", ArkanoidApp::new);
 }

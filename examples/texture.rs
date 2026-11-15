@@ -23,5 +23,5 @@ impl frogquad::App for TextureApp {
 }
 
 fn main() {
-    frogquad::start("Texture", |fc| Box::new(TextureApp::new(fc)));
+    frogquad::start("Texture", TextureApp::new);
 }

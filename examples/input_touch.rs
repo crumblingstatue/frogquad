@@ -22,5 +22,5 @@ impl frogquad::App for InputTouchApp {
 }
 
 fn main() {
-    frogquad::start("InputTouch", |_fc| Box::new(InputTouchApp {}));
+    frogquad::start("InputTouch", |_fc| InputTouchApp {});
 }

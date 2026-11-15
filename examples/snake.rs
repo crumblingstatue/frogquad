@@ -200,5 +200,5 @@ struct Snake {
 }
 
 fn main() {
-    frogquad::start("Snake", |fc| Box::new(SnakeApp::new(fc)));
+    frogquad::start("Snake", SnakeApp::new);
 }

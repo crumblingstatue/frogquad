@@ -87,5 +87,5 @@ impl frogquad::App for RustaceanMarkApp {
 }
 
 fn main() {
-    frogquad::start("Rustaceanmark", |fc| Box::new(RustaceanMarkApp::new(fc)));
+    frogquad::start("Rustaceanmark", RustaceanMarkApp::new);
 }

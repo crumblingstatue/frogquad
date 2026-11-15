@@ -82,5 +82,5 @@ impl frogquad::App for App3d {
 }
 
 fn main() {
-    frogquad::start("3D", |fc| Box::new(App3d::new(fc)));
+    frogquad::start("3D", App3d::new);
 }

@@ -110,5 +110,5 @@ impl frogquad::App for LifeApp {
 }
 
 fn main() {
-    frogquad::start("Life", |fc| Box::new(LifeApp::new(fc)));
+    frogquad::start("Life", LifeApp::new);
 }

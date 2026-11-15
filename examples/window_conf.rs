@@ -23,5 +23,5 @@ impl frogquad::App for WindowConfApp {
 }
 
 fn main() {
-    frogquad::start(window_conf(), |_fc| Box::new(WindowConfApp {}));
+    frogquad::start(window_conf(), |_fc| WindowConfApp {});
 }

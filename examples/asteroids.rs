@@ -267,5 +267,5 @@ impl frogquad::App for AsteroidsApp {
 }
 
 fn main() {
-    frogquad::start("Asteroids", |fc| Box::new(AsteroidsApp::new(fc)));
+    frogquad::start("Asteroids", AsteroidsApp::new);
 }

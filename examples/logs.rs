@@ -20,6 +20,6 @@ fn main() {
         miniquad::info!("and info message");
         miniquad::error!("and errors, the red ones!");
         miniquad::warn!("Or warnings, the yellow ones.");
-        Box::new(LogsApp {})
+        LogsApp {}
     });
 }

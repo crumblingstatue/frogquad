@@ -44,5 +44,5 @@ impl frogquad::App for ParticlesSingleApp {
 }
 
 fn main() {
-    frogquad::start("Fountain", |fc| Box::new(ParticlesSingleApp::new(fc)));
+    frogquad::start("Fountain", ParticlesSingleApp::new);
 }

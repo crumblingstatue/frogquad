@@ -38,6 +38,6 @@ fn main() {
             .block_on()
             .unwrap();
         fc.set_default_font(font);
-        Box::new(DefaultFontApp {})
+        DefaultFontApp {}
     });
 }

@@ -63,7 +63,7 @@ impl frogquad::App for ScreenTexExample {
 }
 
 fn main() {
-    frogquad::start("Texture", |fc| Box::new(ScreenTexExample::new(fc)));
+    frogquad::start("Texture", ScreenTexExample::new);
 }
 
 const LENS_FRAGMENT_SHADER: &str = r#"#version 100

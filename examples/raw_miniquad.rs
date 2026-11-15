@@ -62,7 +62,7 @@ impl frogquad::App for RawMqApp {
 }
 
 fn main() {
-    frogquad::start("Raw miniquad", |fc| Box::new(RawMqApp::new(fc)));
+    frogquad::start("Raw miniquad", RawMqApp::new);
 }
 
 mod raw_miniquad {

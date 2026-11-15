@@ -26,5 +26,5 @@ impl frogquad::App for BasicShapesApp {
 }
 
 fn main() {
-    frogquad::start("BasicShapes", |_fc| Box::new(BasicShapesApp {}));
+    frogquad::start("BasicShapes", |_fc| BasicShapesApp {});
 }

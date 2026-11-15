@@ -159,5 +159,5 @@ impl frogquad::App for PlatformerApp {
 }
 
 fn main() {
-    frogquad::start("Platformer", |fc| Box::new(PlatformerApp::new(fc)));
+    frogquad::start("Platformer", PlatformerApp::new);
 }
