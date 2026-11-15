@@ -82,7 +82,7 @@ impl FirstPersonApp {
 
 impl frogquad::App for FirstPersonApp {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
-        let delta = fc.get_frame_time();
+        let delta = fc.frame_time();
 
         if fc.is_key_pressed(KeyCode::Escape) {
             fc.request_quit();

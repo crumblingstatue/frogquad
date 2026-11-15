@@ -1003,7 +1003,7 @@ impl Emitter {
         fc.perform_render_passes();
 
         self.position = pos;
-        let frame_time = fc.get_frame_time();
+        let frame_time = fc.frame_time();
         self.update(fc, frame_time);
 
         self.setup_render_pass(&fc.gl, &mut *fc.quad_context);
@@ -1069,7 +1069,7 @@ impl EmittersCache {
         for i in &mut self.active_emitters {
             if let Some((emitter, pos)) = i {
                 emitter.position = *pos;
-                let frame_time = fc.get_frame_time();
+                let frame_time = fc.frame_time();
                 emitter.update(fc, frame_time);
 
                 emitter.perform_render_pass(fc.projection_matrix(), &mut *fc.quad_context);

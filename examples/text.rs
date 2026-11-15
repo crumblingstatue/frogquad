@@ -42,7 +42,7 @@ impl frogquad::App for TextApp {
         }
 
         fc.draw_text_ex("Dynamic font scale:", 20.0, 400.0, TextParams::default());
-        let time = fc.get_time();
+        let time = fc.time();
         fc.draw_text_ex(
             "abcd",
             20.0,

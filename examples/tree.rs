@@ -46,7 +46,7 @@ impl frogquad::App for TreeApp {
         fc.clear_background(Color::LIGHTGRAY);
 
         fc.draw_circle(0., 0., 0.03, Color::DARKGRAY);
-        let time = fc.get_time();
+        let time = fc.time();
         tree(fc, time, 0, 1., 0.3);
     }
 }

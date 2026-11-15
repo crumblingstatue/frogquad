@@ -113,17 +113,16 @@ impl frogquad::App for ParticlesApp {
         }
 
         let local_emitter_pos = vec2(
-            (fc.get_time() * 0.3).sin() as f32 * fc.screen_width() / 2.5 + fc.screen_width() / 2.0,
-            (fc.get_time() * 0.5).cos() as f32 * fc.screen_height() / 2.5
-                + fc.screen_height() / 2.0,
+            (fc.time() * 0.3).sin() as f32 * fc.screen_width() / 2.5 + fc.screen_width() / 2.0,
+            (fc.time() * 0.5).cos() as f32 * fc.screen_height() / 2.5 + fc.screen_height() / 2.0,
         );
         self.flying_emitter_local.draw(fc, local_emitter_pos);
         fc.draw_circle(local_emitter_pos.x, local_emitter_pos.y, 15.0, Color::RED);
 
         let world_emitter_pos = vec2(
-            (fc.get_time() * 0.6 + 1.0).sin() as f32 * fc.screen_width() / 2.5
+            (fc.time() * 0.6 + 1.0).sin() as f32 * fc.screen_width() / 2.5
                 + fc.screen_width() / 2.0,
-            (fc.get_time() * 0.4 + 1.0).cos() as f32 * fc.screen_height() / 2.5
+            (fc.time() * 0.4 + 1.0).cos() as f32 * fc.screen_height() / 2.5
                 + fc.screen_height() / 2.0,
         );
 

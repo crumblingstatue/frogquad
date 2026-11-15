@@ -126,7 +126,7 @@ impl frogquad::App for PlatformerApp {
                 .collide_check(self.player.collider, pos + vec2(0., 1.));
 
             if !on_ground {
-                self.player.speed.y += 500. * fc.get_frame_time();
+                self.player.speed.y += 500. * fc.frame_time();
             }
 
             if fc.is_key_down(KeyCode::Right) {
@@ -141,21 +141,17 @@ impl frogquad::App for PlatformerApp {
                 self.player.speed.y = -120.;
             }
 
-            self.world.move_h(
-                self.player.collider,
-                self.player.speed.x * fc.get_frame_time(),
-            );
-            self.world.move_v(
-                self.player.collider,
-                self.player.speed.y * fc.get_frame_time(),
-            );
+            self.world
+                .move_h(self.player.collider, self.player.speed.x * fc.frame_time());
+            self.world
+                .move_v(self.player.collider, self.player.speed.y * fc.frame_time());
         }
 
         // platform movement
         {
             self.world.solid_move(
                 self.platform.collider,
-                self.platform.speed * fc.get_frame_time(),
+                self.platform.speed * fc.frame_time(),
                 0.0,
             );
             let pos = self.world.solid_pos(self.platform.collider);

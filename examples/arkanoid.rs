@@ -63,7 +63,7 @@ impl frogquad::App for ArkanoidApp {
         let platform_height = 0.2;
         fc.clear_background(Color::SKYBLUE);
 
-        let delta = fc.get_frame_time();
+        let delta = fc.frame_time();
 
         if fc.is_key_down(KeyCode::Right) && self.platform_x < SCR_W - platform_width / 2. {
             self.platform_x += 3.0 * delta;

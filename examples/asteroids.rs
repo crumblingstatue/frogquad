@@ -63,7 +63,7 @@ impl AsteroidsApp {
         };
 
         let bullets = Vec::new();
-        let last_shot = fc.get_time();
+        let last_shot = fc.time();
         let asteroids = Vec::new();
         let gameover = false;
 
@@ -123,7 +123,7 @@ impl frogquad::App for AsteroidsApp {
             }
             return;
         }
-        let frame_t = fc.get_time();
+        let frame_t = fc.time();
         let rotation = self.ship.rot.to_radians();
 
         let mut acc = -self.ship.vel / 100.; // Friction
