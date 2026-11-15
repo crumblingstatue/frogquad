@@ -112,7 +112,7 @@ impl Font {
             .contains_key(&(character, size))
     }
 
-    pub(crate) fn measure_text(
+    pub(crate) fn measure_text_ex(
         &self,
         text: impl AsRef<str>,
         font_size: u16,
@@ -480,128 +480,130 @@ impl FrogCx {
     }
 }
 
-/// Get the text center.
-pub fn get_text_center(
-    text: impl AsRef<str>,
-    font: &Font,
-    font_size: u16,
-    font_scale: f32,
-    rotation: f32,
-) -> crate::Vec2 {
-    let measure = measure_text(text, font, font_size, font_scale);
+impl Font {
+    /// Get the text center.
+    pub fn get_text_center(
+        &self,
+        text: impl AsRef<str>,
+        font_size: u16,
+        font_scale: f32,
+        rotation: f32,
+    ) -> crate::Vec2 {
+        let measure = self.measure_text(text, font_size, font_scale);
 
-    let x_center = measure.width / 2.0 * rotation.cos() + measure.height / 2.0 * rotation.sin();
-    let y_center = measure.width / 2.0 * rotation.sin() - measure.height / 2.0 * rotation.cos();
+        let x_center = measure.width / 2.0 * rotation.cos() + measure.height / 2.0 * rotation.sin();
+        let y_center = measure.width / 2.0 * rotation.sin() - measure.height / 2.0 * rotation.cos();
 
-    crate::Vec2::new(x_center, y_center)
-}
-
-pub fn measure_text(
-    text: impl AsRef<str>,
-    font: &Font,
-    font_size: u16,
-    font_scale: f32,
-) -> TextDimensions {
-    font.measure_text(text, font_size, font_scale, font_scale, |_| {})
-}
-
-pub fn measure_multiline_text(
-    text: &str,
-    font: &Font,
-    font_size: u16,
-    font_scale: f32,
-    line_distance_factor: Option<f32>,
-) -> TextDimensions {
-    let line_distance = match line_distance_factor {
-        Some(distance) => distance,
-        None => match font.font.horizontal_line_metrics(1.0) {
-            Some(metrics) => metrics.new_line_size,
-            None => 1.0,
-        },
-    };
-
-    let mut dimensions = TextDimensions::default();
-    let y_step = line_distance * font_size as f32 * font_scale;
-
-    for line in text.lines() {
-        let line_dimensions = font.measure_text(line, font_size, font_scale, font_scale, |_| {});
-
-        dimensions.width = f32::max(dimensions.width, line_dimensions.width);
-        dimensions.height += y_step;
-        if dimensions.offset_y == 0.0 {
-            dimensions.offset_y = line_dimensions.offset_y;
-        }
+        crate::Vec2::new(x_center, y_center)
+    }
+    pub fn measure_text(
+        &self,
+        text: impl AsRef<str>,
+        font_size: u16,
+        font_scale: f32,
+    ) -> TextDimensions {
+        self.measure_text_ex(text, font_size, font_scale, font_scale, |_| {})
     }
 
-    dimensions
-}
+    pub fn measure_multiline_text(
+        &self,
+        text: &str,
+        font_size: u16,
+        font_scale: f32,
+        line_distance_factor: Option<f32>,
+    ) -> TextDimensions {
+        let line_distance = match line_distance_factor {
+            Some(distance) => distance,
+            None => match self.font.horizontal_line_metrics(1.0) {
+                Some(metrics) => metrics.new_line_size,
+                None => 1.0,
+            },
+        };
 
-/// Converts word breaks to newlines wherever the text would otherwise exceed the given length.
-pub fn wrap_text(
-    text: &str,
-    font: &Font,
-    font_size: u16,
-    font_scale: f32,
-    maximum_line_length: f32,
-) -> String {
-    // This is always a bit too much memory, but it saves a lot of reallocations.
-    let mut new_text =
-        String::with_capacity(text.len() + text.chars().filter(|c| c.is_whitespace()).count());
+        let mut dimensions = TextDimensions::default();
+        let y_step = line_distance * font_size as f32 * font_scale;
 
-    let mut current_word_start = 0usize;
-    let mut current_word_end = 0usize;
-    let mut characters = text.char_indices();
-    let mut total_width = 0.0;
-    let mut word_width = 0.0;
+        for line in text.lines() {
+            let line_dimensions =
+                self.measure_text_ex(line, font_size, font_scale, font_scale, |_| {});
 
-    font.measure_text(text, font_size, font_scale, font_scale, |mut width| {
-        // It's impossible this is called more often than the text has characters.
-        let (idx, c) = characters.next().unwrap();
-        let mut keep_char = true;
-
-        if c.is_whitespace() {
-            new_text.push_str(&text[current_word_start..idx + c.len_utf8()]);
-            current_word_start = idx + c.len_utf8();
-            word_width = 0.0;
-            keep_char = false;
-
-            // If we would wrap, ignore the whitespace.
-            if total_width + width > maximum_line_length {
-                width = 0.0;
+            dimensions.width = f32::max(dimensions.width, line_dimensions.width);
+            dimensions.height += y_step;
+            if dimensions.offset_y == 0.0 {
+                dimensions.offset_y = line_dimensions.offset_y;
             }
         }
 
-        // If a single word expands past the length limit, just break it up.
-        if word_width + width > maximum_line_length {
-            new_text.push_str(&text[current_word_start..current_word_end]);
-            new_text.push('\n');
-            current_word_start = current_word_end;
-            total_width = 0.0;
-            word_width = 0.0;
-        }
+        dimensions
+    }
 
-        current_word_end = idx + c.len_utf8();
-        if keep_char {
-            word_width += width;
-        }
+    /// Converts word breaks to newlines wherever the text would otherwise exceed the given length.
+    pub fn wrap_text(
+        &self,
+        text: &str,
+        font_size: u16,
+        font_scale: f32,
+        maximum_line_length: f32,
+    ) -> String {
+        // This is always a bit too much memory, but it saves a lot of reallocations.
+        let mut new_text =
+            String::with_capacity(text.len() + text.chars().filter(|c| c.is_whitespace()).count());
 
-        if c == '\n' {
-            total_width = 0.0;
-            word_width = 0.0;
-            return;
-        }
+        let mut current_word_start = 0usize;
+        let mut current_word_end = 0usize;
+        let mut characters = text.char_indices();
+        let mut total_width = 0.0;
+        let mut word_width = 0.0;
 
-        total_width += width;
+        self.measure_text_ex(text, font_size, font_scale, font_scale, |mut width| {
+            // It's impossible this is called more often than the text has characters.
+            let (idx, c) = characters.next().unwrap();
+            let mut keep_char = true;
 
-        if total_width > maximum_line_length {
-            new_text.push('\n');
-            total_width = word_width;
-        }
-    });
+            if c.is_whitespace() {
+                new_text.push_str(&text[current_word_start..idx + c.len_utf8()]);
+                current_word_start = idx + c.len_utf8();
+                word_width = 0.0;
+                keep_char = false;
 
-    new_text.push_str(&text[current_word_start..current_word_end]);
+                // If we would wrap, ignore the whitespace.
+                if total_width + width > maximum_line_length {
+                    width = 0.0;
+                }
+            }
 
-    new_text
+            // If a single word expands past the length limit, just break it up.
+            if word_width + width > maximum_line_length {
+                new_text.push_str(&text[current_word_start..current_word_end]);
+                new_text.push('\n');
+                current_word_start = current_word_end;
+                total_width = 0.0;
+                word_width = 0.0;
+            }
+
+            current_word_end = idx + c.len_utf8();
+            if keep_char {
+                word_width += width;
+            }
+
+            if c == '\n' {
+                total_width = 0.0;
+                word_width = 0.0;
+                return;
+            }
+
+            total_width += width;
+
+            if total_width > maximum_line_length {
+                new_text.push('\n');
+                total_width = word_width;
+            }
+        });
+
+        new_text.push_str(&text[current_word_start..current_word_end]);
+
+        new_text
+    }
 }
 
 pub(crate) struct FontsStorage {

@@ -1,5 +1,5 @@
 use {
-    frogquad::{Color, FrogCx, rand, text::measure_text},
+    frogquad::{Color, FrogCx, rand},
     miniquad::KeyCode,
 };
 
@@ -167,7 +167,7 @@ impl frogquad::App for SnakeApp {
             fc.clear_background(Color::WHITE);
             let text = "Game Over. Press [enter] to play again.";
             let font_size = 30.;
-            let text_size = measure_text(text, fc.default_font(), font_size as _, 1.0);
+            let text_size = fc.default_font().measure_text(text, font_size as _, 1.0);
 
             fc.draw_text(
                 text,

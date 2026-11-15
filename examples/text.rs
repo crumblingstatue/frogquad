@@ -1,7 +1,7 @@
 use {
     frogquad::{
         Color, FrogCx,
-        text::{Font, TextParams, get_text_center},
+        text::{Font, TextParams},
     },
     pollster::FutureExt,
 };
@@ -88,7 +88,9 @@ impl frogquad::App for TextApp {
             },
         );
 
-        let center = get_text_center("abcd", fc.default_font(), 70, 1.0, self.angle * 2.0);
+        let center = fc
+            .default_font()
+            .get_text_center("abcd", 70, 1.0, self.angle * 2.0);
         fc.draw_text_ex(
             "abcd",
             fc.screen_width() / 4.0 * 3.0 - center.x,

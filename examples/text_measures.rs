@@ -1,7 +1,7 @@
 use {
     frogquad::{
         Color,
-        text::{Font, TextParams, measure_text},
+        text::{Font, TextParams},
     },
     pollster::FutureExt,
 };
@@ -13,7 +13,8 @@ fn draw_text_annotated(
     x: f32,
     baseline: f32,
 ) {
-    let size = measure_text(text, font.unwrap_or_else(|| fc.default_font()), 100, 1.0);
+    let font_ref = font.unwrap_or_else(|| fc.default_font());
+    let size = font_ref.measure_text(text, 100, 1.0);
 
     // Full background rect
     fc.draw_rectangle(
