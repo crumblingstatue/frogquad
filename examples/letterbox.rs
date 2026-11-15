@@ -4,7 +4,7 @@ use {
         camera::Camera2D,
         conf::Conf,
         math::Rect,
-        texture::{DrawTextureParams, RenderTarget, draw_texture_ex, render_target},
+        texture::{DrawTextureParams, RenderTarget},
     },
     glam::{Vec2, vec2},
     miniquad::FilterMode,
@@ -20,7 +20,7 @@ struct LetterboxApp {
 impl LetterboxApp {
     fn new(fc: &mut frogquad::FrogCx) -> Self {
         // Setup 'render_target', used to hold the rendering result so we can resize it
-        let render_target = render_target(fc, VIRTUAL_WIDTH as u32, VIRTUAL_HEIGHT as u32);
+        let render_target = fc.render_target(VIRTUAL_WIDTH as u32, VIRTUAL_HEIGHT as u32);
         render_target.texture.set_filter(fc, FilterMode::Linear);
 
         // Setup camera for the virtual screen, that will render to 'render_target'
@@ -87,8 +87,7 @@ impl frogquad::App for LetterboxApp {
         fc.clear_background(Color::BLACK); // Will be the letterbox color
 
         // Draw 'render_target' to window screen, porperly scaled and letterboxed
-        draw_texture_ex(
-            fc,
+        fc.draw_texture_ex(
             &self.render_target.texture,
             (fc.screen_width() - (VIRTUAL_WIDTH * scale)) * 0.5,
             (fc.screen_height() - (VIRTUAL_HEIGHT * scale)) * 0.5,

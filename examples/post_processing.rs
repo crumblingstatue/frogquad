@@ -4,7 +4,7 @@ use {
         camera::Camera2D,
         conf::Conf,
         material::{Material, gl_use_default_material, gl_use_material, load_material},
-        texture::{DrawTextureParams, RenderTarget, draw_texture_ex, render_target},
+        texture::{DrawTextureParams, RenderTarget},
     },
     glam::vec2,
     miniquad::{FilterMode, ShaderSource},
@@ -17,7 +17,7 @@ struct PostProcessExample {
 
 impl PostProcessExample {
     fn new(fc: &mut FrogCx) -> Self {
-        let render_target = render_target(fc, 320, 150);
+        let render_target = fc.render_target(320, 150);
         render_target.texture.set_filter(fc, FilterMode::Nearest);
 
         let material = load_material(
@@ -59,8 +59,7 @@ impl frogquad::App for PostProcessExample {
 
         fc.clear_background(Color::WHITE);
         gl_use_material(&mut fc.gl, &self.material);
-        draw_texture_ex(
-            fc,
+        fc.draw_texture_ex(
             &self.render_target.texture,
             0.,
             0.,

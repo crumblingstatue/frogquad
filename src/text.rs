@@ -355,8 +355,7 @@ impl FrogCx {
             total_width += char_data.advance * font_scale_x + kerning_offset;
             let texture_id = atlas.texture(&mut *self.quad_context);
 
-            crate::texture::draw_texture_ex(
-                self,
+            self.draw_texture_ex(
                 &crate::texture::Texture2D {
                     texture: TextureHandle::Unmanaged(texture_id),
                 },

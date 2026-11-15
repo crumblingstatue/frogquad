@@ -1,8 +1,5 @@
 use {
-    frogquad::{
-        Color, FrogCx, camera::Camera2D, conf::Conf, file::load_string, math::Rect,
-        texture::load_texture,
-    },
+    frogquad::{Color, FrogCx, camera::Camera2D, conf::Conf, file::load_string, math::Rect},
     glam::{Vec2, vec2},
     miniquad::{FilterMode, KeyCode},
 };
@@ -32,7 +29,7 @@ struct PlatformerApp {
 
 impl PlatformerApp {
     fn new(fc: &mut FrogCx) -> Self {
-        let tileset = load_texture(fc, "examples/tileset.png").block_on().unwrap();
+        let tileset = fc.load_texture("examples/tileset.png").block_on().unwrap();
         tileset.set_filter(fc, FilterMode::Nearest);
 
         let tiled_map_json = load_string(fc, "examples/map.json").block_on().unwrap();

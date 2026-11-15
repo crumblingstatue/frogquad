@@ -341,18 +341,20 @@ impl Image {
     }
 }
 
-/// Loads an [Image] from a file into CPU memory.
-pub async fn load_image(fc: &mut FrogCx, path: &str) -> Result<Image, Error> {
-    let bytes = load_file(fc, path).await?;
+impl FrogCx {
+    /// Loads an [Image] from a file into CPU memory.
+    pub async fn load_image(&mut self, path: &str) -> Result<Image, Error> {
+        let bytes = load_file(self, path).await?;
 
-    Image::from_file_with_format(&bytes, None)
-}
+        Image::from_file_with_format(&bytes, None)
+    }
 
-/// Loads a [Texture2D] from a file into GPU memory.
-pub async fn load_texture(fc: &mut FrogCx, path: &str) -> Result<Texture2D, Error> {
-    let bytes = load_file(fc, path).await?;
+    /// Loads a [Texture2D] from a file into GPU memory.
+    pub async fn load_texture(&mut self, path: &str) -> Result<Texture2D, Error> {
+        let bytes = load_file(self, path).await?;
 
-    Ok(Texture2D::from_file_with_format(fc, &bytes[..], None))
+        Ok(Texture2D::from_file_with_format(self, &bytes[..], None))
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -407,83 +409,91 @@ pub struct RenderTarget {
     pub render_pass: RenderPass,
 }
 
-/// A shortcut to create a render target with sample_count: 1 and no depth buffer
-pub fn render_target(fc: &mut FrogCx, width: u32, height: u32) -> RenderTarget {
-    render_target_ex(fc, width, height, RenderTargetParams::default())
-}
+impl FrogCx {
+    /// A shortcut to create a render target with sample_count: 1 and no depth buffer
+    pub fn render_target(&mut self, width: u32, height: u32) -> RenderTarget {
+        self.render_target_ex(width, height, RenderTargetParams::default())
+    }
 
-/// A shortcut to create a render target with no depth buffer and `sample_count: 4`
-pub fn render_target_msaa(fc: &mut FrogCx, width: u32, height: u32) -> RenderTarget {
-    render_target_ex(
-        fc,
-        width,
-        height,
-        RenderTargetParams {
-            sample_count: 4,
-            ..Default::default()
-        },
-    )
-}
-
-pub fn render_target_ex(
-    fc: &mut FrogCx,
-    width: u32,
-    height: u32,
-    params: RenderTargetParams,
-) -> RenderTarget {
-    let color_texture = fc.quad_context.new_render_texture(miniquad::TextureParams {
-        width,
-        height,
-        sample_count: params.sample_count,
-        ..Default::default()
-    });
-    let depth_texture = if params.depth {
-        Some(fc.quad_context.new_render_texture(miniquad::TextureParams {
+    /// A shortcut to create a render target with no depth buffer and `sample_count: 4`
+    pub fn render_target_msaa(&mut self, width: u32, height: u32) -> RenderTarget {
+        self.render_target_ex(
             width,
             height,
-            format: miniquad::TextureFormat::Depth,
-            sample_count: params.sample_count,
-            ..Default::default()
-        }))
-    } else {
-        None
-    };
-
-    let (render_pass, texture) = if params.sample_count > 1 {
-        let color_resolve_texture = fc.quad_context.new_render_texture(miniquad::TextureParams {
-            width,
-            height,
-            ..Default::default()
-        });
-        (
-            fc.quad_context.new_render_pass_mrt(
-                &[color_texture],
-                Some(&[color_resolve_texture]),
-                depth_texture,
-            ),
-            color_resolve_texture,
+            RenderTargetParams {
+                sample_count: 4,
+                ..Default::default()
+            },
         )
-    } else {
-        (
-            fc.quad_context
-                .new_render_pass_mrt(&[color_texture], None, depth_texture),
-            color_texture,
-        )
-    };
+    }
 
-    let texture = Texture2D {
-        texture: fc.textures.store_texture(texture),
-    };
+    pub fn render_target_ex(
+        &mut self,
+        width: u32,
+        height: u32,
+        params: RenderTargetParams,
+    ) -> RenderTarget {
+        let color_texture = self
+            .quad_context
+            .new_render_texture(miniquad::TextureParams {
+                width,
+                height,
+                sample_count: params.sample_count,
+                ..Default::default()
+            });
+        let depth_texture = if params.depth {
+            Some(
+                self.quad_context
+                    .new_render_texture(miniquad::TextureParams {
+                        width,
+                        height,
+                        format: miniquad::TextureFormat::Depth,
+                        sample_count: params.sample_count,
+                        ..Default::default()
+                    }),
+            )
+        } else {
+            None
+        };
 
-    let render_pass = RenderPass {
-        color_texture: texture.clone(),
-        depth_texture: None,
-        render_pass: Arc::new(render_pass),
-        tex_cmd_send: fc.textures.cmd_send.clone(),
-    };
-    RenderTarget {
-        texture,
-        render_pass,
+        let (render_pass, texture) = if params.sample_count > 1 {
+            let color_resolve_texture =
+                self.quad_context
+                    .new_render_texture(miniquad::TextureParams {
+                        width,
+                        height,
+                        ..Default::default()
+                    });
+            (
+                self.quad_context.new_render_pass_mrt(
+                    &[color_texture],
+                    Some(&[color_resolve_texture]),
+                    depth_texture,
+                ),
+                color_resolve_texture,
+            )
+        } else {
+            (
+                self.quad_context
+                    .new_render_pass_mrt(&[color_texture], None, depth_texture),
+                color_texture,
+            )
+        };
+
+        let texture = Texture2D {
+            texture: self.textures.store_texture(texture),
+        };
+
+        let render_pass = RenderPass {
+            color_texture: texture.clone(),
+            depth_texture: None,
+            render_pass: Arc::new(render_pass),
+            tex_cmd_send: self.textures.cmd_send.clone(),
+        };
+        RenderTarget {
+            texture,
+            render_pass,
+        }
     }
 }
 
@@ -526,122 +536,126 @@ impl Default for DrawTextureParams {
     }
 }
 
-pub fn draw_texture(fc: &mut FrogCx, texture: &Texture2D, x: f32, y: f32, color: Color) {
-    draw_texture_ex(fc, texture, x, y, color, Default::default());
-}
+impl FrogCx {
+    pub fn draw_texture(&mut self, texture: &Texture2D, x: f32, y: f32, color: Color) {
+        self.draw_texture_ex(texture, x, y, color, Default::default());
+    }
 
-pub fn draw_texture_ex(
-    fc: &mut FrogCx,
-    texture: &Texture2D,
-    x: f32,
-    y: f32,
-    color: Color,
-    params: DrawTextureParams,
-) {
-    let [mut width, mut height] = texture.size(fc).to_array();
+    pub fn draw_texture_ex(
+        &mut self,
+        texture: &Texture2D,
+        x: f32,
+        y: f32,
+        color: Color,
+        params: DrawTextureParams,
+    ) {
+        let [mut width, mut height] = texture.size(self).to_array();
 
-    let Rect {
-        x: mut sx,
-        y: mut sy,
-        w: mut sw,
-        h: mut sh,
-    } = params.source.unwrap_or(Rect {
-        x: 0.,
-        y: 0.,
-        w: width,
-        h: height,
-    });
-
-    let texture_opt = fc
-        .texture_batcher
-        .get(&fc.gl, &fc.textures, &mut *fc.quad_context, texture)
-        .map(|(batched_texture, uv)| {
-            let [batched_width, batched_height] = batched_texture.size(fc).to_array();
-            sx = ((sx / width) * uv.w + uv.x) * batched_width;
-            sy = ((sy / height) * uv.h + uv.y) * batched_height;
-            sw = (sw / width) * uv.w * batched_width;
-            sh = (sh / height) * uv.h * batched_height;
-
-            width = batched_width;
-            height = batched_height;
-
-            batched_texture
+        let Rect {
+            x: mut sx,
+            y: mut sy,
+            w: mut sw,
+            h: mut sh,
+        } = params.source.unwrap_or(Rect {
+            x: 0.,
+            y: 0.,
+            w: width,
+            h: height,
         });
-    let texture = texture_opt.as_ref().unwrap_or(texture);
 
-    let (mut w, mut h) = match params.dest_size {
-        Some(dst) => (dst.x, dst.y),
-        _ => (sw, sh),
-    };
-    let mut x = x;
-    let mut y = y;
-    if params.flip_x {
-        x += w;
-        w = -w;
-    }
-    if params.flip_y {
-        y += h;
-        h = -h;
-    }
+        let texture_opt = self
+            .texture_batcher
+            .get(&self.gl, &self.textures, &mut *self.quad_context, texture)
+            .map(|(batched_texture, uv)| {
+                let [batched_width, batched_height] = batched_texture.size(self).to_array();
+                sx = ((sx / width) * uv.w + uv.x) * batched_width;
+                sy = ((sy / height) * uv.h + uv.y) * batched_height;
+                sw = (sw / width) * uv.w * batched_width;
+                sh = (sh / height) * uv.h * batched_height;
 
-    let pivot = params.pivot.unwrap_or(vec2(x + w / 2., y + h / 2.));
-    let m = pivot;
-    let p = [
-        vec2(x, y) - pivot,
-        vec2(x + w, y) - pivot,
-        vec2(x + w, y + h) - pivot,
-        vec2(x, y + h) - pivot,
-    ];
-    let r = params.rotation;
-    let p = [
-        vec2(
-            p[0].x * r.cos() - p[0].y * r.sin(),
-            p[0].x * r.sin() + p[0].y * r.cos(),
-        ) + m,
-        vec2(
-            p[1].x * r.cos() - p[1].y * r.sin(),
-            p[1].x * r.sin() + p[1].y * r.cos(),
-        ) + m,
-        vec2(
-            p[2].x * r.cos() - p[2].y * r.sin(),
-            p[2].x * r.sin() + p[2].y * r.cos(),
-        ) + m,
-        vec2(
-            p[3].x * r.cos() - p[3].y * r.sin(),
-            p[3].x * r.sin() + p[3].y * r.cos(),
-        ) + m,
-    ];
-    #[rustfmt::skip]
+                width = batched_width;
+                height = batched_height;
+
+                batched_texture
+            });
+        let texture = texture_opt.as_ref().unwrap_or(texture);
+
+        let (mut w, mut h) = match params.dest_size {
+            Some(dst) => (dst.x, dst.y),
+            _ => (sw, sh),
+        };
+        let mut x = x;
+        let mut y = y;
+        if params.flip_x {
+            x += w;
+            w = -w;
+        }
+        if params.flip_y {
+            y += h;
+            h = -h;
+        }
+
+        let pivot = params.pivot.unwrap_or(vec2(x + w / 2., y + h / 2.));
+        let m = pivot;
+        let p = [
+            vec2(x, y) - pivot,
+            vec2(x + w, y) - pivot,
+            vec2(x + w, y + h) - pivot,
+            vec2(x, y + h) - pivot,
+        ];
+        let r = params.rotation;
+        let p = [
+            vec2(
+                p[0].x * r.cos() - p[0].y * r.sin(),
+                p[0].x * r.sin() + p[0].y * r.cos(),
+            ) + m,
+            vec2(
+                p[1].x * r.cos() - p[1].y * r.sin(),
+                p[1].x * r.sin() + p[1].y * r.cos(),
+            ) + m,
+            vec2(
+                p[2].x * r.cos() - p[2].y * r.sin(),
+                p[2].x * r.sin() + p[2].y * r.cos(),
+            ) + m,
+            vec2(
+                p[3].x * r.cos() - p[3].y * r.sin(),
+                p[3].x * r.sin() + p[3].y * r.cos(),
+            ) + m,
+        ];
+        #[rustfmt::skip]
     let vertices = [
         Vertex::new(p[0].x, p[0].y, 0.,  sx      /width,  sy      /height, color),
         Vertex::new(p[1].x, p[1].y, 0., (sx + sw)/width,  sy      /height, color),
         Vertex::new(p[2].x, p[2].y, 0., (sx + sw)/width, (sy + sh)/height, color),
         Vertex::new(p[3].x, p[3].y, 0.,  sx      /width, (sy + sh)/height, color),
     ];
-    let indices: [u16; 6] = [0, 1, 2, 0, 2, 3];
+        let indices: [u16; 6] = [0, 1, 2, 0, 2, 3];
 
-    fc.gl.texture(&fc.textures, Some(texture));
-    fc.gl.draw_mode(DrawMode::Triangles);
-    fc.gl.geometry(&vertices, &indices);
-}
+        self.gl.texture(&self.textures, Some(texture));
+        self.gl.draw_mode(DrawMode::Triangles);
+        self.gl.geometry(&vertices, &indices);
+    }
 
-/// Get pixel data from screen buffer and return an Image (screenshot)
-pub fn get_screen_data(fc: &mut FrogCx) -> Image {
-    fc.flush_internal_gl();
+    /// Get pixel data from screen buffer and return an Image (screenshot)
+    pub fn get_screen_data(&mut self) -> Image {
+        self.flush_internal_gl();
 
-    let texture_id = fc.quad_context.new_render_texture(miniquad::TextureParams {
-        width: fc.screen_width as _,
-        height: fc.screen_height as _,
-        ..Default::default()
-    });
+        let texture_id = self
+            .quad_context
+            .new_render_texture(miniquad::TextureParams {
+                width: self.screen_width as _,
+                height: self.screen_height as _,
+                ..Default::default()
+            });
 
-    let texture = Texture2D {
-        texture: fc.textures.store_texture(texture_id),
-    };
+        let texture = Texture2D {
+            texture: self.textures.store_texture(texture_id),
+        };
 
-    texture.grab_screen(&mut *fc.quad_context, &fc.gl, &fc.textures);
+        texture.grab_screen(&mut *self.quad_context, &self.gl, &self.textures);
 
-    texture.get_texture_data(&fc.gl, &fc.textures, &mut *fc.quad_context)
+        texture.get_texture_data(&self.gl, &self.textures, &mut *self.quad_context)
+    }
 }
 
 /// Texture, data stored in GPU memory
@@ -937,32 +951,37 @@ impl Batcher {
     }
 }
 
-/// Build an atlas out of all currently loaded texture
-/// Later on all draw_texture calls with texture available in the atlas will use
-/// the one from the atlas
-/// NOTE: the GPU memory and texture itself in Texture2D will still be allocated
-/// and Texture->Image conversions will work with Texture2D content, not the atlas
-pub fn build_textures_atlas(fc: &mut FrogCx) {
-    for texture in fc.texture_batcher.unbatched.drain(0..) {
-        let sprite: Image = texture.get_texture_data(&fc.gl, &fc.textures, &mut *fc.quad_context);
-        let id = SpriteKey::Texture(FrogCx::raw_miniquad_id(&fc.gl, &fc.textures, &texture));
+impl FrogCx {
+    /// Build an atlas out of all currently loaded texture
+    /// Later on all draw_texture calls with texture available in the atlas will use
+    /// the one from the atlas
+    /// NOTE: the GPU memory and texture itself in Texture2D will still be allocated
+    /// and Texture->Image conversions will work with Texture2D content, not the atlas
+    pub fn build_textures_atlas(&mut self) {
+        for texture in self.texture_batcher.unbatched.drain(0..) {
+            let sprite: Image =
+                texture.get_texture_data(&self.gl, &self.textures, &mut *self.quad_context);
+            let id =
+                SpriteKey::Texture(FrogCx::raw_miniquad_id(&self.gl, &self.textures, &texture));
 
-        fc.texture_batcher.atlas.cache_sprite(id, sprite);
+            self.texture_batcher.atlas.cache_sprite(id, sprite);
+        }
     }
-}
 
-#[doc(hidden)]
-/// frogquad do not have track of all loaded fonts.
-/// Fonts store their characters as ID's in the atlas.
-/// There fore resetting the atlas will render all fonts unusable.
-pub unsafe fn reset_textures_atlas(fc: &mut FrogCx) {
-    fc.fonts_storage = crate::text::FontsStorage::new(&mut *fc.quad_context, &fc.textures);
-    fc.texture_batcher = Batcher::new(&mut *fc.quad_context, &fc.textures);
-}
+    #[doc(hidden)]
+    /// frogquad do not have track of all loaded fonts.
+    /// Fonts store their characters as ID's in the atlas.
+    /// There fore resetting the atlas will render all fonts unusable.
+    pub unsafe fn reset_textures_atlas(&mut self) {
+        self.fonts_storage =
+            crate::text::FontsStorage::new(&mut *self.quad_context, &self.textures);
+        self.texture_batcher = Batcher::new(&mut *self.quad_context, &self.textures);
+    }
 
-pub fn set_default_filter_mode(fc: &mut FrogCx, filter: FilterMode) {
-    fc.default_filter_mode = filter;
-    fc.texture_batcher
-        .atlas
-        .set_filter(filter, &mut *fc.quad_context);
+    pub fn set_default_filter_mode(&mut self, filter: FilterMode) {
+        self.default_filter_mode = filter;
+        self.texture_batcher
+            .atlas
+            .set_filter(filter, &mut *self.quad_context);
+    }
 }

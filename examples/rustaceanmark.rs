@@ -1,11 +1,6 @@
 use pollster::FutureExt;
 use {
-    frogquad::{
-        Color, FrogCx,
-        conf::Conf,
-        rand,
-        texture::{Texture2D, draw_texture, load_texture},
-    },
+    frogquad::{Color, FrogCx, conf::Conf, rand, texture::Texture2D},
     glam::Vec2,
     miniquad::{FilterMode, MouseButton},
 };
@@ -24,7 +19,8 @@ struct RustaceanMarkApp {
 impl RustaceanMarkApp {
     fn new(fc: &mut FrogCx) -> Self {
         let rustaceanes: Vec<Rustaceane> = Vec::new();
-        let rustacean_tex = load_texture(fc, "examples/rustacean_happy.png")
+        let rustacean_tex = fc
+            .load_texture("examples/rustacean_happy.png")
             .block_on()
             .unwrap();
         rustacean_tex.set_filter(fc, FilterMode::Nearest);
@@ -71,8 +67,7 @@ impl frogquad::App for RustaceanMarkApp {
                 rustaceane.speed.y *= -1.;
             }
 
-            draw_texture(
-                fc,
+            fc.draw_texture(
                 &self.rustacean_tex,
                 rustaceane.pos.x,
                 rustaceane.pos.y,

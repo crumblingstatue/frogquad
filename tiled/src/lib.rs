@@ -1,7 +1,7 @@
 use frogquad::{
     Color,
     math::{Rect, vec2},
-    texture::{DrawTextureParams, Texture2D, draw_texture_ex},
+    texture::{DrawTextureParams, Texture2D},
 };
 use nanoserde::DeJson;
 use std::collections::HashMap;
@@ -136,8 +136,7 @@ impl Map {
             0.0
         };
 
-        draw_texture_ex(
-            fc,
+        fc.draw_texture_ex(
             &tileset.texture,
             dest.x,
             dest.y,
@@ -161,8 +160,7 @@ impl Map {
     pub fn spr_ex(&self, fc: &mut frogquad::FrogCx, tileset: &str, source: Rect, dest: Rect) {
         let tileset = &self.tilesets[tileset];
 
-        draw_texture_ex(
-            fc,
+        fc.draw_texture_ex(
             &tileset.texture,
             dest.x,
             dest.y,
@@ -263,8 +261,7 @@ impl Map {
             img_texture.width(fc),
             img_texture.height(fc),
         ));
-        draw_texture_ex(
-            fc,
+        fc.draw_texture_ex(
             &img_texture,
             (layer.offsetx.unwrap() - source.x) / source.w * dest.w + dest.x,
             (layer.offsety.unwrap() - source.y) / source.h * dest.h + dest.y,

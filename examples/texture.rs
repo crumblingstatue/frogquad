@@ -1,9 +1,5 @@
 use {
-    frogquad::{
-        Color, FrogCx,
-        conf::Conf,
-        texture::{Texture2D, draw_texture, load_texture},
-    },
+    frogquad::{Color, FrogCx, conf::Conf, texture::Texture2D},
     pollster::FutureExt,
 };
 
@@ -14,7 +10,7 @@ struct TextureApp {
 impl TextureApp {
     fn new(fc: &mut FrogCx) -> Self {
         Self {
-            texture: load_texture(fc, "examples/ferris.png").block_on().unwrap(),
+            texture: fc.load_texture("examples/ferris.png").block_on().unwrap(),
         }
     }
 }
@@ -22,7 +18,7 @@ impl TextureApp {
 impl frogquad::App for TextureApp {
     fn update(&mut self, fc: &mut FrogCx) {
         fc.clear_background(Color::LIGHTGRAY);
-        draw_texture(fc, &self.texture, 0., 0., Color::WHITE);
+        fc.draw_texture(&self.texture, 0., 0., Color::WHITE);
     }
 }
 

@@ -4,7 +4,7 @@ use {
         camera::Camera3D,
         conf::Conf,
         models::{draw_cube, draw_cube_wires, draw_grid, draw_plane, draw_sphere},
-        texture::{Texture2D, load_texture},
+        texture::Texture2D,
     },
     glam::{vec2, vec3},
     pollster::FutureExt,
@@ -18,8 +18,8 @@ struct App3d {
 impl App3d {
     fn new(fc: &mut FrogCx) -> Self {
         Self {
-            rust_logo: load_texture(fc, "examples/rust.png").block_on().unwrap(),
-            ferris: load_texture(fc, "examples/ferris.png").block_on().unwrap(),
+            rust_logo: fc.load_texture("examples/rust.png").block_on().unwrap(),
+            ferris: fc.load_texture("examples/ferris.png").block_on().unwrap(),
         }
     }
 }

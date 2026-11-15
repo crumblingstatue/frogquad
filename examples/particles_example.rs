@@ -1,4 +1,4 @@
-use frogquad::{Color, FrogCx, conf::Conf, texture::load_texture};
+use frogquad::{Color, FrogCx, conf::Conf};
 use frogquad_particles::{self as particles, AtlasConfig, BlendMode, Emitter, EmitterConfig};
 use glam::vec2;
 use miniquad::KeyCode;
@@ -54,7 +54,8 @@ struct ParticlesApp {
 
 impl ParticlesApp {
     fn new(fc: &mut FrogCx) -> Self {
-        let texture = load_texture(fc, "examples/smoke_fire.png")
+        let texture = fc
+            .load_texture("examples/smoke_fire.png")
             .block_on()
             .unwrap();
 

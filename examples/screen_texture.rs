@@ -5,7 +5,7 @@ use {
         material::{
             Material, MaterialParams, gl_use_default_material, gl_use_material, load_material,
         },
-        texture::{DrawTextureParams, Texture2D, draw_texture_ex, load_texture},
+        texture::{DrawTextureParams, Texture2D},
     },
     glam::vec2,
     miniquad::{ShaderSource, UniformDesc, UniformType},
@@ -19,7 +19,7 @@ struct ScreenTexExample {
 
 impl ScreenTexExample {
     fn new(fc: &mut FrogCx) -> Self {
-        let texture: Texture2D = load_texture(fc, "examples/chess.png").block_on().unwrap();
+        let texture: Texture2D = fc.load_texture("examples/chess.png").block_on().unwrap();
 
         let lens_material = load_material(
             fc,
@@ -43,8 +43,7 @@ impl ScreenTexExample {
 impl frogquad::App for ScreenTexExample {
     fn update(&mut self, fc: &mut frogquad::FrogCx) {
         fc.clear_background(Color::WHITE);
-        draw_texture_ex(
-            fc,
+        fc.draw_texture_ex(
             &self.texture,
             0.0,
             0.0,

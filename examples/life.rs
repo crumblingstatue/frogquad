@@ -2,7 +2,7 @@ use frogquad::{
     Color, FrogCx,
     conf::Conf,
     rand,
-    texture::{Image, Texture2D, draw_texture},
+    texture::{Image, Texture2D},
 };
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
@@ -107,7 +107,7 @@ impl frogquad::App for LifeApp {
 
         self.texture.update(fc, &self.image);
 
-        draw_texture(fc, &self.texture, 0., 0., Color::WHITE);
+        fc.draw_texture(&self.texture, 0., 0., Color::WHITE);
     }
 }
 
