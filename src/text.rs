@@ -197,6 +197,7 @@ impl Font {
 /// Arguments for "draw_text_ex" function such as font, font_size etc
 #[derive(Debug, Clone)]
 pub struct TextParams<'a> {
+    /// The font to use. If `None`, the default font will be used.
     pub font: Option<&'a Font>,
     /// Base size for character height. The size in pixel used during font rasterizing.
     pub font_size: u16,
@@ -210,6 +211,7 @@ pub struct TextParams<'a> {
     /// Text rotation in radian
     /// Default is 0.0
     pub rotation: f32,
+    /// Color of the text
     pub color: Color,
 }
 
@@ -497,6 +499,7 @@ impl Font {
 
         crate::Vec2::new(x_center, y_center)
     }
+    /// Measure the dimensions of a piece of text
     pub fn measure_text(
         &self,
         text: impl AsRef<str>,
@@ -505,7 +508,7 @@ impl Font {
     ) -> TextDimensions {
         self.measure_text_ex(text, font_size, font_scale, font_scale, |_| {})
     }
-
+    /// Measure the dimensions of a piece of multiline text
     pub fn measure_multiline_text(
         &self,
         text: &str,
