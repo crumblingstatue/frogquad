@@ -5,13 +5,19 @@ use crate::{
 };
 use glam::{Mat4, Vec2, vec2, vec3};
 
+/// Defines a camera used for viewing what is being rendered
 pub trait Camera {
+    /// The projection matrix of the camera
     fn matrix(&self, fc: &mut FrogCx) -> Mat4;
+    /// Whether the camera is depth enabled
     fn depth_enabled(&self) -> bool;
+    /// An optional render pass for the camera
     fn render_pass(&self) -> Option<RenderPass>;
+    /// The viewport of the camera. If `None`, the default viewport is used
     fn viewport(&self) -> Option<(i32, i32, i32, i32)>;
 }
 
+/// A camera ideal for 2D drawing
 #[derive(Debug)]
 pub struct Camera2D {
     /// Rotation in degrees.
