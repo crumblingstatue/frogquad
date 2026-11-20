@@ -41,6 +41,7 @@
 //!```
 
 #![allow(clippy::needless_doctest_main)]
+#![warn(missing_docs)]
 
 use std::collections::{HashMap, HashSet, VecDeque};
 
@@ -128,7 +129,6 @@ pub struct FrogCx {
     last_frame_time: f64,
     frame_time: f64,
 
-    camera_stack: Vec<camera::CameraState>,
     texture_batcher: texture::Batcher,
 
     /// The miniquad rendering backend
@@ -263,7 +263,6 @@ impl FrogCx {
 
             fonts_storage: text::FontsStorage::new(&mut *ctx, &textures),
             texture_batcher: texture::Batcher::new(&mut *ctx, &textures),
-            camera_stack: vec![],
 
             pc_assets_folder: None,
 

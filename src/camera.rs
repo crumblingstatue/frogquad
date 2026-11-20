@@ -204,9 +204,3 @@ impl FrogCx {
         self.camera_matrix = None;
     }
 }
-
-pub(crate) struct CameraState {
-    render_pass: Option<miniquad::RenderPass>,
-    depth_test: bool,
-    matrix: Option<Mat4>,
-}

@@ -823,10 +823,6 @@ impl FrogGl {
         self.state.render_pass
     }
 
-    pub(crate) const fn is_depth_test_enabled(&self) -> bool {
-        self.state.depth_test_enable
-    }
-
     pub(crate) fn render_pass(&mut self, render_pass: Option<RenderPass>) {
         self.state.render_pass = render_pass;
     }
