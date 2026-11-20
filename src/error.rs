@@ -1,6 +1,9 @@
+/// Error that can happen for various frogquad operations
 #[derive(Debug)]
 pub enum Error {
+    /// Error when trying to load a font
     FontError(&'static str),
+    /// Error when trying to load a file
     FileError {
         kind: miniquad::fs::Error,
         path: String,

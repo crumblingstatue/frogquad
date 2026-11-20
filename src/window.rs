@@ -11,11 +11,11 @@ impl FrogCx {
     pub fn clear_background(&mut self, color: Color) {
         self.gl.clear(&mut *self.backend, color);
     }
-
+    /// Screen width divided by the DPI scale
     pub fn screen_width(&self) -> f32 {
         self.screen_width / miniquad::window::dpi_scale()
     }
-
+    /// Screen height divided by the DPI scale
     pub fn screen_height(&self) -> f32 {
         self.screen_height / miniquad::window::dpi_scale()
     }

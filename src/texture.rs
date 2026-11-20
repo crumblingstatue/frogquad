@@ -660,7 +660,7 @@ pub struct Texture2D {
 }
 
 impl Texture2D {
-    pub fn weak_clone(&self) -> Texture2D {
+    pub(crate) fn weak_clone(&self) -> Texture2D {
         match &self.texture {
             TextureHandle::Unmanaged(id) => Texture2D::unmanaged(*id),
             TextureHandle::Managed(t) => Texture2D {
@@ -774,7 +774,7 @@ impl Texture2D {
         );
     }
 
-    // Updates the texture from an array of bytes.
+    /// Updates the texture from an array of bytes.
     pub fn update_from_bytes(&self, fc: &mut FrogCx, width: u32, height: u32, bytes: &[u8]) {
         let ctx = &mut fc.backend;
         let (texture_width, texture_height) =
@@ -823,7 +823,7 @@ impl Texture2D {
 
         height as f32
     }
-
+    /// Size of the texture
     pub fn size(&self, fc: &mut FrogCx) -> Vec2 {
         let ctx = &mut fc.backend;
         let (width, height) = ctx.texture_size(FrogCx::raw_miniquad_id(&fc.gl, &fc.textures, self));
@@ -962,7 +962,7 @@ impl FrogCx {
             self.texture_batcher.atlas.cache_sprite(id, sprite);
         }
     }
-
+    /// Set the default filter mode.
     pub fn set_default_filter_mode(&mut self, filter: FilterMode) {
         self.default_filter_mode = filter;
         self.texture_batcher
