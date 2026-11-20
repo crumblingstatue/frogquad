@@ -203,24 +203,6 @@ impl FrogCx {
         self.gl.depth_test(false);
         self.camera_matrix = None;
     }
-    pub fn push_camera_state(&mut self) {
-        let camera_state = CameraState {
-            render_pass: self.gl.get_active_render_pass(),
-            depth_test: self.gl.is_depth_test_enabled(),
-            matrix: self.camera_matrix,
-        };
-        self.camera_stack.push(camera_state);
-    }
-
-    pub fn pop_camera_state(&mut self) {
-        if let Some(camera_state) = self.camera_stack.pop() {
-            self.perform_render_passes();
-
-            self.gl.render_pass(camera_state.render_pass);
-            self.gl.depth_test(camera_state.depth_test);
-            self.camera_matrix = camera_state.matrix;
-        }
-    }
 }
 
 pub(crate) struct CameraState {
