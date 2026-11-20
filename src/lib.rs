@@ -357,7 +357,7 @@ impl FrogCx {
         let dpi = miniquad::window::dpi_scale();
         glam::camera::rh::proj::opengl::orthographic(0., width / dpi, height / dpi, 0., -1., 1.)
     }
-
+    /// Get the projection matrix of the currently set camera, or the default one
     pub fn projection_matrix(&self) -> glam::Mat4 {
         if let Some(matrix) = self.camera_matrix {
             matrix
@@ -365,7 +365,10 @@ impl FrogCx {
             self.pixel_perfect_projection_matrix()
         }
     }
-
+    /// Perform the queued up drawing commands.
+    ///
+    /// Doesn't have to normally be used, except when you are mixing your own
+    /// miniquad rendering code with frogquad.
     pub fn perform_render_passes(&mut self) {
         let matrix = self.projection_matrix();
 
@@ -376,11 +379,11 @@ impl FrogCx {
             &mut self.snapshotter,
         );
     }
-
+    /// Get the currently set default font
     pub fn default_font(&self) -> &Font {
         &self.fonts_storage.default_font
     }
-
+    /// Request that frogquad quit on the next frame
     pub fn request_quit(&mut self) {
         self.quit_requested = true;
     }
@@ -736,10 +739,13 @@ impl From<miniquad::conf::Conf> for conf::Config {
     }
 }
 
+/// A frogquad application
 pub trait App {
+    /// Called every frame to update and draw your frogquad application
     fn update(&mut self, fc: &mut FrogCx);
 }
 
+/// Start a frogquad application
 pub fn start<A: App + 'static>(
     config: impl Into<Config>,
     app_init: impl FnOnce(&mut FrogCx) -> A + 'static,
@@ -760,6 +766,8 @@ pub fn start<A: App + 'static>(
 
 /// Information about a dropped file.
 pub struct DroppedFile {
+    /// Path of the dropped file, if any
     pub path: Option<std::path::PathBuf>,
+    /// The data of the dropped file, if any, as raw bytes
     pub bytes: Option<Vec<u8>>,
 }
