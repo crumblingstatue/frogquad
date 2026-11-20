@@ -171,7 +171,7 @@ impl CustomMatApp {
 
         let mat = fc
             .load_material(
-                match fc.quad_context.info().backend {
+                match fc.backend.info().backend {
                     Backend::OpenGl => ShaderSource::Glsl {
                         vertex: VERTEX,
                         fragment: FRAGMENT,
@@ -188,7 +188,7 @@ impl CustomMatApp {
 
         let mat_with_array = fc
             .load_material(
-                match fc.quad_context.info().backend {
+                match fc.backend.info().backend {
                     Backend::OpenGl => ShaderSource::Glsl {
                         vertex: VERTEX,
                         fragment: FRAGMENT_WITH_ARRAY,

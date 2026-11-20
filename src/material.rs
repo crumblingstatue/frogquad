@@ -124,7 +124,7 @@ impl FrogCx {
         params: MaterialParams,
     ) -> Result<Material, Error> {
         let pipeline = self.gl.make_pipeline(
-            &mut *self.quad_context,
+            &mut *self.backend,
             shader,
             params.pipeline_params,
             params.uniforms,

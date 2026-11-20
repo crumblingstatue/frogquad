@@ -314,7 +314,7 @@ impl ParticleShape {
                     -1.0 * aspect_ratio,  1.0, 0.0,   0.0, 1.0,  1.0, 1.0, 1.0, 1.0,
                 ];
 
-                let vertex_buffer = fc.quad_context.new_buffer(
+                let vertex_buffer = fc.backend.new_buffer(
                     BufferType::VertexBuffer,
                     BufferUsage::Immutable,
                     BufferSource::slice(vertices),
@@ -324,7 +324,7 @@ impl ParticleShape {
                 let indices: &[u16] = &[
                     0, 1, 2, 0, 2, 3
                 ];
-                let index_buffer = fc.quad_context.new_buffer(
+                let index_buffer = fc.backend.new_buffer(
                     BufferType::IndexBuffer,
                     BufferUsage::Immutable,
                     BufferSource::slice(indices),
@@ -350,12 +350,12 @@ impl ParticleShape {
                     }
                 }
 
-                let vertex_buffer = fc.quad_context.new_buffer(
+                let vertex_buffer = fc.backend.new_buffer(
                     BufferType::VertexBuffer,
                     BufferUsage::Immutable,
                     BufferSource::slice(&vertices),
                 );
-                let index_buffer = fc.quad_context.new_buffer(
+                let index_buffer = fc.backend.new_buffer(
                     BufferType::IndexBuffer,
                     BufferUsage::Immutable,
                     BufferSource::slice(&indices),
@@ -363,12 +363,12 @@ impl ParticleShape {
                 (vertex_buffer, index_buffer)
             }
             ParticleShape::CustomMesh { vertices, indices } => {
-                let vertex_buffer = fc.quad_context.new_buffer(
+                let vertex_buffer = fc.backend.new_buffer(
                     BufferType::VertexBuffer,
                     BufferUsage::Immutable,
                     BufferSource::slice(vertices),
                 );
-                let index_buffer = fc.quad_context.new_buffer(
+                let index_buffer = fc.backend.new_buffer(
                     BufferType::IndexBuffer,
                     BufferUsage::Immutable,
                     BufferSource::slice(indices),
@@ -382,7 +382,7 @@ impl ParticleShape {
             index_buffer,
             images: vec![texture.map_or_else(
                 || {
-                    fc.quad_context
+                    fc.backend
                         .new_texture_from_rgba8(1, 1, &[255, 255, 255, 255])
                 },
                 |texture| frogquad::FrogCx::raw_miniquad_id(&fc.gl, &fc.textures, &texture),
@@ -548,7 +548,7 @@ impl Emitter {
 
     pub fn new(config: EmitterConfig, fc: &mut FrogCx) -> Emitter {
         // empty, dynamic instance-data vertex buffer
-        let positions_vertex_buffer = fc.quad_context.new_buffer(
+        let positions_vertex_buffer = fc.backend.new_buffer(
             BufferType::VertexBuffer,
             BufferUsage::Stream,
             BufferSource::empty::<GpuParticle>(Self::MAX_PARTICLES),
@@ -579,7 +579,7 @@ impl Emitter {
             let vertex = preprocess_shader(vertex, &config);
             let fragment = preprocess_shader(fragment, &config);
 
-            fc.quad_context
+            fc.backend
                 .new_shader(
                     ShaderSource::Glsl {
                         vertex: &vertex,
@@ -591,7 +591,7 @@ impl Emitter {
         };
 
         let blend_mode = config.blend_mode.blend_state();
-        let pipeline = fc.quad_context.new_pipeline(
+        let pipeline = fc.backend.new_pipeline(
             &[
                 BufferLayout::default(),
                 BufferLayout {
@@ -621,7 +621,7 @@ impl Emitter {
         );
 
         let post_processing_shader = fc
-            .quad_context
+            .backend
             .new_shader(
                 ShaderSource::Glsl {
                     vertex: post_processing_shader::VERTEX,
@@ -631,7 +631,7 @@ impl Emitter {
             )
             .unwrap();
 
-        let post_processing_pipeline = fc.quad_context.new_pipeline(
+        let post_processing_pipeline = fc.backend.new_pipeline(
             &[BufferLayout::default(), BufferLayout::default()],
             &[
                 VertexAttribute::with_buffer("pos", VertexFormat::Float2, 0),
@@ -648,19 +648,16 @@ impl Emitter {
             },
         );
         let post_processing_pass = {
-            let color_img = fc.quad_context.new_render_texture(TextureParams {
+            let color_img = fc.backend.new_render_texture(TextureParams {
                 width: 320,
                 height: 200,
                 format: TextureFormat::RGBA8,
                 ..Default::default()
             });
-            fc.quad_context.texture_set_filter(
-                color_img,
-                FilterMode::Nearest,
-                MipmapFilterMode::None,
-            );
+            fc.backend
+                .texture_set_filter(color_img, FilterMode::Nearest, MipmapFilterMode::None);
 
-            fc.quad_context.new_render_pass(color_img, None)
+            fc.backend.new_render_pass(color_img, None)
         };
 
         let post_processing_bindings = {
@@ -673,7 +670,7 @@ impl Emitter {
                 -1.0,  1.0,    0.0, 1.0,
             ];
 
-            let vertex_buffer = fc.quad_context.new_buffer(
+            let vertex_buffer = fc.backend.new_buffer(
                 BufferType::VertexBuffer,
                 BufferUsage::Immutable,
                 BufferSource::slice(vertices),
@@ -683,7 +680,7 @@ impl Emitter {
             let indices: &[u16] = &[
                 0, 1, 2, 0, 2, 3
             ];
-            let index_buffer = fc.quad_context.new_buffer(
+            let index_buffer = fc.backend.new_buffer(
                 BufferType::IndexBuffer,
                 BufferUsage::Immutable,
                 BufferSource::slice(indices),
@@ -691,7 +688,7 @@ impl Emitter {
             Bindings {
                 vertex_buffers: vec![vertex_buffer],
                 index_buffer,
-                images: vec![fc.quad_context.render_pass_texture(post_processing_pass)],
+                images: vec![fc.backend.render_pass_texture(post_processing_pass)],
             }
         };
 
@@ -911,7 +908,7 @@ impl Emitter {
             }
         }
 
-        fc.quad_context.buffer_update(
+        fc.backend.buffer_update(
             self.bindings.vertex_buffers[1],
             BufferSource::slice(&self.gpu_particles[..]),
         );
@@ -975,27 +972,25 @@ impl Emitter {
     }
 
     pub fn end_render_pass(&mut self, fc: &mut FrogCx) {
-        fc.quad_context.end_render_pass();
+        fc.backend.end_render_pass();
 
         if self.config.post_processing.is_some() {
             let pass = fc.gl.get_active_render_pass();
             if let Some(pass) = pass {
-                fc.quad_context.begin_pass(Some(pass), PassAction::Nothing);
+                fc.backend.begin_pass(Some(pass), PassAction::Nothing);
             } else {
-                fc.quad_context.begin_default_pass(PassAction::Nothing);
+                fc.backend.begin_default_pass(PassAction::Nothing);
             }
 
-            fc.quad_context
-                .apply_pipeline(&self.post_processing_pipeline);
+            fc.backend.apply_pipeline(&self.post_processing_pipeline);
             let (x, y, w, h) = fc.gl.get_viewport(fc);
-            fc.quad_context.apply_viewport(x, y, w, h);
+            fc.backend.apply_viewport(x, y, w, h);
 
-            fc.quad_context
-                .apply_bindings(&self.post_processing_bindings);
+            fc.backend.apply_bindings(&self.post_processing_bindings);
 
-            fc.quad_context.draw(0, 6, 1);
+            fc.backend.draw(0, 6, 1);
 
-            fc.quad_context.end_render_pass();
+            fc.backend.end_render_pass();
         }
     }
 
@@ -1006,8 +1001,8 @@ impl Emitter {
         let frame_time = fc.frame_time();
         self.update(fc, frame_time);
 
-        self.setup_render_pass(&fc.gl, &mut *fc.quad_context);
-        self.perform_render_pass(fc.projection_matrix(), &mut *fc.quad_context);
+        self.setup_render_pass(&fc.gl, &mut *fc.backend);
+        self.perform_render_pass(fc.projection_matrix(), &mut *fc.backend);
         self.end_render_pass(fc);
     }
 }
@@ -1063,8 +1058,7 @@ impl EmittersCache {
         fc.perform_render_passes();
 
         if !self.active_emitters.is_empty() {
-            self.emitter
-                .setup_render_pass(&fc.gl, &mut *fc.quad_context);
+            self.emitter.setup_render_pass(&fc.gl, &mut *fc.backend);
         }
         for i in &mut self.active_emitters {
             if let Some((emitter, pos)) = i {
@@ -1072,7 +1066,7 @@ impl EmittersCache {
                 let frame_time = fc.frame_time();
                 emitter.update(fc, frame_time);
 
-                emitter.perform_render_pass(fc.projection_matrix(), &mut *fc.quad_context);
+                emitter.perform_render_pass(fc.projection_matrix(), &mut *fc.backend);
 
                 if !emitter.config.emitting {
                     self.emitters_cache.push(i.take().unwrap().0);

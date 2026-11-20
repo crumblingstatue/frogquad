@@ -433,39 +433,32 @@ impl FrogCx {
         height: u32,
         params: RenderTargetParams,
     ) -> RenderTarget {
-        let color_texture = self
-            .quad_context
-            .new_render_texture(miniquad::TextureParams {
+        let color_texture = self.backend.new_render_texture(miniquad::TextureParams {
+            width,
+            height,
+            sample_count: params.sample_count,
+            ..Default::default()
+        });
+        let depth_texture = if params.depth {
+            Some(self.backend.new_render_texture(miniquad::TextureParams {
                 width,
                 height,
+                format: miniquad::TextureFormat::Depth,
                 sample_count: params.sample_count,
                 ..Default::default()
-            });
-        let depth_texture = if params.depth {
-            Some(
-                self.quad_context
-                    .new_render_texture(miniquad::TextureParams {
-                        width,
-                        height,
-                        format: miniquad::TextureFormat::Depth,
-                        sample_count: params.sample_count,
-                        ..Default::default()
-                    }),
-            )
+            }))
         } else {
             None
         };
 
         let (render_pass, texture) = if params.sample_count > 1 {
-            let color_resolve_texture =
-                self.quad_context
-                    .new_render_texture(miniquad::TextureParams {
-                        width,
-                        height,
-                        ..Default::default()
-                    });
+            let color_resolve_texture = self.backend.new_render_texture(miniquad::TextureParams {
+                width,
+                height,
+                ..Default::default()
+            });
             (
-                self.quad_context.new_render_pass_mrt(
+                self.backend.new_render_pass_mrt(
                     &[color_texture],
                     Some(&[color_resolve_texture]),
                     depth_texture,
@@ -474,7 +467,7 @@ impl FrogCx {
             )
         } else {
             (
-                self.quad_context
+                self.backend
                     .new_render_pass_mrt(&[color_texture], None, depth_texture),
                 color_texture,
             )
@@ -565,7 +558,7 @@ impl FrogCx {
 
         let texture_opt = self
             .texture_batcher
-            .get(&self.gl, &self.textures, &mut *self.quad_context, texture)
+            .get(&self.gl, &self.textures, &mut *self.backend, texture)
             .map(|(batched_texture, uv)| {
                 let [batched_width, batched_height] = batched_texture.size(self).to_array();
                 sx = ((sx / width) * uv.w + uv.x) * batched_width;
@@ -640,21 +633,19 @@ impl FrogCx {
     pub fn get_screen_data(&mut self) -> Image {
         self.perform_render_passes();
 
-        let texture_id = self
-            .quad_context
-            .new_render_texture(miniquad::TextureParams {
-                width: self.screen_width as _,
-                height: self.screen_height as _,
-                ..Default::default()
-            });
+        let texture_id = self.backend.new_render_texture(miniquad::TextureParams {
+            width: self.screen_width as _,
+            height: self.screen_height as _,
+            ..Default::default()
+        });
 
         let texture = Texture2D {
             texture: self.textures.store_texture(texture_id),
         };
 
-        texture.grab_screen(&mut *self.quad_context, &self.gl, &self.textures);
+        texture.grab_screen(&mut *self.backend, &self.gl, &self.textures);
 
-        texture.get_texture_data(&self.gl, &self.textures, &mut *self.quad_context)
+        texture.get_texture_data(&self.gl, &self.textures, &mut *self.backend)
     }
 }
 
@@ -755,7 +746,7 @@ impl Texture2D {
     /// let texture = frogquad::texture::Texture2D::from_rgba8(fc, 2, 2, &bytes);
     /// ```
     pub fn from_rgba8(fc: &mut FrogCx, width: u16, height: u16, bytes: &[u8]) -> Texture2D {
-        let texture = fc.quad_context.new_texture_from_rgba8(width, height, bytes);
+        let texture = fc.backend.new_texture_from_rgba8(width, height, bytes);
         let texture = fc.textures.store_texture(texture);
         let texture = Texture2D { texture };
         texture.set_filter(fc, fc.default_filter_mode);
@@ -767,7 +758,7 @@ impl Texture2D {
 
     /// Uploads [Image] data to this texture.
     pub fn update(&self, fc: &mut FrogCx, image: &Image) {
-        let ctx = &mut fc.quad_context;
+        let ctx = &mut fc.backend;
         let (width, height) = ctx.texture_size(FrogCx::raw_miniquad_id(&fc.gl, &fc.textures, self));
 
         assert_eq!(width, image.width as u32);
@@ -781,7 +772,7 @@ impl Texture2D {
 
     // Updates the texture from an array of bytes.
     pub fn update_from_bytes(&self, fc: &mut FrogCx, width: u32, height: u32, bytes: &[u8]) {
-        let ctx = &mut fc.quad_context;
+        let ctx = &mut fc.backend;
         let (texture_width, texture_height) =
             ctx.texture_size(FrogCx::raw_miniquad_id(&fc.gl, &fc.textures, self));
 
@@ -801,7 +792,7 @@ impl Texture2D {
         width: i32,
         height: i32,
     ) {
-        let ctx = &mut fc.quad_context;
+        let ctx = &mut fc.backend;
 
         ctx.texture_update_part(
             FrogCx::raw_miniquad_id(&fc.gl, &fc.textures, self),
@@ -815,7 +806,7 @@ impl Texture2D {
 
     /// Returns the width of this texture.
     pub fn width(&self, fc: &mut FrogCx) -> f32 {
-        let ctx = &mut fc.quad_context;
+        let ctx = &mut fc.backend;
         let (width, _) = ctx.texture_size(FrogCx::raw_miniquad_id(&fc.gl, &fc.textures, self));
 
         width as f32
@@ -823,14 +814,14 @@ impl Texture2D {
 
     /// Returns the height of this texture.
     pub fn height(&self, fc: &mut FrogCx) -> f32 {
-        let ctx = &mut fc.quad_context;
+        let ctx = &mut fc.backend;
         let (_, height) = ctx.texture_size(FrogCx::raw_miniquad_id(&fc.gl, &fc.textures, self));
 
         height as f32
     }
 
     pub fn size(&self, fc: &mut FrogCx) -> Vec2 {
-        let ctx = &mut fc.quad_context;
+        let ctx = &mut fc.backend;
         let (width, height) = ctx.texture_size(FrogCx::raw_miniquad_id(&fc.gl, &fc.textures, self));
 
         vec2(width as f32, height as f32)
@@ -848,7 +839,7 @@ impl Texture2D {
     /// texture.set_filter(fc, miniquad::FilterMode::Linear);
     /// ```
     pub fn set_filter(&self, fc: &mut FrogCx, filter_mode: FilterMode) {
-        let ctx = &mut fc.quad_context;
+        let ctx = &mut fc.backend;
 
         ctx.texture_set_filter(
             FrogCx::raw_miniquad_id(&fc.gl, &fc.textures, self),
@@ -960,7 +951,7 @@ impl FrogCx {
     pub fn build_textures_atlas(&mut self) {
         for texture in self.texture_batcher.unbatched.drain(0..) {
             let sprite: Image =
-                texture.get_texture_data(&self.gl, &self.textures, &mut *self.quad_context);
+                texture.get_texture_data(&self.gl, &self.textures, &mut *self.backend);
             let id =
                 SpriteKey::Texture(FrogCx::raw_miniquad_id(&self.gl, &self.textures, &texture));
 
@@ -972,6 +963,6 @@ impl FrogCx {
         self.default_filter_mode = filter;
         self.texture_batcher
             .atlas
-            .set_filter(filter, &mut *self.quad_context);
+            .set_filter(filter, &mut *self.backend);
     }
 }

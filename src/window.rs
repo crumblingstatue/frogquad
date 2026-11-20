@@ -9,7 +9,7 @@ impl FrogCx {
     /// Note: even when "clear_background" is not called explicitly,
     /// the screen will be cleared at the beginning of the frame.
     pub fn clear_background(&mut self, color: Color) {
-        self.gl.clear(&mut *self.quad_context, color);
+        self.gl.clear(&mut *self.backend, color);
     }
 
     pub fn screen_width(&self) -> f32 {

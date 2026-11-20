@@ -10,7 +10,7 @@ struct RawMqApp {
 impl RawMqApp {
     fn new(fc: &mut FrogCx) -> Self {
         Self {
-            stage: { raw_miniquad::Stage::new(&mut *fc.quad_context) },
+            stage: { raw_miniquad::Stage::new(&mut *fc.backend) },
         }
     }
 }
@@ -34,24 +34,22 @@ impl frogquad::App for RawMqApp {
             fc.perform_render_passes();
 
             let t = fc.time();
-            fc.quad_context.apply_pipeline(&self.stage.pipeline);
+            fc.backend.apply_pipeline(&self.stage.pipeline);
 
-            fc.quad_context
-                .begin_default_pass(miniquad::PassAction::Nothing);
-            fc.quad_context.apply_bindings(&self.stage.bindings);
+            fc.backend.begin_default_pass(miniquad::PassAction::Nothing);
+            fc.backend.apply_bindings(&self.stage.bindings);
 
             for i in 0..10 {
                 let t = t + i as f64 * 0.3;
 
-                fc.quad_context
-                    .apply_uniforms(miniquad::UniformsSource::table(
-                        &raw_miniquad::shader::Uniforms {
-                            offset: (t.sin() as f32 * 0.5, (t * 3.).cos() as f32 * 0.5),
-                        },
-                    ));
-                fc.quad_context.draw(0, 6, 1);
+                fc.backend.apply_uniforms(miniquad::UniformsSource::table(
+                    &raw_miniquad::shader::Uniforms {
+                        offset: (t.sin() as f32 * 0.5, (t * 3.).cos() as f32 * 0.5),
+                    },
+                ));
+                fc.backend.draw(0, 6, 1);
             }
-            fc.quad_context.end_render_pass();
+            fc.backend.end_render_pass();
         }
 
         // Back to screen space, render some text

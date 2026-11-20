@@ -183,7 +183,7 @@ impl Font {
     ///
     /// # let fc: &mut frogquad::FrogCx = unimplemented!();
     /// let mut font = fc.get_default_font();
-    /// font.set_filter(miniquad::FilterMode::Linear, &mut *fc.quad_context);
+    /// font.set_filter(miniquad::FilterMode::Linear, &mut *fc.backend);
     /// ```
     pub fn set_filter(
         &mut self,
@@ -242,7 +242,7 @@ impl FrogCx {
     /// ```
     pub fn load_ttf_font_from_bytes(&mut self, bytes: &[u8]) -> Result<Font, Error> {
         let atlas = Arc::new(Mutex::new(Atlas::new(
-            &mut *self.quad_context,
+            &mut *self.backend,
             &self.textures,
             miniquad::FilterMode::Linear,
         )));
@@ -251,7 +251,7 @@ impl FrogCx {
 
         font.populate_font_cache(&Font::ascii_character_list(), 15);
 
-        font.set_filter(self.default_filter_mode, &mut *self.quad_context);
+        font.set_filter(self.default_filter_mode, &mut *self.backend);
 
         Ok(font)
     }
@@ -354,7 +354,7 @@ impl FrogCx {
             );
 
             total_width += char_data.advance * font_scale_x + kerning_offset;
-            let texture_id = atlas.texture(&mut *self.quad_context);
+            let texture_id = atlas.texture(&mut *self.backend);
 
             self.draw_texture_ex(
                 &crate::texture::Texture2D {
