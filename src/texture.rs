@@ -865,7 +865,7 @@ impl Texture2D {
         gl: &QuadGl,
         textures: &TexturesContext,
     ) {
-        use miniquad::*;
+        use miniquad::TextureFormat;
         let texture = FrogCx::raw_miniquad_id(gl, textures, self);
         let params = rend.texture_params(texture);
         let raw_id = match unsafe { rend.texture_raw_id(texture) } {
@@ -884,9 +884,9 @@ impl Texture2D {
             TextureFormat::Alpha => miniquad::gl::GL_R8,
         };
         unsafe {
-            gl::glBindTexture(gl::GL_TEXTURE_2D, raw_id);
-            gl::glCopyTexImage2D(
-                gl::GL_TEXTURE_2D,
+            miniquad::gl::glBindTexture(miniquad::gl::GL_TEXTURE_2D, raw_id);
+            miniquad::gl::glCopyTexImage2D(
+                miniquad::gl::GL_TEXTURE_2D,
                 0,
                 internal_format,
                 0,
