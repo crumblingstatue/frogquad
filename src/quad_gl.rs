@@ -557,10 +557,6 @@ impl PipelinesStorage {
     fn get_quad_pipeline_mut(&mut self, pip: GlPipeline) -> &mut PipelineExt {
         self.pipelines[pip.0].as_mut().unwrap()
     }
-
-    fn delete_pipeline(&mut self, pip: GlPipeline) {
-        self.pipelines[pip.0] = None;
-    }
 }
 
 /// Holds OpenGL specific data required for drawing
@@ -956,10 +952,6 @@ impl FrogGl {
         dc.indices_count += indices.len();
 
         dc.texture = self.state.texture;
-    }
-
-    pub fn delete_pipeline(&mut self, pipeline: GlPipeline) {
-        self.pipelines.delete_pipeline(pipeline);
     }
 
     pub(crate) fn set_uniform<T>(&mut self, pipeline: GlPipeline, name: &str, uniform: T) {
