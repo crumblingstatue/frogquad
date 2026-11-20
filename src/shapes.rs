@@ -85,7 +85,7 @@ impl FrogCx {
         self.gl.set_draw_mode(DrawMode::Triangles);
         self.gl.geometry(&vertices, &indices);
     }
-
+    /// Draw rectangle lines with extended options
     pub fn draw_rectangle_lines_ex(
         &mut self,
         x: f32,
@@ -418,16 +418,16 @@ impl FrogCx {
     }
 }
 
+/// Extended options for drawing a rectangle
 #[derive(Debug, Clone)]
 pub struct DrawRectangleParams {
     /// Adds an offset to the position
     /// E.g. offset (0,0) positions the rectangle at the top left corner of the screen, while offset
     /// (0.5, 0.5) centers it
     pub offset: Vec2,
-
     /// Rotation in radians
     pub rotation: f32,
-
+    /// Color of the rectangle
     pub color: Color,
 }
 

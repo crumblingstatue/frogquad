@@ -31,11 +31,11 @@ impl Material {
     pub fn set_uniform<T>(&self, gl: &mut FrogGl, name: &str, uniform: T) {
         gl.set_uniform(self.pipeline.0, name, uniform);
     }
-
+    /// Set a uniform array for this material. See [`Self::set_uniform`].
     pub fn set_uniform_array<T: ToBytes>(&self, gl: &mut FrogGl, name: &str, uniform: &[T]) {
         gl.set_uniform_array(self.pipeline.0, name, uniform);
     }
-
+    /// Set a texture for this material. See [`Self::set_uniform`].
     pub fn set_texture(&self, fc: &mut crate::FrogCx, name: &str, texture: Texture2D) {
         fc.gl
             .set_texture(&fc.textures, self.pipeline.0, name, texture);
@@ -149,17 +149,21 @@ impl FrogGl {
     }
 }
 
+/// Shader related functionality
 pub mod shaders {
     type IncludeFilename = String;
     type IncludeContent = String;
 
+    /// Configuration for shared preprocessing
     #[derive(Debug, Clone, Default)]
     pub struct PreprocessorConfig {
+        /// List of includes for the shader
         pub includes: Vec<(IncludeFilename, IncludeContent)>,
     }
 
     impl PreprocessorConfig {}
 
+    /// Preprocess a shader
     pub fn preprocess_shader(source: &str, config: &PreprocessorConfig) -> String {
         let mut res = source.chars().collect::<Vec<_>>();
 

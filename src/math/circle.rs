@@ -1,9 +1,13 @@
 use crate::math::{Rect, Vec2, vec2};
 
+/// A circle shape
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
 pub struct Circle {
+    /// X position of the center
     pub x: f32,
+    /// Y position of the center
     pub y: f32,
+    /// Radius of the circle
     pub r: f32,
 }
 

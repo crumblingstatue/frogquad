@@ -677,14 +677,17 @@ mod conf {
         pub touch: bool,
     }
 
+    /// Configuration for a frogquad application
     #[derive(Debug)]
     pub struct Config {
+        /// The miniquad configuration
         pub miniquad_conf: miniquad::conf::Conf,
         /// With miniquad_conf.platform.blocking_event_loop = true,
         /// next_frame().await will never finish and will wait forever with
         /// zero CPU usage.
         /// update_on will tell frogquad when to proceed with the event loop.
         pub update_on: Option<UpdateTrigger>,
+        /// The default filter mode to use
         pub default_filter_mode: miniquad::FilterMode,
         /// frogquad performs automatic and static batching for each
         /// draw_* call. For each draw call, it pre-allocate a huge cpu/gpu
@@ -697,6 +700,7 @@ mod conf {
         /// - when each draw_* call got its own material,
         ///   buffer size might be reduced to save some memory
         pub draw_call_vertex_capacity: usize,
+        /// TODO: Document this
         pub draw_call_index_capacity: usize,
     }
 

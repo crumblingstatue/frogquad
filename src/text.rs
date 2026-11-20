@@ -168,7 +168,7 @@ impl Font {
             .collect()
     }
 
-    pub fn populate_font_cache(&self, characters: &[char], size: u16) {
+    pub(crate) fn populate_font_cache(&self, characters: &[char], size: u16) {
         for character in characters {
             self.cache_glyph(*character, size);
         }
