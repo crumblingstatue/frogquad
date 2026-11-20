@@ -5,11 +5,16 @@ pub enum Error {
     FontError(&'static str),
     /// Error when trying to load a file
     FileError {
+        /// What kind of filesystem error happened
         kind: miniquad::fs::Error,
+        /// Path of the file we were trying to access
         path: String,
     },
+    /// Error when trying to compile a shader
     ShaderError(miniquad::ShaderError),
+    /// Error when trying to load an image
     ImageError(image::ImageError),
+    /// Unknown error, with possibly an info string
     UnknownError(&'static str),
 }
 

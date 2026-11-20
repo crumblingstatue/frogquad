@@ -666,7 +666,9 @@ impl<T: App> EventHandler for Stage<T> {
 }
 
 mod conf {
+    /// Which events should trigger updates
     #[derive(Default, Debug, Clone)]
+    #[expect(missing_docs)]
     pub struct UpdateTrigger {
         pub key_down: bool,
         pub mouse_down: bool,
