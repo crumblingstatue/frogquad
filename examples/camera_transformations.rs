@@ -73,7 +73,7 @@ impl frogquad::App for CamTfApp {
         }
 
         match fc.mouse_wheel() {
-            (_x, y) if y != 0.0 => {
+            glam::Vec2 { x: _, y } if y != 0.0 => {
                 // Normalize mouse wheel values is browser (chromium: 53, firefox: 3)
                 #[cfg(target_arch = "wasm32")]
                 let y = if y < 0.0 {

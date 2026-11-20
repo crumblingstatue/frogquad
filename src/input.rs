@@ -7,7 +7,9 @@ use crate::Vec2;
 
 pub use miniquad::{KeyCode, MouseButton};
 
+/// The phase of a touch input
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[expect(missing_docs)]
 pub enum TouchPhase {
     Started,
     Stationary,
@@ -27,10 +29,14 @@ impl From<miniquad::TouchPhase> for TouchPhase {
     }
 }
 
+/// A touch input
 #[derive(Clone, Debug)]
 pub struct Touch {
+    /// Unique identifier for the touch
     pub id: u64,
+    /// Current phase of the touch
     pub phase: TouchPhase,
+    /// Position of the touch
     pub position: Vec2,
 }
 
@@ -91,8 +97,9 @@ impl FrogCx {
             .collect()
     }
 
-    pub fn mouse_wheel(&mut self) -> (f32, f32) {
-        (self.mouse_wheel.x, self.mouse_wheel.y)
+    /// The movement of the mouse wheel
+    pub fn mouse_wheel(&mut self) -> Vec2 {
+        self.mouse_wheel
     }
 
     /// Detect if the key has been pressed once
