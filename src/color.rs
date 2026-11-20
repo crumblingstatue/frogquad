@@ -126,6 +126,7 @@ impl Color {
         Color::new(self.r, self.g, self.b, alpha)
     }
 
+    /// Create a color from H/S/L (hue, saturation, lighting) values.
     pub fn from_hsl(h: f32, s: f32, l: f32) -> Self {
         let (r, g, b) = if s == 0.0 {
             (l, l, l)
@@ -164,7 +165,7 @@ impl Color {
 
         Color::new(r, g, b, 1.0)
     }
-
+    /// Convert the color to H/S/L (hue, saturation, lighting) values
     pub fn to_hsl(self) -> (f32, f32, f32) {
         fn max(a: f32, b: f32) -> f32 {
             if a > b { a } else { b }
