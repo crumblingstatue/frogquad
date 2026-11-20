@@ -581,7 +581,7 @@ pub struct QuadGl {
 }
 
 impl QuadGl {
-    pub fn new(
+    pub(crate) fn new(
         ctx: &mut dyn miniquad::RenderingBackend,
         max_vertices: usize,
         max_indices: usize,
