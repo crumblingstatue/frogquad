@@ -81,9 +81,9 @@ impl FrogTextures {
 /// Image, data stored in CPU memory
 #[derive(Clone)]
 pub struct Image {
-    pub bytes: Vec<u8>,
-    pub width: u16,
-    pub height: u16,
+    pub(crate) bytes: Vec<u8>,
+    pub(crate) width: u16,
+    pub(crate) height: u16,
 }
 
 impl std::fmt::Debug for Image {
