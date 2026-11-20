@@ -167,17 +167,10 @@ impl Color {
     }
     /// Convert the color to H/S/L (hue, saturation, lighting) values
     pub fn to_hsl(self) -> (f32, f32, f32) {
-        fn max(a: f32, b: f32) -> f32 {
-            if a > b { a } else { b }
-        }
-        fn min(a: f32, b: f32) -> f32 {
-            if a < b { a } else { b }
-        }
-
         let Color { r, g, b, .. } = self;
 
-        let max = max(max(r, g), b);
-        let min = min(min(r, g), b);
+        let max = f32::max(f32::max(r, g), b);
+        let min = f32::min(f32::min(r, g), b);
 
         // Luminosity is the average of the max and min rgb color intensities.
         let l = (max + min) / 2.0;
