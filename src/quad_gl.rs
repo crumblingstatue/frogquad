@@ -8,7 +8,7 @@ use crate::{
     Error, FrogCx,
     color::Color,
     logging::warn,
-    texture::{Texture2D, TexturesContext},
+    texture::{FrogTextures, Texture2D},
     tobytes::ToBytes,
 };
 
@@ -204,7 +204,7 @@ impl MagicSnapshotter {
     fn snapshot(
         &mut self,
         gl: &FrogGl,
-        textures: &TexturesContext,
+        textures: &FrogTextures,
         rend: &mut dyn RenderingBackend,
         camera_render_pass: Option<RenderPass>,
     ) {
@@ -689,7 +689,7 @@ impl FrogGl {
     pub(crate) fn draw(
         &mut self,
         quad_context: &mut dyn RenderingBackend,
-        textures: &TexturesContext,
+        textures: &FrogTextures,
         projection: glam::Mat4,
         snapshotter: &mut MagicSnapshotter,
     ) {
@@ -837,7 +837,7 @@ impl FrogGl {
         self.state.depth_test_enable = enable;
     }
 
-    pub(crate) fn texture(&mut self, texture_ctx: &TexturesContext, texture: Option<&Texture2D>) {
+    pub(crate) fn texture(&mut self, texture_ctx: &FrogTextures, texture: Option<&Texture2D>) {
         self.state.texture = texture.map(|t| FrogCx::raw_miniquad_id(self, texture_ctx, t));
     }
 
@@ -982,7 +982,7 @@ impl FrogGl {
 
     pub(crate) fn set_texture(
         &mut self,
-        texture_ctx: &TexturesContext,
+        texture_ctx: &FrogTextures,
         pipeline: GlPipeline,
         name: &str,
         texture: Texture2D,

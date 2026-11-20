@@ -34,16 +34,17 @@ pub(crate) enum TextureCmd {
 pub(crate) type TextureCmdSend = std::sync::mpsc::Sender<TextureCmd>;
 pub(crate) type TextureCmdRecv = std::sync::mpsc::Receiver<TextureCmd>;
 
-pub struct TexturesContext {
+/// Contains data for managing textures
+pub struct FrogTextures {
     textures: TextureIdSlotMap,
     pub(crate) cmd_send: TextureCmdSend,
     cmd_recv: TextureCmdRecv,
 }
 
-impl TexturesContext {
-    pub(crate) fn new() -> TexturesContext {
+impl FrogTextures {
+    pub(crate) fn new() -> FrogTextures {
         let (send, recv) = std::sync::mpsc::channel();
-        TexturesContext {
+        FrogTextures {
             textures: TextureIdSlotMap::new(),
             cmd_send: send,
             cmd_recv: recv,
@@ -854,7 +855,7 @@ impl Texture2D {
         &self,
         rend: &mut dyn RenderingBackend,
         gl: &FrogGl,
-        textures: &TexturesContext,
+        textures: &FrogTextures,
     ) {
         use miniquad::TextureFormat;
         let texture = FrogCx::raw_miniquad_id(gl, textures, self);
@@ -895,7 +896,7 @@ impl Texture2D {
     pub fn get_texture_data(
         &self,
         gl: &FrogGl,
-        textures: &TexturesContext,
+        textures: &FrogTextures,
         rend: &mut dyn RenderingBackend,
     ) -> Image {
         let (width, height) = rend.texture_size(FrogCx::raw_miniquad_id(gl, textures, self));
@@ -918,7 +919,7 @@ pub(crate) struct Batcher {
 }
 
 impl Batcher {
-    pub fn new(rend: &mut dyn miniquad::RenderingBackend, tex_ctx: &TexturesContext) -> Batcher {
+    pub fn new(rend: &mut dyn miniquad::RenderingBackend, tex_ctx: &FrogTextures) -> Batcher {
         Batcher {
             unbatched: vec![],
             atlas: crate::text::atlas::Atlas::new(rend, tex_ctx, miniquad::FilterMode::Linear),
@@ -932,7 +933,7 @@ impl Batcher {
     pub fn get(
         &mut self,
         gl: &FrogGl,
-        tex_ctx: &TexturesContext,
+        tex_ctx: &FrogTextures,
         rend: &mut dyn RenderingBackend,
         texture: &Texture2D,
     ) -> Option<(Texture2D, Rect)> {

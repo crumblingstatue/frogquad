@@ -86,7 +86,7 @@ use miniquad::{EventHandler, KeyCode, KeyMods, MouseButton, TouchPhase, date};
 
 use crate::quad_gl::MagicSnapshotter;
 use crate::texture::TextureHandle;
-use crate::texture::{Texture2D, TexturesContext};
+use crate::texture::{FrogTextures, Texture2D};
 
 use glam::{Mat4, Vec2, vec2};
 
@@ -135,7 +135,9 @@ pub struct FrogCx {
     pub backend: Box<dyn miniquad::RenderingBackend>,
 
     default_filter_mode: crate::quad_gl::FilterMode,
-    pub textures: crate::texture::TexturesContext,
+
+    /// Contains data for managing textures
+    pub textures: crate::texture::FrogTextures,
 
     update_on: conf::UpdateTrigger,
 
@@ -224,7 +226,7 @@ impl FrogCx {
         let mut ctx: Box<dyn miniquad::RenderingBackend> =
             miniquad::window::new_rendering_backend();
         let (screen_width, screen_height) = miniquad::window::screen_size();
-        let textures = crate::texture::TexturesContext::new();
+        let textures = crate::texture::FrogTextures::new();
 
         FrogCx {
             screen_width,
@@ -282,7 +284,7 @@ impl FrogCx {
     /// Returns the handle for this texture.
     pub fn raw_miniquad_id(
         gl: &FrogGl,
-        textures: &TexturesContext,
+        textures: &FrogTextures,
         texture: &Texture2D,
     ) -> miniquad::TextureId {
         match &texture.texture {

@@ -1,7 +1,7 @@
 use crate::{
     Color,
     math::Rect,
-    texture::{Image, TextureCmd, TextureCmdSend, TextureHandle, TexturesContext},
+    texture::{FrogTextures, Image, TextureCmd, TextureCmdSend, TextureHandle},
 };
 
 use std::collections::HashMap;
@@ -50,7 +50,7 @@ impl Atlas {
 
     pub fn new(
         ctx: &mut dyn miniquad::RenderingBackend,
-        tex_ctx: &TexturesContext,
+        tex_ctx: &FrogTextures,
         filter: miniquad::FilterMode,
     ) -> Atlas {
         let image = Image::gen_image_color(512, 512, Color::new(0.0, 0.0, 0.0, 0.0));
@@ -224,7 +224,7 @@ impl Atlas {
 mod tests {
     use super::*;
 
-    fn atlas(width: u16, height: u16, tex_ctx: &TexturesContext) -> Atlas {
+    fn atlas(width: u16, height: u16, tex_ctx: &FrogTextures) -> Atlas {
         let texture = miniquad::TextureId::from_raw_id(miniquad::RawId::OpenGl(0));
 
         Atlas {
@@ -253,7 +253,7 @@ mod tests {
     // to the next row (issue #1054, bug 1).
     #[test]
     fn sprite_crossing_gap_at_row_edge_breaks_line_instead_of_growing() {
-        let tex_cx = TexturesContext::new();
+        let tex_cx = FrogTextures::new();
         let mut atlas = atlas(64, 1024, &tex_cx);
 
         // 20 wide: placed at x = 2, cursor_x becomes 20 + 2 * GAP = 24
@@ -280,7 +280,7 @@ mod tests {
     // edge. Its left-side GAP is already accounted for in `x`.
     #[test]
     fn sprite_ending_at_row_edge_stays_in_current_line() {
-        let tex_cx = TexturesContext::new();
+        let tex_cx = FrogTextures::new();
         let mut storage = std::mem::ManuallyDrop::new(atlas(64, 1024, &tex_cx));
         let atlas = &mut *storage;
 
@@ -302,7 +302,7 @@ mod tests {
     // are now repacked tallest-first and the resulting layout is exact.
     #[test]
     fn regrow_repacks_deterministically_and_keeps_pixels() {
-        let tex_cx = TexturesContext::new();
+        let tex_cx = FrogTextures::new();
         let mut atlas = atlas(64, 32, &tex_cx);
 
         let red = Color::new(1.0, 0.0, 0.0, 1.0);
@@ -349,7 +349,7 @@ mod tests {
     // same-dimension sprites identically.
     #[test]
     fn same_dimension_sprites_repack_in_the_same_order_in_every_atlas() {
-        let tex_cx = TexturesContext::new();
+        let tex_cx = FrogTextures::new();
         let red = Color::new(1.0, 0.0, 0.0, 1.0);
         let green = Color::new(0.0, 1.0, 0.0, 1.0);
         let blue = Color::new(0.0, 0.0, 1.0, 1.0);

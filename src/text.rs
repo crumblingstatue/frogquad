@@ -7,7 +7,7 @@ use crate::{
     color::Color,
     glam::vec3,
     math::Rect,
-    texture::{Image, TextureHandle, TexturesContext},
+    texture::{FrogTextures, Image, TextureHandle},
 };
 
 use glam::vec2;
@@ -614,7 +614,7 @@ pub(crate) struct FontsStorage {
 impl FontsStorage {
     pub(crate) fn new(
         rend: &mut dyn miniquad::RenderingBackend,
-        tex_ctx: &TexturesContext,
+        tex_ctx: &FrogTextures,
     ) -> FontsStorage {
         let atlas = Arc::new(Mutex::new(Atlas::new(
             rend,
