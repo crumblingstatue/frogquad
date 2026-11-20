@@ -2,7 +2,6 @@
 
 use std::collections::HashSet;
 
-use crate::DroppedFile;
 use crate::FrogCx;
 use crate::Vec2;
 
@@ -169,11 +168,6 @@ impl FrogCx {
     /// Detect if quit has been requested
     pub fn is_quit_requested(&mut self) -> bool {
         self.quit_requested
-    }
-
-    /// Gets the files which have been dropped on the window.
-    pub fn get_dropped_files(&mut self) -> Vec<DroppedFile> {
-        self.dropped_files()
     }
 }
 
