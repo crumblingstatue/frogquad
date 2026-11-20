@@ -626,7 +626,7 @@ impl FrogCx {
         let indices: [u16; 6] = [0, 1, 2, 0, 2, 3];
 
         self.gl.texture(&self.textures, Some(texture));
-        self.gl.draw_mode(DrawMode::Triangles);
+        self.gl.set_draw_mode(DrawMode::Triangles);
         self.gl.geometry(&vertices, &indices);
     }
 

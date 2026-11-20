@@ -18,7 +18,7 @@ impl FrogCx {
         let indices: [u16; 3] = [0, 1, 2];
 
         self.gl.texture(&self.textures, None);
-        self.gl.draw_mode(DrawMode::Triangles);
+        self.gl.set_draw_mode(DrawMode::Triangles);
         self.gl.geometry(&vertices, &indices);
     }
 
@@ -48,7 +48,7 @@ impl FrogCx {
         let indices: [u16; 6] = [0, 1, 2, 0, 2, 3];
 
         self.gl.texture(&self.textures, None);
-        self.gl.draw_mode(DrawMode::Triangles);
+        self.gl.set_draw_mode(DrawMode::Triangles);
         self.gl.geometry(&vertices, &indices);
     }
 
@@ -82,7 +82,7 @@ impl FrogCx {
         ];
 
         self.gl.texture(&self.textures, None);
-        self.gl.draw_mode(DrawMode::Triangles);
+        self.gl.set_draw_mode(DrawMode::Triangles);
         self.gl.geometry(&vertices, &indices);
     }
 
@@ -141,7 +141,7 @@ impl FrogCx {
     ];
 
         self.gl.texture(&self.textures, None);
-        self.gl.draw_mode(DrawMode::Triangles);
+        self.gl.set_draw_mode(DrawMode::Triangles);
         self.gl.geometry(&vertices, &indices);
     }
     /// Draws a solid rectangle with its position at `[x, y]` with size `[w, h]`,
@@ -176,7 +176,7 @@ impl FrogCx {
         let indices: [u16; 6] = [0, 1, 2, 0, 2, 3];
 
         self.gl.texture(&self.textures, None);
-        self.gl.draw_mode(DrawMode::Triangles);
+        self.gl.set_draw_mode(DrawMode::Triangles);
         self.gl.geometry(&vertices, &indices);
     }
 
@@ -230,7 +230,7 @@ impl FrogCx {
         }
 
         self.gl.texture(&self.textures, None);
-        self.gl.draw_mode(DrawMode::Triangles);
+        self.gl.set_draw_mode(DrawMode::Triangles);
         self.gl.geometry(&vertices, &indices);
     }
 
@@ -295,7 +295,7 @@ impl FrogCx {
         }
 
         self.gl.texture(&self.textures, None);
-        self.gl.draw_mode(DrawMode::Triangles);
+        self.gl.set_draw_mode(DrawMode::Triangles);
         self.gl.geometry(&vertices, &indices);
     }
 
@@ -357,7 +357,7 @@ impl FrogCx {
         let ty = ny / tlen;
 
         self.gl.texture(&self.textures, None);
-        self.gl.draw_mode(DrawMode::Triangles);
+        self.gl.set_draw_mode(DrawMode::Triangles);
         self.gl.geometry(
             &[
                 Vertex::new(x1 + tx, y1 + ty, 0., 0., 0., color),
@@ -392,7 +392,7 @@ impl FrogCx {
         let sides = sides as usize;
 
         self.gl.texture(&self.textures, None);
-        self.gl.draw_mode(DrawMode::Triangles);
+        self.gl.set_draw_mode(DrawMode::Triangles);
 
         let mut verticies = Vec::<Vertex>::with_capacity(sides * 2);
         let mut indicies = Vec::<u16>::with_capacity(sides * 2);

@@ -563,6 +563,7 @@ impl PipelinesStorage {
     }
 }
 
+/// Holds OpenGL specific data required for drawing
 pub struct FrogGl {
     pipelines: PipelinesStorage,
 
@@ -821,6 +822,7 @@ impl FrogGl {
         self.batch_vertex_buffer.clear();
     }
 
+    /// Gets the active miniquad render pass, if any
     pub const fn get_active_render_pass(&self) -> Option<RenderPass> {
         self.state.render_pass
     }
@@ -840,7 +842,7 @@ impl FrogGl {
     pub(crate) fn texture(&mut self, texture_ctx: &FrogTextures, texture: Option<&Texture2D>) {
         self.state.texture = texture.map(|t| FrogCx::raw_miniquad_id(self, texture_ctx, t));
     }
-
+    /// Set a scissor to limit rendering to the specified area
     pub fn scissor(&mut self, clip: Option<(i32, i32, i32, i32)>) {
         self.state.clip = clip;
     }
@@ -848,17 +850,17 @@ impl FrogGl {
     pub(crate) fn viewport(&mut self, viewport: Option<(i32, i32, i32, i32)>) {
         self.state.viewport = viewport;
     }
-
+    /// Get the currently set viewport, or a default one
     pub fn get_viewport(&self, fc: &FrogCx) -> (i32, i32, i32, i32) {
         self.state
             .viewport
             .unwrap_or((0, 0, fc.screen_width() as _, fc.screen_height() as _))
     }
-
+    /// Push a model matrix
     pub fn push_model_matrix(&mut self, matrix: glam::Mat4) {
         self.state.model_stack.push(self.state.model() * matrix);
     }
-
+    /// Pop the top of the model matrix
     pub fn pop_model_matrix(&mut self) {
         if self.state.model_stack.len() > 1 {
             self.state.model_stack.pop();
@@ -873,11 +875,11 @@ impl FrogGl {
         self.state.break_batching = true;
         self.state.pipeline = pipeline;
     }
-
-    pub fn draw_mode(&mut self, mode: DrawMode) {
+    /// Set which kinds of primitives to draw
+    pub fn set_draw_mode(&mut self, mode: DrawMode) {
         self.state.draw_mode = mode;
     }
-
+    /// Supply geometry data to draw
     pub fn geometry(&mut self, vertices: &[Vertex], indices: &[u16]) {
         if vertices.len() >= self.max_vertices || indices.len() >= self.max_indices {
             warn!("geometry() exceeded max drawcall size, clamping");
