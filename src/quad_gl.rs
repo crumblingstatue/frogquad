@@ -203,7 +203,7 @@ impl MagicSnapshotter {
 
     fn snapshot(
         &mut self,
-        gl: &QuadGl,
+        gl: &FrogGl,
         textures: &TexturesContext,
         rend: &mut dyn RenderingBackend,
         camera_render_pass: Option<RenderPass>,
@@ -563,7 +563,7 @@ impl PipelinesStorage {
     }
 }
 
-pub struct QuadGl {
+pub struct FrogGl {
     pipelines: PipelinesStorage,
 
     draw_calls: Vec<DrawCall>,
@@ -580,15 +580,15 @@ pub struct QuadGl {
     batch_index_buffer: Vec<u16>,
 }
 
-impl QuadGl {
+impl FrogGl {
     pub(crate) fn new(
         ctx: &mut dyn miniquad::RenderingBackend,
         max_vertices: usize,
         max_indices: usize,
-    ) -> QuadGl {
+    ) -> FrogGl {
         let white_texture = ctx.new_texture_from_rgba8(1, 1, &[255, 255, 255, 255]);
 
-        QuadGl {
+        FrogGl {
             pipelines: PipelinesStorage::new(ctx),
             state: GlState {
                 clip: None,

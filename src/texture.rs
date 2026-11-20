@@ -1,7 +1,7 @@
 //! Loading and rendering textures. Also render textures, per-pixel image manipulations.
 
 use crate::{
-    Error, FrogCx, color::Color, file::load_file, math::Rect, quad_gl::QuadGl,
+    Error, FrogCx, color::Color, file::load_file, math::Rect, quad_gl::FrogGl,
     text::atlas::SpriteKey,
 };
 
@@ -862,7 +862,7 @@ impl Texture2D {
     pub fn grab_screen(
         &self,
         rend: &mut dyn RenderingBackend,
-        gl: &QuadGl,
+        gl: &FrogGl,
         textures: &TexturesContext,
     ) {
         use miniquad::TextureFormat;
@@ -903,7 +903,7 @@ impl Texture2D {
     /// This operation can be expensive.
     pub fn get_texture_data(
         &self,
-        gl: &QuadGl,
+        gl: &FrogGl,
         textures: &TexturesContext,
         rend: &mut dyn RenderingBackend,
     ) -> Image {
@@ -940,7 +940,7 @@ impl Batcher {
 
     pub fn get(
         &mut self,
-        gl: &QuadGl,
+        gl: &FrogGl,
         tex_ctx: &TexturesContext,
         rend: &mut dyn RenderingBackend,
         texture: &Texture2D,

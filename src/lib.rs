@@ -67,7 +67,7 @@ pub use camera::{Camera, Camera2D};
 pub use color::Color;
 pub use conf::{Config, UpdateTrigger};
 pub use error::Error;
-pub use quad_gl::QuadGl;
+pub use quad_gl::FrogGl;
 pub use shapes::DrawRectangleParams;
 pub use text::{Font, TextParams};
 // Re-export glam library
@@ -115,8 +115,8 @@ pub struct FrogCx {
     cursor_grabbed: bool,
 
     input_events: Vec<Vec<MiniquadInputEvent>>,
-
-    pub gl: QuadGl,
+    /// OpenGL-specific data required for certain graphics operations
+    pub gl: FrogGl,
     snapshotter: MagicSnapshotter,
     camera_matrix: Option<Mat4>,
 
@@ -251,7 +251,7 @@ impl FrogCx {
             input_events: Vec::new(),
 
             camera_matrix: None,
-            gl: QuadGl::new(
+            gl: FrogGl::new(
                 &mut *ctx,
                 draw_call_vertex_capacity,
                 draw_call_index_capacity,
@@ -280,7 +280,7 @@ impl FrogCx {
 
     /// Returns the handle for this texture.
     pub fn raw_miniquad_id(
-        gl: &QuadGl,
+        gl: &FrogGl,
         textures: &TexturesContext,
         texture: &Texture2D,
     ) -> miniquad::TextureId {

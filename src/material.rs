@@ -2,7 +2,7 @@
 
 use crate::{
     Error, FrogCx,
-    quad_gl::{GlPipeline, QuadGl},
+    quad_gl::{FrogGl, GlPipeline},
     texture::Texture2D,
     tobytes::ToBytes,
 };
@@ -28,11 +28,11 @@ impl Material {
     /// Set GPU uniform value for this material.
     /// "name" should be from "uniforms" list used for material creation.
     /// Otherwise uniform value would be silently ignored.
-    pub fn set_uniform<T>(&self, gl: &mut QuadGl, name: &str, uniform: T) {
+    pub fn set_uniform<T>(&self, gl: &mut FrogGl, name: &str, uniform: T) {
         gl.set_uniform(self.pipeline.0, name, uniform);
     }
 
-    pub fn set_uniform_array<T: ToBytes>(&self, gl: &mut QuadGl, name: &str, uniform: &[T]) {
+    pub fn set_uniform_array<T: ToBytes>(&self, gl: &mut FrogGl, name: &str, uniform: &[T]) {
         gl.set_uniform_array(self.pipeline.0, name, uniform);
     }
 
@@ -137,7 +137,7 @@ impl FrogCx {
     }
 }
 
-impl QuadGl {
+impl FrogGl {
     /// All following frogquad rendering calls will use the given material.
     pub fn use_material(&mut self, material: &Material) {
         self.pipeline(Some(material.pipeline.0));

@@ -7,7 +7,7 @@ use frogquad::miniquad::{
     VertexStep,
 };
 use frogquad::texture::{FilterMode, Texture2D};
-use frogquad::{FrogCx, QuadGl, glam};
+use frogquad::{FrogCx, FrogGl, glam};
 use miniquad::graphics::RenderPass;
 
 #[cfg(feature = "nanoserde")]
@@ -947,7 +947,7 @@ impl Emitter {
 
     pub fn setup_render_pass(
         &mut self,
-        quad_gl: &QuadGl,
+        quad_gl: &FrogGl,
         ctx: &mut dyn miniquad::RenderingBackend,
     ) {
         if self.config.blend_mode != self.blend_mode {
