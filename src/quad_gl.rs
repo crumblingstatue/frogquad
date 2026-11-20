@@ -841,7 +841,7 @@ impl FrogGl {
         self.state.texture = texture.map(|t| FrogCx::raw_miniquad_id(self, texture_ctx, t));
     }
 
-    pub(crate) fn scissor(&mut self, clip: Option<(i32, i32, i32, i32)>) {
+    pub fn scissor(&mut self, clip: Option<(i32, i32, i32, i32)>) {
         self.state.clip = clip;
     }
 
@@ -874,11 +874,11 @@ impl FrogGl {
         self.state.pipeline = pipeline;
     }
 
-    pub(crate) fn draw_mode(&mut self, mode: DrawMode) {
+    pub fn draw_mode(&mut self, mode: DrawMode) {
         self.state.draw_mode = mode;
     }
 
-    pub(crate) fn geometry(&mut self, vertices: &[Vertex], indices: &[u16]) {
+    pub fn geometry(&mut self, vertices: &[Vertex], indices: &[u16]) {
         if vertices.len() >= self.max_vertices || indices.len() >= self.max_indices {
             warn!("geometry() exceeded max drawcall size, clamping");
         }
@@ -956,7 +956,7 @@ impl FrogGl {
         dc.texture = self.state.texture;
     }
 
-    pub(crate) fn delete_pipeline(&mut self, pipeline: GlPipeline) {
+    pub fn delete_pipeline(&mut self, pipeline: GlPipeline) {
         self.pipelines.delete_pipeline(pipeline);
     }
 
