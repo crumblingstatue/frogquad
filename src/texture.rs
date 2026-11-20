@@ -360,8 +360,6 @@ impl FrogCx {
 
 #[derive(Debug, Clone)]
 pub struct RenderPass {
-    pub color_texture: Texture2D,
-    pub depth_texture: Option<Texture2D>,
     pub(crate) render_pass: Arc<miniquad::RenderPass>,
     tex_cmd_send: TextureCmdSend,
 }
@@ -479,8 +477,6 @@ impl FrogCx {
         };
 
         let render_pass = RenderPass {
-            color_texture: texture.clone(),
-            depth_texture: None,
             render_pass: Arc::new(render_pass),
             tex_cmd_send: self.textures.cmd_send.clone(),
         };
