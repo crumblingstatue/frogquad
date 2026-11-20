@@ -1,7 +1,5 @@
 //! Cross-platform mouse, keyboard (and gamepads soon) module.
 
-use std::collections::HashSet;
-
 use crate::FrogCx;
 use crate::Vec2;
 
@@ -132,18 +130,6 @@ impl FrogCx {
     pub fn get_last_key_pressed(&mut self) -> Option<KeyCode> {
         // TODO: this will return a random key from keys_pressed HashMap instead of the last one, fix me later
         self.keys_pressed.iter().next().cloned()
-    }
-
-    pub fn get_keys_pressed(&mut self) -> HashSet<KeyCode> {
-        self.keys_pressed.clone()
-    }
-
-    pub fn get_keys_down(&mut self) -> HashSet<KeyCode> {
-        self.keys_down.clone()
-    }
-
-    pub fn get_keys_released(&mut self) -> HashSet<KeyCode> {
-        self.keys_released.clone()
     }
 
     /// Clears input queue
