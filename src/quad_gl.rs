@@ -615,7 +615,7 @@ impl QuadGl {
         }
     }
 
-    pub fn make_pipeline(
+    pub(crate) fn make_pipeline(
         &mut self,
         ctx: &mut dyn miniquad::RenderingBackend,
         shader: miniquad::ShaderSource,
@@ -673,12 +673,12 @@ impl QuadGl {
     }
 
     /// Reset only draw calls state
-    pub fn clear_draw_calls(&mut self) {
+    pub(crate) fn clear_draw_calls(&mut self) {
         self.draw_calls_count = 0;
     }
 
     /// Reset internal state to known default
-    pub fn reset(&mut self) {
+    pub(crate) fn reset(&mut self) {
         self.state.clip = None;
         self.state.texture = None;
         self.state.model_stack = vec![glam::Mat4::IDENTITY];
@@ -686,7 +686,7 @@ impl QuadGl {
         self.draw_calls_count = 0;
     }
 
-    pub fn draw(
+    pub(crate) fn draw(
         &mut self,
         quad_context: &mut dyn RenderingBackend,
         textures: &TexturesContext,
@@ -825,27 +825,27 @@ impl QuadGl {
         self.state.render_pass
     }
 
-    pub const fn is_depth_test_enabled(&self) -> bool {
+    pub(crate) const fn is_depth_test_enabled(&self) -> bool {
         self.state.depth_test_enable
     }
 
-    pub fn render_pass(&mut self, render_pass: Option<RenderPass>) {
+    pub(crate) fn render_pass(&mut self, render_pass: Option<RenderPass>) {
         self.state.render_pass = render_pass;
     }
 
-    pub fn depth_test(&mut self, enable: bool) {
+    pub(crate) fn depth_test(&mut self, enable: bool) {
         self.state.depth_test_enable = enable;
     }
 
-    pub fn texture(&mut self, texture_ctx: &TexturesContext, texture: Option<&Texture2D>) {
+    pub(crate) fn texture(&mut self, texture_ctx: &TexturesContext, texture: Option<&Texture2D>) {
         self.state.texture = texture.map(|t| FrogCx::raw_miniquad_id(self, texture_ctx, t));
     }
 
-    pub fn scissor(&mut self, clip: Option<(i32, i32, i32, i32)>) {
+    pub(crate) fn scissor(&mut self, clip: Option<(i32, i32, i32, i32)>) {
         self.state.clip = clip;
     }
 
-    pub fn viewport(&mut self, viewport: Option<(i32, i32, i32, i32)>) {
+    pub(crate) fn viewport(&mut self, viewport: Option<(i32, i32, i32, i32)>) {
         self.state.viewport = viewport;
     }
 
@@ -865,7 +865,7 @@ impl QuadGl {
         }
     }
 
-    pub fn pipeline(&mut self, pipeline: Option<GlPipeline>) {
+    pub(crate) fn pipeline(&mut self, pipeline: Option<GlPipeline>) {
         if self.state.pipeline == pipeline {
             return;
         }
@@ -874,11 +874,11 @@ impl QuadGl {
         self.state.pipeline = pipeline;
     }
 
-    pub fn draw_mode(&mut self, mode: DrawMode) {
+    pub(crate) fn draw_mode(&mut self, mode: DrawMode) {
         self.state.draw_mode = mode;
     }
 
-    pub fn geometry(&mut self, vertices: &[Vertex], indices: &[u16]) {
+    pub(crate) fn geometry(&mut self, vertices: &[Vertex], indices: &[u16]) {
         if vertices.len() >= self.max_vertices || indices.len() >= self.max_indices {
             warn!("geometry() exceeded max drawcall size, clamping");
         }
@@ -956,18 +956,18 @@ impl QuadGl {
         dc.texture = self.state.texture;
     }
 
-    pub fn delete_pipeline(&mut self, pipeline: GlPipeline) {
+    pub(crate) fn delete_pipeline(&mut self, pipeline: GlPipeline) {
         self.pipelines.delete_pipeline(pipeline);
     }
 
-    pub fn set_uniform<T>(&mut self, pipeline: GlPipeline, name: &str, uniform: T) {
+    pub(crate) fn set_uniform<T>(&mut self, pipeline: GlPipeline, name: &str, uniform: T) {
         self.state.break_batching = true;
 
         self.pipelines
             .get_quad_pipeline_mut(pipeline)
             .set_uniform(name, uniform);
     }
-    pub fn set_uniform_array<T: ToBytes>(
+    pub(crate) fn set_uniform_array<T: ToBytes>(
         &mut self,
         pipeline: GlPipeline,
         name: &str,
@@ -980,7 +980,7 @@ impl QuadGl {
             .set_uniform_array(name, uniform);
     }
 
-    pub fn set_texture(
+    pub(crate) fn set_texture(
         &mut self,
         texture_ctx: &TexturesContext,
         pipeline: GlPipeline,
