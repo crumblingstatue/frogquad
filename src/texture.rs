@@ -358,6 +358,7 @@ impl FrogCx {
     }
 }
 
+/// A render pass, mostly corresponding to [`miniquad::RenderPass`].
 #[derive(Debug, Clone)]
 pub struct RenderPass {
     pub(crate) render_pass: Arc<miniquad::RenderPass>,
@@ -376,6 +377,7 @@ impl Drop for RenderPass {
     }
 }
 
+/// Extended options for creating a render target
 #[derive(Debug, Clone)]
 pub struct RenderTargetParams {
     /// 1 means no multi sampling.
@@ -402,10 +404,12 @@ impl RenderPass {
     }
 }
 
+/// A render target that can be rendered to
 #[derive(Clone, Debug)]
 pub struct RenderTarget {
+    /// The texture of the render target
     pub texture: Texture2D,
-    pub render_pass: RenderPass,
+    pub(crate) render_pass: RenderPass,
 }
 
 impl FrogCx {
@@ -425,7 +429,7 @@ impl FrogCx {
             },
         )
     }
-
+    /// Create a render target with extended options
     pub fn render_target_ex(
         &mut self,
         width: u32,
@@ -487,8 +491,10 @@ impl FrogCx {
     }
 }
 
+/// Extended options for drawing a texture
 #[derive(Debug, Clone)]
 pub struct DrawTextureParams {
+    /// Size at the destination
     pub dest_size: Option<Vec2>,
 
     /// Part of texture to draw. If None - draw the whole texture.
@@ -527,10 +533,11 @@ impl Default for DrawTextureParams {
 }
 
 impl FrogCx {
+    /// Draw a texture at the specified position, with the specified color
     pub fn draw_texture(&mut self, texture: &Texture2D, x: f32, y: f32, color: Color) {
         self.draw_texture_ex(texture, x, y, color, Default::default());
     }
-
+    /// Draw a texture with extended options
     pub fn draw_texture_ex(
         &mut self,
         texture: &Texture2D,
